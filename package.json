@@ -1,0 +1,34 @@
+{
+  "name": "newcoin-sdk",
+  "version": "1.0.0",
+  "description": "SDK for Newcoin blockchain",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "vitalyr",
+  "license": "MIT",
+  "dependencies": {
+    "@eoscafe/hyperion": "^3.2.9",
+    "@types/faker": "^5.5.9",
+    "@types/node": "^16.10.2",
+    "@types/node-fetch": "^3.0.3",
+    "atomicassets": "^1.4.2",
+    "eosjs": "^22.1.0",
+    "isomorphic-fetch": "^3.0.0",
+    "node-fetch": "^2.6.5",
+    "ts-install": "^1.0.0",
+    "ts-node": "^10.4.0",
+    "typedoc-plugin-missing-exports": "^0.22.4"
+  },
+  "devDependencies": {
+    "@types/isomorphic-fetch": "0.0.35",
+    "@types/jest": "^27.0.2",
+    "@types/mocha": "^9.0.0",
+    "jest": "^27.3.1",
+    "ts-jest": "^27.0.7",
+    "typedoc": "^0.22.9",
+    "typedoc-plugin-markdown": "^3.11.6",
+    "typescript": "^4.4.4"
+  }
+}
