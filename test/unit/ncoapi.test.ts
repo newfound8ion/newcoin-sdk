@@ -1,6 +1,3 @@
-//import { NCO_BlockchainAPI } from "../../src";
-//import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCReturnInfo} from 'newcoin';
-
 import { NCO_BlockchainAPI } from '../../src';
 import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCReturnInfo} from "../../src/types";
 //import * as nco from 'newcoin';

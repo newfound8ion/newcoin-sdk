@@ -1,7 +1,9 @@
 import { Api, JsonRpc, RpcError } from "eosjs";
-import { NCO_BlockchainAPI } from 'newcoin';
-//import { RpcApi } from 'newcoin.pools-js';
-import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCReturnInfo} from 'newcoin';
+import { RpcApi } from '@newcoin-foundation/newcoin.pools-js/';
+import { NCO_BlockchainAPI } from '@newcoin-foundation/newcoin-sdk/';
+import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCReturnInfo} from '@newcoin-foundation/newcoin-sdk';
+//@ts-ignore
+import  fetch  from 'node-fetch';
 
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
 let name = randomname();
@@ -83,7 +85,7 @@ const demoall = async (uniq5: string) =>
     console.log("createuser transaction complete");
 
     console.log("creating collection for the user");
-    t = apicreateCollection(nu, col);
+    t = api.createCollection(nu, col);
     console.log(t);
     console.log("createcol transaction");
     res = await SubmitTx([t]);

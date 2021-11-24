@@ -1,24 +1,23 @@
-
-
 import { Api, JsonRpc, RpcError } from "eosjs";
 import { Transaction, TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';  // development only
 import { PushTransactionArgs, ReadOnlyTransactResult } from "eosjs/dist/eosjs-rpc-interfaces";
-
-import { RpcApi } from "../../newcoin.pools-js/src"
-import { PoolPayload } from "../../newcoin.pools-js/src/interfaces/pool.interface";
 import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion"
 
+import { RpcApi } from '@newcoin-foundation/newcoin.pools-js/'
+import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
+//import * as farm  from '@newcoin-foundation/newcoin.farm-js'
 //@ts-ignore 
 import fetch from 'node-fetch';
 import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCGetPoolInfo, NCPoolsInfo, NCReturnInfo } from "./types"; 
 export * from './types'
+//const fetch = require('node-fetch');
 
 const _newaccount = (
   new_name: string,
   payer: string = 'io',
-  newacc_public_active_key: string = 'EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT',
-  newacc_public_owner_key: string = 'EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT'
+  newacc_public_active_key: string = 'EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT', // testnet
+  newacc_public_owner_key: string = 'EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT'    //testnet
 ) => (
   {
     account: 'eosio',
@@ -92,7 +91,6 @@ const _delegateBw = (
   }
 });
 
-// provide 
 const _createUser = async (
   newUser: string,
   payer: string,
@@ -427,7 +425,7 @@ export class NCO_BlockchainAPI {
     let r: NCReturnTxs = {};
     type RetT = { rows: PoolPayload[] };
 
-    let q = await api.getPoolByOwner(p);
+    let q = await api.getPool(p);
     let t = await q.json() as RetT;
     let pool_id = t.rows[0].id as string;
 
@@ -515,7 +513,7 @@ export class NCO_BlockchainAPI {
   let p: PoolPayload = { owner: acc.owner };
 
   try {
-    let q = await api.getPoolByOwner(p);
+    let q = await api.getPool(p);
     let t = await q.json() as NCPoolsInfo;
     //console.log(t.rows[0]);
     //console.log(t.rows[0].total);
