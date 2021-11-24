@@ -2,11 +2,11 @@
   "name": "@newcoin-foundation/newcoin-sdk",
   "version": "1.0.0",
   "description": "SDK for Newcoin blockchain",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "jest"
   },
-  "author": "vitalyr",
+  "author": "vitalyrue",
   "license": "MIT",
   "dependencies": {
     "@eoscafe/hyperion": "^3.2.9",
@@ -31,16 +31,26 @@
     "ts-jest": "^27.0.7",
     "typedoc": "^0.22.9",
     "typedoc-plugin-markdown": "^3.11.6",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "webpack": "^5.64.3",
+    "webpack-cli": "^4.9.1"
   },
   "keywords": [
     "newcoin"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Newcoin-Foundation/newcoin-sdk"
-  }, 
+    "url": "git+https://github.com/newcoin-foundation/newcoin-sdk.git"
+  },
   "publishConfig": {
-    "registry":"https://registry.npmjs.org"
+    "registry": "https://registry.npmjs.org"
+  },
+  "bugs": {
+    "url": "https://github.com/newcoin-foundation/newcoin-sdk/issues"
+  },
+  "homepage": "https://github.com/newcoin-foundation/newcoin-sdk#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   }
 }

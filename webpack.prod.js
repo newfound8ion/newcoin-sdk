@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        newcoinpools: './src/index.ts',
+        newcoinsdk: './src/index.ts',
     },
     mode: 'production',
     module: {
