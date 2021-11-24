@@ -1,8 +1,12 @@
+![Newcoin](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/main/docs/newcoin-globe.png?raw=true)
+
 # newcoin-sdk
 
 This is the newcoin sdk, a starting point for a tooling environment that will make it easy to build applications on top of [https://newcoin.org](newcoin.org).
 
-This is an early version indeed.
+```
+npm install --save @newcoin-foundation/newcoin-sdk
+```
 
 See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
 
