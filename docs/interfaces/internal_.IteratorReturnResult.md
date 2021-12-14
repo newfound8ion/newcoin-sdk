@@ -1,4 +1,4 @@
-[newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / IteratorReturnResult
+[@newcoin-foundation/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / IteratorReturnResult
 
 # Interface: IteratorReturnResult<TReturn\>
 

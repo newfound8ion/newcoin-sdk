@@ -17,6 +17,7 @@ export declare type NCReturnTxs = {
     TxID_createPool?: string;
     TxID_stakeToPool?: string;
     TxID_mintAsset?: string;
+    TxID_txNcoBalance?: string;
 };
 export declare type NCCreatePool = {
     owner: string;
@@ -28,6 +29,14 @@ export declare type NCStakeToPool = {
     to: string;
     amt: string;
     payer: string;
+    payer_public_key: string;
+    payer_prv_key: string;
+};
+export declare type NCTxNcoBal = {
+    to: string;
+    amt: string;
+    payer: string;
+    memo: string;
     payer_public_key: string;
     payer_prv_key: string;
 };

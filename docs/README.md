@@ -1,10 +1,14 @@
-newcoin-sdk / [Exports](modules.md)
+@newcoin-foundation/newcoin-sdk / [Exports](modules.md)
+
+![Newcoin](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/main/docs/media/newcoin-globe.png?raw=true)
 
 # newcoin-sdk
 
 This is the newcoin sdk, a starting point for a tooling environment that will make it easy to build applications on top of [https://newcoin.org](newcoin.org).
 
-This is an early version indeed.
+```
+npm install --save @newcoin-foundation/newcoin-sdk
+```
 
 See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
 
@@ -38,9 +42,11 @@ function async createUser() {
 See the tests for more examples.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. 
+For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+# newcoin-sdk

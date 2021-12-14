@@ -9,7 +9,12 @@ import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interface
 //import * as farm  from '@newcoin-foundation/newcoin.farm-js'
 //@ts-ignore 
 import fetch from 'node-fetch';
-import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCGetPoolInfo, NCPoolsInfo, NCReturnInfo } from "./types"; 
+import { 
+    NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal,
+    NCGetAccInfo, NCGetPoolInfo, 
+    NCPoolsInfo, 
+    NCReturnTxs,  NCReturnInfo 
+  } from "./types"; 
 export * from './types'
 //const fetch = require('node-fetch');
 
@@ -274,6 +279,31 @@ const _stakeToPool = (
   return action;
 }
 
+const _txNcoBalance = (
+  from: string,
+  to: string,
+  amt: string, 
+  memo: string = ''
+) => {
+  const action = {
+    account: 'eosio.token',
+    name: 'transfer',
+    data: {
+      from: from,
+      to: to,
+      quantity: amt,//'10.0000 NCO',
+      memo: memo //''
+    },
+    authorization: [
+      {
+        'actor': from,
+        'permission': 'active'
+      }
+    ]
+  }
+  return action;
+}
+
 const SubmitTx = async (
   actions: any[],
   public_keys: string[] = ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"], // testnet
@@ -505,19 +535,32 @@ export class NCO_BlockchainAPI {
   }
 
   /**
+   * Transfer NCO between accounts
+   * @returns Transfer transaction id
+   */
+  async txNcoBalance(inpt: NCTxNcoBal): Promise<NCReturnTxs> {
+      let r: NCReturnTxs = {};
+      let tx = _txNcoBalance(inpt.payer, inpt.to, inpt.amt);
+      let res = await SubmitTx([tx], [inpt.payer_public_key], [inpt.payer_prv_key]) as TransactResult;
+      r.TxID_txNcoBalance = res.transaction_id;
+      //console.log(res);
+      return r;
+  }
+
+  /**
    * Get pool info
    * @returns Tx data
    */
   async getPoolInfo (acc: NCGetPoolInfo) {
-  const api = new RpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
-  let p: PoolPayload = { owner: acc.owner };
+    const api = new RpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
+    let p: PoolPayload = { owner: acc.owner };
 
-  try {
-    let q = await api.getPool(p);
-    let t = await q.json() as NCPoolsInfo;
-    //console.log(t.rows[0]);
-    //console.log(t.rows[0].total);
-    return t;
+    try {
+      let q = await api.getPool(p);
+      let t = await q.json() as NCPoolsInfo;
+      //console.log(t.rows[0]);
+      //console.log(t.rows[0].total);
+      return t;
 
   } catch (e) {
     console.log('\nCaught exception: ' + e);

@@ -1,4 +1,4 @@
-[newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / DateConstructor
+[@newcoin-foundation/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / DateConstructor
 
 # Interface: DateConstructor
 

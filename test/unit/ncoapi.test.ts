@@ -1,5 +1,9 @@
 import { NCO_BlockchainAPI } from '../../src';
-import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCReturnInfo} from "../../src/types";
+import { 
+    NCCreateUser,  NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
+    NCGetAccInfo, 
+    NCReturnTxs, NCReturnInfo
+} from "../../src/types";
 //import * as nco from 'newcoin';
 
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
@@ -42,9 +46,9 @@ describe("Basic blockchain operations", () => {
         it("create pool", async () => {
 
             let n: NCCreatePool = { owner: name, payer:'io', 
-            payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-            payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
-        } ;
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
+                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+            } ;
             
             let resp :NCReturnTxs = await api.createPool(n) ;
             console.log(resp);
@@ -60,7 +64,7 @@ describe("Basic blockchain operations", () => {
             payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
         } ;
             
-        let resp :NCReturnTxs = await api.stakeToPool(n) ;
+        let resp : NCReturnTxs = await api.stakeToPool(n) ;
         console.log(resp);
         expect(typeof resp.TxID_stakeToPool).toBe('string');
         }, 60000)
@@ -90,18 +94,35 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
+    describe("get account pools balances", () => {
+        it("get pool balances", async () => {
+            let n:   NCGetAccInfo = { owner: 'io', contract: 'pools.nco' } ;
+            let resp:NCReturnInfo = { acc_balances: [] }
+            resp = await api.getAccountBalance(n) as NCReturnInfo ;
+            console.log(resp);
+            if(resp.acc_balances)
+                expect(typeof resp.acc_balances[0]).toBe('string'); 
+            else 
+                expect(false).toBe(true);
+        }, 60000)
+    });
 
-    describe("get account balances", () => {
-        it("get balances", async () => {
-            let n: NCGetAccInfo = { owner: 'io', contract: 'pools.nco' } ;
+    describe("tx NCO transaction", () => {
+        it("tx nco balance", async () => {
+            let n: NCTxNcoBal = { 
+                to: name, 
+                amt: '5000.0000 NCO', 
+                payer:'io',
+                memo: 'test transfer', 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
+                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+            };
             
-        let resp :NCReturnInfo = { acc_balances: []}
-        resp = await api.getAccountBalance(n) as NCReturnInfo ;
-        console.log(resp);
-        if(resp.acc_balances)
-            expect(typeof resp.acc_balances[0]).toBe('string'); 
-        else 
-            expect(false).toBe(true);
+            debugger;
+            let resp :NCReturnTxs = await api.txNcoBalance(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_txNcoBalance).toBe('string');
+
         }, 60000)
     });
 

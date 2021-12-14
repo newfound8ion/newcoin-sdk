@@ -19,6 +19,7 @@ export type NCCreateUser = {
     TxID_createPool?: string;
     TxID_stakeToPool?: string;
     TxID_mintAsset?: string;
+    TxID_txNcoBalance?: string;
   };
   
   export type NCCreatePool = {
@@ -36,6 +37,15 @@ export type NCCreateUser = {
     payer_prv_key: string;
   }
   
+  export type NCTxNcoBal = {
+    to: string;
+    amt: string;
+    payer: string;
+    memo: string;
+    payer_public_key: string;
+    payer_prv_key: string;
+  }
+
   export type NCPoolInfo = {
     id: string;
     code: string;

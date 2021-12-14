@@ -1,5 +1,5 @@
 import { GetTransaction } from "@eoscafe/hyperion";
-import { NCCreateUser, NCReturnTxs, NCCreatePool, NCStakeToPool, NCMintAsset, NCGetAccInfo, NCGetPoolInfo, NCPoolsInfo, NCReturnInfo } from "./types";
+import { NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCGetAccInfo, NCGetPoolInfo, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
 export * from './types';
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -55,6 +55,11 @@ export declare class NCO_BlockchainAPI {
      * @returns Tx data
      */
     getAccountBalance(acc: NCGetAccInfo): Promise<NCReturnInfo | undefined>;
+    /**
+     * Transfer NCO between accounts
+     * @returns Transfer transaction id
+     */
+    txNcoBalance(inpt: NCTxNcoBal): Promise<NCReturnTxs>;
     /**
      * Get pool info
      * @returns Tx data
