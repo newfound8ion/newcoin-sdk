@@ -1,6 +1,6 @@
 {
   "name": "@newcoin-foundation/newcoin-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "SDK for Newcoin blockchain",
   "main": "./src/index.js",
   "scripts": {
@@ -46,7 +46,7 @@
     "url": "git+https://github.com/newcoin-foundation/newcoin-sdk.git"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+    "registry": "https://registry.npmjs.org",
   },
   "bugs": {
     "url": "https://github.com/newcoin-foundation/newcoin-sdk/issues"
