@@ -8,7 +8,7 @@ import { RpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 //import * as farm  from '@newcoin-foundation/newcoin.farm-js'
 //@ts-ignore 
-import fetch from 'node-fetch';
+import fetch from 'isomorphic-fetch';
 import { 
     NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal,
     NCGetAccInfo, NCGetPoolInfo, 
@@ -551,12 +551,13 @@ export class NCO_BlockchainAPI {
    * Get pool info
    * @returns Tx data
    */
-  async getPoolInfo (acc: NCGetPoolInfo) {
+  async getPoolInfo (payload: NCGetPoolInfo) {
     const api = new RpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
-    let p: PoolPayload = { owner: acc.owner };
 
     try {
-      let q = await api.getPool(p);
+      const fn = payload.code ? "getPoolByCode" : "getPoolByOwner";
+
+      let q = await api[fn](payload);
       let t = await q.json() as NCPoolsInfo;
       //console.log(t.rows[0]);
       //console.log(t.rows[0].total);
