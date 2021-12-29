@@ -1,9 +1,15 @@
+export declare type NCKeyPair = {
+    pub_key: string;
+    prv_key: string;
+};
 export declare type NCCreateUser = {
     newUser: string;
     newacc_public_active_key: string;
     newacc_public_owner_key: string;
+    newacc_prv_active_key: string;
     payer: string;
     payer_prv_key: string;
+    payer_public_key: string;
     ram_amt?: number;
     cpu_amount?: string;
     net_amount?: string;
@@ -14,16 +20,21 @@ export declare type NCReturnTxs = {
     TxID_createCol?: string;
     TxID_createSch?: string;
     TxID_createTpl?: string;
+    TxID_createPerm?: string;
     TxID_createPool?: string;
     TxID_stakeToPool?: string;
     TxID_mintAsset?: string;
     TxID_txNcoBalance?: string;
 };
+export declare type NCCreatePerm = {
+    author: string;
+    perm_name: string;
+    perm_pub_key: string;
+    author_prv_active_key: string;
+};
 export declare type NCCreatePool = {
     owner: string;
-    payer: string;
-    payer_public_key: string;
-    payer_prv_key: string;
+    owner_prv_active_key: string;
 };
 export declare type NCStakeToPool = {
     to: string;
@@ -69,7 +80,6 @@ export declare type NCMintAsset = {
     immutable_data: NCKeyValPair[];
     mutable_data: NCKeyValPair[];
     payer: string;
-    payer_public_key: string;
     payer_prv_key: string;
 };
 export declare type NCGetAccInfo = {
