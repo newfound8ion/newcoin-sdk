@@ -1,18 +1,16 @@
 const path = require('path');
 
 module.exports = {
-    entry: {
-        newcoinsdk: './src/index.ts',
-    },
-    mode: 'production',
+    entry: './src/index.ts',
+    mode: 'development',
+    devtool: "eval-cheap-source-map",
     module: {
         rules: [
+            // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
             {
-                test: /\.ts$/,
-                use: {
-                    loader: 'ts-loader',
-                    options: { configFile: 'tsconfig.json' }
-                },
+                test: /\.tsx?$/,
+                loader: "ts-loader",
+                options: { configFile: 'tsconfig.web.json' },
                 exclude: /node_modules/,
             }
         ]
@@ -21,8 +19,12 @@ module.exports = {
         extensions: ['.ts', '.js']
     },
     output: {
-        filename: x => x.chunk.name.replace('_', '-') + '.js',
-        library: '[name]',
-        path: path.resolve(__dirname, 'dist'),
+        filename: "index.js", // => x.chunk.name.replace('_', '-') + '.js',
+        library: {
+            type: "commonjs2",
+            name: "NCO_BlockchainAPI",
+            // path: path.resolve(__dirname, 'dist'),
+            export: "NCO_BlockchainAPI"
+        }
     }
 };

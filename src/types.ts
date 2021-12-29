@@ -101,7 +101,8 @@ export type NCCreateUser = {
   }
   
   export type NCGetPoolInfo = {
-    owner: string
+    owner?: string
+    code?: string;
   }
   
   export type NCReturnInfo = {

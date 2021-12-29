@@ -77,7 +77,8 @@ export declare type NCGetAccInfo = {
     contract?: string;
 };
 export declare type NCGetPoolInfo = {
-    owner: string;
+    owner?: string;
+    code?: string;
 };
 export declare type NCReturnInfo = {
     acc_balances?: string[];
