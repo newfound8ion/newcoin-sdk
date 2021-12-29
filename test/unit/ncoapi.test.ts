@@ -1,6 +1,7 @@
 import { NCO_BlockchainAPI } from '../../src';
 import { 
-    NCCreateUser,  NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
+    NCKeyPair,
+    NCCreateUser,  NCCreatePool, NCCreatePerm, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo
 } from "../../src/types";
@@ -10,6 +11,17 @@ let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.
 let name = randomname();
 console.log(name);
 
+//defaults pre-generation
+let pub_key_active = "EOS8KnfBrVCvdWr1JXybAcMvz8NjqB3XLArEAzRm7wLJchWKw6NFM";
+let prv_key_active = "5JLUzZYfMJUim4KPdGw1ipA8i4Std8QM4hunnvwaesqgRfWiD3j";
+
+let pub_key_owner = "EOS6j3ATfMaBRM7DnGHqZ8Miqw4ah1awgtpbriq4zubfdhey9pcDx";
+let prv_key_owner = "5JvR9dzATtTkPPDcUdNZzQ8Grp6w4eKJz4xqomCx9T7M9VCaQgN";
+
+let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
+let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
+
+
 const api = new NCO_BlockchainAPI(
     {
         bc_url:  "http://testnet.newcoin.org",
@@ -18,21 +30,52 @@ const api = new NCO_BlockchainAPI(
 );
 
 describe("Basic blockchain operations", () => {
+    describe("test template", () => {
+        it("test template", async () => {
+            let resp = "test template shows tests are running" ;
+            console.log(resp);
+
+            return resp;
+        }, 1000);
+    });
+    
+    describe("create key pair", () => {
+        it("key pair create", async () => {
+
+            let resp = await api.createKeyPair();
+            console.log("Keys owner generated: \n Prv: %s \n Pub: %s\n", resp.prv_key, resp.pub_key);
+            pub_key_owner =  resp.pub_key;
+            prv_key_owner =  resp.prv_key;
+            resp = await api.createKeyPair();
+            console.log("Keys active generated: \n Prv: %s \n Pub: %s\n", resp.prv_key, resp.pub_key);
+            pub_key_active =  resp.pub_key;
+            prv_key_active =  resp.prv_key;
+            resp = await api.createKeyPair();
+            console.log("Keys comm generated: \n Prv: %s \n Pub: %s\n", resp.prv_key, resp.pub_key);
+            pub_key_comm =  resp.pub_key;
+            prv_key_comm =  resp.prv_key;
+            
+            return resp;
+        }, 60000);
+    });
+
     describe("open account transaction", () => {
         it("create acc", async () => {
 
             let nco_struct : NCCreateUser = {
                 newUser: name, 
-                newacc_public_active_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
-                newacc_public_owner_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
+                newacc_public_active_key: pub_key_active,
+                newacc_public_owner_key:  pub_key_owner,
+                newacc_prv_active_key: prv_key_active,
                 payer: "io", 
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
                 ram_amt : 8196, 
                 cpu_amount : "100.0000 NCO", 
                 net_amount : "100.0000 NCO", 
                 xfer : true, // stake or transfer CPU/NET to the account
             };
-            let resp :NCReturnTxs = await api.createUser(nco_struct) ;
+            let resp : NCReturnTxs = await api.createUser(nco_struct) ;
             console.log(resp);
             expect(typeof resp.TxID_createAcc).toBe('string');
             expect(typeof resp.TxID_createCol).toBe('string'); 
@@ -42,12 +85,27 @@ describe("Basic blockchain operations", () => {
         }, 120000)
     });
 
-    describe("create pool transaction", () => {
+    describe("create permission for an account under active", () => {
+        it("create permission", async () => {
+            let n: NCCreatePerm = { 
+                author: name, 
+                perm_name: 'nwpermission', 
+                author_prv_active_key: prv_key_active,
+                perm_pub_key: pub_key_comm
+             } ;
+            console.log("creating permission %s for account %s", n.perm_name, n.author);
+            let resp: NCReturnTxs = await api.createPermission(n);
+            console.log(resp);
+            expect(typeof resp.TxID_createPerm).toBe('string');
+        }, 60000);
+    });
+
+    describe("'create pool' transaction", () => {
         it("create pool", async () => {
 
-            let n: NCCreatePool = { owner: name, payer:'io', 
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+            let n: NCCreatePool = { 
+                owner: name, 
+                owner_prv_active_key: prv_key_active
             } ;
             
             let resp :NCReturnTxs = await api.createPool(n) ;
@@ -59,9 +117,11 @@ describe("Basic blockchain operations", () => {
 
     describe("stake to pool transaction", () => {
         it("stake pool", async () => {
-            let n: NCStakeToPool = { to: name, amt: '100000.0000 NCO', payer:'io',  
-            payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-            payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+            let n: NCStakeToPool = { 
+                to: name, amt: '1000.0000 NCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
+                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
         } ;
             
         let resp : NCReturnTxs = await api.stakeToPool(n) ;
@@ -74,14 +134,14 @@ describe("Basic blockchain operations", () => {
         it("Mint asset", async () => {
             let n: NCMintAsset = { 
             creator: name, 
-            payer:'io',  
-            payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-            payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
+            payer: name,  
+            payer_prv_key: prv_key_active, 
             immutable_data: [
                 {'key': 'name', 'value': ['string', name+'_'+(new Date()).getTime()]},
                 {'key': 'description','value': ['string', 'demo nft']}, 
                 {'key': 'image','value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png']},
-                {'key': "external_url",'value':['string', '']}
+                {'key': "external_url",'value':['string', '']},
+                {'key': "license",'value':['string', 'CC-EX-123456']},
                 //{'key': "template_name"}, {'value': ['string', '']},
                 //{'key': "attributes"}, { 'value': ['string[]', []] }
               ],
@@ -118,7 +178,6 @@ describe("Basic blockchain operations", () => {
                 payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
             };
             
-            debugger;
             let resp :NCReturnTxs = await api.txNcoBalance(n) ;
             console.log(resp);
             expect(typeof resp.TxID_txNcoBalance).toBe('string');

@@ -2,28 +2,34 @@ import { Api, JsonRpc, RpcError } from "eosjs";
 import { Transaction, TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';  // development only
 import { PushTransactionArgs, ReadOnlyTransactResult } from "eosjs/dist/eosjs-rpc-interfaces";
-import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion"
-
-import { RpcApi } from '@newcoin-foundation/newcoin.pools-js/'
+import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
+import { ActionGenerator, RpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
+
+//@ts-ignore
+import ecc from "eosjs-ecc";
+
 //import * as farm  from '@newcoin-foundation/newcoin.farm-js'
 
 import fetch from 'cross-fetch';
 
 import { 
-    NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal,
+    NCKeyPair,
+    NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePerm,
     NCGetAccInfo, NCGetPoolInfo, 
     NCPoolsInfo, 
     NCReturnTxs,  NCReturnInfo 
   } from "./types"; 
+import { unescapeLeadingUnderscores } from "typescript";
 export * from './types'
 //const fetch = require('node-fetch');
 
+
 const _newaccount = (
   new_name: string,
-  payer: string = 'io',
-  newacc_public_active_key: string = 'EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT', // testnet
-  newacc_public_owner_key: string = 'EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT'    //testnet
+  payer: string,
+  newacc_public_active_key: string, 
+  newacc_public_owner_key: string    
 ) => (
   {
     account: 'eosio',
@@ -38,7 +44,7 @@ const _newaccount = (
       owner: {
         threshold: 1,
         keys: [{
-          key: newacc_public_active_key,
+          key: newacc_public_owner_key,
           weight: 1
         }],
         accounts: [],
@@ -47,7 +53,7 @@ const _newaccount = (
       active: {
         threshold: 1,
         keys: [{
-          key: newacc_public_owner_key,
+          key: newacc_public_active_key,
           weight: 1
         }],
         accounts: [],
@@ -63,10 +69,7 @@ const _buyrambytes = (
 ) => ({
   account: 'eosio',
   name: 'buyrambytes',
-  authorization: [{
-    actor: payer,
-    permission: 'active',
-  }],
+  authorization: [{ actor: payer, permission: 'active'}],
   data: {
     payer: payer,
     receiver: receiver,
@@ -114,8 +117,7 @@ const _createUser = async (
 const _createCollection = (
   author: string,
   collection_name: string,
-  payer: string = 'io',
-  authorized_accounts: string[] = [author, payer],
+  authorized_accounts: string[],
   notify_accounts: string[] = [],
   market_fee: number = 0.05,
   allow_notify: boolean = false
@@ -133,8 +135,7 @@ const _createCollection = (
       data: []
     },
     authorization: [
-      { actor: author, permission: 'active' },
-      //{ actor: payer, permission: 'active'},
+      { actor: author, permission: 'active' } 
     ]
   }
   return action;
@@ -142,13 +143,15 @@ const _createCollection = (
 
 const _createSch = (
   author: string,
+  payer: string,
   collection_name: string,
   schema_name: string,
   sch: any[] = [
     { name: 'name', type: "string" },
     { name: 'description', type: "string" },
     { name: 'image', type: 'string' },
-    { name: 'external_url', type: 'string' }
+    { name: 'external_url', type: 'string' },
+    { name: 'license', type: 'string' }
   ]
   //{name: "attributes", type: "string[]"},
   //{name: "external_url", type:"string"},
@@ -165,7 +168,6 @@ const _createSch = (
     },
     authorization: [
       { actor: author, permission: 'active' }
-      //{ actor: 'io', permission: 'active'}, 
     ]
   }
   return action;
@@ -191,13 +193,49 @@ const _createTmpl = (
       max_supply: 0xffffff,
       immutable_data: [] //{key: 'name', value: ['string', 'default'] } ]
     },
-    authorization: [{ actor: author, permission: 'active' }]
+    authorization: [
+      { actor: author, permission: 'active' } 
+    ]
   }
   return action;
 }
 
+const _createPermission = (
+  author: string,
+  perm_name: string,
+  perm_key: string
+) => {
+
+    const authorization_object = { 
+      threshold: 1, 
+      accounts: [{ permission: { actor: author, permission: 'active' }, weight: 1 }], 
+      keys: [{ key: perm_key, weight: 1 }],
+      waits: []
+    };
+    
+    const updateauth_input = {
+      account: author,
+      permission: perm_name,
+      parent: 'active',
+      auth: authorization_object
+    };
+
+    const action = {
+      account: 'eosio',
+      name: 'updateauth',
+      data: updateauth_input,
+      authorization: [
+        { actor: author, permission: 'active'}
+      ]
+  }
+  
+  return action;
+}
+
+
 const _mintAsset = (
   author: string,
+  payer: string,
   col_name: string,
   sch_name: string,
   tmpl_id: number,
@@ -224,14 +262,16 @@ const _mintAsset = (
       mutable_data: mutable_data,  //mutable data  
       tokens_to_back: []//tokens to back 
     },
-    authorization: [{ actor: author, permission: 'active' }]
+    authorization: [
+      { actor: author, permission: 'active' } 
+    ]
   };
   return action;
 }
 
 const _createPool = (
   creator: string,
-  payer: string = 'io',
+  payer: string,
   descr: string = creator + ' pool'
 ) => {
   const action = {
@@ -242,14 +282,7 @@ const _createPool = (
       description: descr,
     },
     authorization: [
-      {
-        actor: payer,
-        permission: 'active'
-      },
-      {
-        actor: creator,
-        permission: 'active'
-      }
+      { actor: creator, permission: 'active'}
     ]
   };
 
@@ -271,10 +304,7 @@ const _stakeToPool = (
       memo: "pool:" + id //'pool:1'
     },
     authorization: [
-      {
-        'actor': from,
-        'permission': 'active'
-      }
+      { 'actor': from, 'permission': 'active' }
     ]
   }
   return action;
@@ -296,10 +326,7 @@ const _txNcoBalance = (
       memo: memo //''
     },
     authorization: [
-      {
-        'actor': from,
-        'permission': 'active'
-      }
+      { 'actor': from, 'permission': 'active' }
     ]
   }
   return action;
@@ -307,8 +334,8 @@ const _txNcoBalance = (
 
 const SubmitTx = async (
   actions: any[],
-  public_keys: string[] = ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"], // testnet
-  private_keys: string[] = ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"],  // testnet
+  public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
+  private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
   net_url = 'https://testnet.newcoin.org'
 ) => {
   const signatureProvider = new JsSignatureProvider(private_keys);
@@ -338,15 +365,22 @@ const SubmitTx = async (
   const requiredKeys = await api.authorityProvider.getRequiredKeys({ transaction, availableKeys });
   const abis = await api.getTransactionAbis(transaction);
   // const pushTransactionArgs: PushTransactionArgs = { serializedTransaction, signatures };
-
   const pushTransactionArgs: PushTransactionArgs = await api.signatureProvider.sign({
     chainId: info.chain_id, // from getinfo
     requiredKeys: requiredKeys,
     serializedTransaction: serializedTransaction,
+    serializedContextFreeData: undefined,
     abis: abis
   });
 
-  //console.log(pushTransactionArgs)
+  /*
+  let tr  = serializedTransaction.buffer.toString();
+  let eccst = ecc.sign(serializedTransaction, private_keys[0]);
+  let pub_from_prv = ecc.privateToPublic(private_keys[0]);
+  let sig = pushTransactionArgs.signatures[0];
+  let key = ecc.recover(sig, tr);
+  let c = ecc.verify(sig, tr, public_keys[0]);
+  console.log("signature verification: return %d", c)*/
   return api.pushSignedTransaction(pushTransactionArgs);
 };
 
@@ -384,14 +418,32 @@ export class NCO_BlockchainAPI {
   }
 
   /**
+   * Create a key pair assuming a secure environment (not frontend)
+   * @returns Create User transaction id
+   */
+  async createKeyPair() {
+
+    await ecc.initialize();
+
+    let opts = { secureEnv: true };
+    let p = await ecc.randomKey( 0, opts );
+    //let x = ecc.isValidPrivate(p);
+    
+    let t: NCKeyPair = { prv_key: p , pub_key: ecc.privateToPublic(p) };
+    return t as NCKeyPair;
+  }
+
+  /**
    * Create a user
-   * NOTE: New collection, schema and template names are formed from user name with c, s and t replacing the dot in the user name.
+   * NOTE: New collection, schema and template names are formed from user name with c, s and t 
+   * replacing the dot in the user name.
    * @returns Create User transaction id
    */
   async createUser(inpt: NCCreateUser) {
 
     const {
-      newUser, payer, newacc_public_active_key, newacc_public_owner_key, payer_prv_key,
+      newUser, newacc_public_active_key, newacc_public_owner_key, newacc_prv_active_key, 
+      payer, payer_prv_key, payer_public_key,
       ram_amt, net_amount, cpu_amount, xfer
     } = { ...CREATE_ACCOUNT_DEFAULTS, ...inpt };
 
@@ -403,44 +455,115 @@ export class NCO_BlockchainAPI {
     let buyram_action = _buyrambytes(newUser, payer, ram_amt);
     let delegatebw_action = _delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
 
-    //console.log(t);
+    console.log("before create account transaction");
     tres = await SubmitTx(
       [newacc_action, buyram_action, delegatebw_action],
-      [newacc_public_active_key, newacc_public_owner_key],
-      [payer_prv_key] //, url
+      [payer_public_key],
+      [payer_prv_key], this._url
     ) as TransactResult;// [] contained      
     res.TxID_createAcc = tres.transaction_id;
-    //console.log("createuser transaction complete");
-    //console.log("creating collection for the user");
+    console.log("createuser transaction complete");
+
+    let n: NCTxNcoBal = { 
+      to: newUser, 
+      amt: '5000.0000 NCO', 
+      payer:'io',
+      memo: 'post create account transfer', 
+      payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
+      payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+    };
+    let resp :NCReturnTxs = await this.txNcoBalance(n) ;
+    console.log("transferred some NCO to the user");
+
+    let n1: NCTxNcoBal = { 
+      to: 'io', 
+      amt: '1000.0000 NCO', 
+      payer:newUser,
+      memo: 'post create account transfer', 
+      payer_prv_key: newacc_prv_active_key, 
+      payer_public_key: newacc_public_active_key
+    };
+    resp = await this.txNcoBalance(n1) ;
+    console.log("transferred some NCO back to io");
+    console.log(resp);
+  
+    console.log("creating collection for the user");
     let col = newUser.replace('.', 'c');
-    t = _createCollection(newUser, col, payer, [payer, newUser]);
-    //console.log(t);
-    //console.log("createcol transaction");
-    tres = await SubmitTx([t]) as TransactResult;
+    t = _createCollection(newUser, col, [newUser], undefined, undefined);
+    console.log(t);
+    console.log("createcol transaction");
+    tres = await SubmitTx([t], 
+      [newacc_public_active_key], //payer_public_key, 
+      [newacc_prv_active_key], this._url
+    ) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
-    //console.log("creating schema for the user");
-    let sch = newUser.replace('.', 's');
-    t = _createSch(newUser, col, sch);
-    //console.log(t);
-    //console.log("createsch transaction");
-    tres = await SubmitTx([t]) as TransactResult;
+    console.log("creating schema for the user");
+    let sch_name = newUser.replace('.', 's');
+    t = _createSch(newUser, payer, col, sch_name, undefined);
+    console.log(t);
+    console.log("createsch transaction");
+    tres = await SubmitTx([t], 
+      [payer_public_key, newacc_public_active_key], 
+      [payer_prv_key, newacc_prv_active_key], this._url
+    ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
-    //console.log("creating template");
-    t = _createTmpl(newUser, col, sch);
-    //console.log(t);
-    //console.log("creating template transaction");
-    tres = await SubmitTx([t]) as TransactResult;
+    console.log("creating template");
+    t = _createTmpl(newUser, col, sch_name);
+    console.log(t);
+    console.log("creating template transaction");
+    tres = await SubmitTx([t], 
+      [payer_public_key, newacc_public_active_key],
+      [payer_prv_key, newacc_prv_active_key], this._url
+    ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
     return res;
   }
 
   /**
-   * Create a poll.
+   * Create a new permission.
+   * @returns Create Pool transaction id
+   */
+  async createPermission(inpt: NCCreatePerm) {
+    let t = _createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
+    let res = await SubmitTx([t], 
+      [ecc.privateToPublic(inpt.author_prv_active_key)], 
+      [inpt.author_prv_active_key],  
+      this._url
+    ) as TransactResult;
+    let r: NCReturnTxs = {};
+    r.TxID_createPerm = res.transaction_id;
+    return r;    
+  }
+
+  /* async linkPermission(inpt: NCLinkPerm) {
+    const linkauth_input = {
+      account: 'useraaaaaaaa',      // the permission's owner to be linked and the payer of the RAM needed to store this link
+      code: 'useraaaaaaaa',         // the owner of the action to be linked
+      type: 'contract_action',      // the action to be linked
+      requirement: 'action_perm',   // the permission to be linked
+    };
+  
+    {
+      account: 'eosio',
+      name: 'linkauth',
+      authorization: [{
+        actor: 'useraaaaaaaa',
+        permission: 'active',
+      }
+  }*/
+
+
+  /**
+   * Create a staking pool.
    * @returns Create Pool transaction id
    */
   async createPool(inpt: NCCreatePool) {
-    let t = _createPool(inpt.owner, inpt.payer);
-    let res = await SubmitTx([t], [inpt.payer_public_key], [inpt.payer_prv_key]) as TransactResult;
+    let t = _createPool(inpt.owner, "test pool for " + inpt.owner);
+    let res = await SubmitTx([t], 
+      [ecc.privateToPublic(inpt.owner_prv_active_key)], 
+      [inpt.owner_prv_active_key],
+      this._url
+    ) as TransactResult;
     let r: NCReturnTxs = {};
     r.TxID_createPool = res.transaction_id;
     return r;
@@ -462,7 +585,10 @@ export class NCO_BlockchainAPI {
 
     //console.log("pool:"+t.rows[0].id);
     let tx = _stakeToPool(inpt.payer, pool_id, inpt.amt);
-    let res = await SubmitTx([tx], [inpt.payer_public_key], [inpt.payer_prv_key]) as TransactResult;
+    let res = await SubmitTx([tx], 
+      [ecc.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key], 
+      this._url
+    ) as TransactResult;
 
     r.TxID_stakeToPool = res.transaction_id;
     //console.log(res);
@@ -485,11 +611,15 @@ export class NCO_BlockchainAPI {
       inpt.mutable_data = [];
 
     const t = _mintAsset(
-      inpt.creator, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
+      inpt.creator, inpt.payer, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
       inpt.immutable_data, inpt.mutable_data
     );
 
-    let res = await SubmitTx([t], [inpt.payer_public_key], [inpt.payer_prv_key]) as TransactResult;
+    let res = await SubmitTx([t], 
+      [ecc.privateToPublic(inpt.payer_prv_key)], 
+      [inpt.payer_prv_key], 
+      this._url
+    ) as TransactResult;
     let r: NCReturnTxs = {};
     r.TxID_mintAsset = res.transaction_id;
     return r;
@@ -542,7 +672,10 @@ export class NCO_BlockchainAPI {
   async txNcoBalance(inpt: NCTxNcoBal): Promise<NCReturnTxs> {
       let r: NCReturnTxs = {};
       let tx = _txNcoBalance(inpt.payer, inpt.to, inpt.amt);
-      let res = await SubmitTx([tx], [inpt.payer_public_key], [inpt.payer_prv_key]) as TransactResult;
+      let res = await SubmitTx([tx], 
+        [inpt.payer_public_key], [inpt.payer_prv_key], 
+        this._url
+      ) as TransactResult;
       r.TxID_txNcoBalance = res.transaction_id;
       //console.log(res);
       return r;
@@ -574,4 +707,12 @@ export class NCO_BlockchainAPI {
 }
 }
 
+
+function options(options: any, opts: { secureEnv: boolean; }) {
+  throw new Error("Function not implemented.");
+}
+
+function cpuEntropyBits(cpuEntropyBits: any, undefined: undefined, options: (options: any, opts: { secureEnv: boolean; }) => void, opts: { secureEnv: boolean; ecOptions: undefined; }) {
+  throw new Error("Function not implemented.");
+}
 
