@@ -17,12 +17,15 @@
     "@newcoin-foundation/newcoin.pools-js": "^1.1.5",
     "@types/faker": "^5.5.9",
     "@types/node": "^16.10.2",
+    "assert": "^2.0.0",
     "atomicassets": "^1.4.2",
+    "buffer": "^6.0.3",
     "cross-fetch": "^3.1.4",
     "eosjs": "^22.1.0",
     "eosjs-ecc": "^4.0.7",
     "isomorphic-fetch": "^3.0.0",
     "node-fetch": "^2.6.6",
+    "stream": "^0.0.2",
     "ts-install": "^1.0.0",
     "ts-node": "^10.4.0"
   },
@@ -58,5 +61,8 @@
   "directories": {
     "doc": "docs",
     "test": "test"
+  },
+  "browser": {
+    "buffer": false
   }
 }
