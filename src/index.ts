@@ -7,8 +7,9 @@ import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion"
 import { RpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 //import * as farm  from '@newcoin-foundation/newcoin.farm-js'
-//@ts-ignore 
+
 import fetch from 'cross-fetch';
+
 import { 
     NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal,
     NCGetAccInfo, NCGetPoolInfo, 
