@@ -5,19 +5,21 @@
   "main": "./src/index.js",
   "scripts": {
     "test": "jest",
-    "docs": "typedoc --out docs src/index.ts", 
+    "docs": "typedoc --out docs src/index.ts",
     "dist": "webpack"
   },
   "author": "vitalyrue",
   "license": "MIT",
   "dependencies": {
     "@eoscafe/hyperion": "^3.2.9",
+    "@jest/test-sequencer": "^27.4.5",
     "@newcoin-foundation/newcoin.farm-js": "^1.0.1",
     "@newcoin-foundation/newcoin.pools-js": "^1.1.5",
     "@types/faker": "^5.5.9",
     "@types/node": "^16.10.2",
     "atomicassets": "^1.4.2",
     "eosjs": "^22.1.0",
+    "eosjs-ecc": "^4.0.7",
     "isomorphic-fetch": "^3.0.0",
     "node-fetch": "^2.6.6",
     "ts-install": "^1.0.0",
@@ -46,7 +48,7 @@
     "url": "git+https://github.com/newcoin-foundation/newcoin-sdk.git"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org",
+    "registry": "https://registry.npmjs.org"
   },
   "bugs": {
     "url": "https://github.com/newcoin-foundation/newcoin-sdk/issues"
