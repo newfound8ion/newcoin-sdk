@@ -65,7 +65,7 @@ export declare class NCO_BlockchainAPI {
      * Get account balance
      * @returns Tx data
      */
-    getAccountBalance(acc: NCGetAccInfo): Promise<NCReturnInfo>;
+    getAccountBalance(acc: NCGetAccInfo): Promise<NCReturnInfo | undefined>;
     /**
      * Transfer NCO between accounts
      * @returns Transfer transaction id

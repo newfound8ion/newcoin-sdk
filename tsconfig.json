@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "rm -rf ./js/ && tsc",
+  },
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
