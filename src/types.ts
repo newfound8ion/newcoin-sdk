@@ -6,12 +6,12 @@ export type NCKeyPair = {
 
 export type NCCreateUser = {
     newUser: string,
-    newacc_public_active_key: string,
-    newacc_public_owner_key: string,
+    newacc_pub_active_key: string,
+    newacc_pub_owner_key: string,
     newacc_prv_active_key: string, 
     payer: string,
     payer_prv_key: string,
-    payer_public_key: string,
+    payer_pub_key: string,
     ram_amt?: number,
     cpu_amount?: string,
     net_amount?: string,

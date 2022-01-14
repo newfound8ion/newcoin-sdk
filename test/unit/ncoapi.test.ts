@@ -64,12 +64,12 @@ describe("Basic blockchain operations", () => {
 
             let nco_struct : NCCreateUser = {
                 newUser: name, 
-                newacc_public_active_key: pub_key_active,
-                newacc_public_owner_key:  pub_key_owner,
+                newacc_pub_active_key: pub_key_active,
+                newacc_pub_owner_key:  pub_key_owner,
                 newacc_prv_active_key: prv_key_active,
                 payer: "io", 
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
+                payer_pub_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
                 ram_amt : 8196, 
                 cpu_amount : "100.0000 NCO", 
                 net_amount : "100.0000 NCO", 

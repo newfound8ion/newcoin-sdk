@@ -442,8 +442,8 @@ export class NCO_BlockchainAPI {
   async createUser(inpt: NCCreateUser) {
 
     const {
-      newUser, newacc_public_active_key, newacc_public_owner_key, newacc_prv_active_key, 
-      payer, payer_prv_key, payer_public_key,
+      newUser, newacc_pub_active_key, newacc_pub_owner_key, newacc_prv_active_key, 
+      payer, payer_prv_key, payer_pub_key,
       ram_amt, net_amount, cpu_amount, xfer
     } = { ...CREATE_ACCOUNT_DEFAULTS, ...inpt };
 
@@ -451,14 +451,15 @@ export class NCO_BlockchainAPI {
     let res: NCReturnTxs = {};
     let tres: TransactResult;
 
-    let newacc_action = _newaccount(newUser, payer, newacc_public_active_key, newacc_public_owner_key);
+    let newacc_action = _newaccount(newUser, payer, newacc_pub_active_key, newacc_pub_owner_key);
     let buyram_action = _buyrambytes(newUser, payer, ram_amt);
     let delegatebw_action = _delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
 
+    debugger;
     console.log("before create account transaction");
     tres = await SubmitTx(
       [newacc_action, buyram_action, delegatebw_action],
-      [payer_public_key],
+      [payer_pub_key],
       [payer_prv_key], this._url
     ) as TransactResult;// [] contained      
     res.TxID_createAcc = tres.transaction_id;
@@ -481,8 +482,10 @@ export class NCO_BlockchainAPI {
       payer:newUser,
       memo: 'post create account transfer', 
       payer_prv_key: newacc_prv_active_key, 
-      payer_public_key: newacc_public_active_key
+      payer_public_key: newacc_pub_active_key
     };
+    debugger;
+
     resp = await this.txNcoBalance(n1) ;
     console.log("transferred some NCO back to io");
     console.log(resp);
@@ -493,7 +496,7 @@ export class NCO_BlockchainAPI {
     console.log(t);
     console.log("createcol transaction");
     tres = await SubmitTx([t], 
-      [newacc_public_active_key], //payer_public_key, 
+      [newacc_pub_active_key], //payer_public_key, 
       [newacc_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
@@ -503,7 +506,7 @@ export class NCO_BlockchainAPI {
     console.log(t);
     console.log("createsch transaction");
     tres = await SubmitTx([t], 
-      [payer_public_key, newacc_public_active_key], 
+      [payer_pub_key, newacc_pub_active_key], 
       [payer_prv_key, newacc_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
@@ -512,7 +515,7 @@ export class NCO_BlockchainAPI {
     console.log(t);
     console.log("creating template transaction");
     tres = await SubmitTx([t], 
-      [payer_public_key, newacc_public_active_key],
+      [payer_pub_key, newacc_pub_active_key],
       [payer_prv_key, newacc_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
