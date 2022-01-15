@@ -14,10 +14,12 @@
 
 ### Type aliases
 
+- [NCCreatePerm](modules.md#nccreateperm)
 - [NCCreatePool](modules.md#nccreatepool)
 - [NCCreateUser](modules.md#nccreateuser)
 - [NCGetAccInfo](modules.md#ncgetaccinfo)
 - [NCGetPoolInfo](modules.md#ncgetpoolinfo)
+- [NCKeyPair](modules.md#nckeypair)
 - [NCKeyValPair](modules.md#nckeyvalpair)
 - [NCMintAsset](modules.md#ncmintasset)
 - [NCPoolInfo](modules.md#ncpoolinfo)
@@ -29,6 +31,25 @@
 
 ## Type aliases
 
+### NCCreatePerm
+
+Ƭ **NCCreatePerm**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `author` | `string` |
+| `author_prv_active_key` | `string` |
+| `perm_name` | `string` |
+| `perm_pub_key` | `string` |
+
+#### Defined in
+
+[src/types.ts:33](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L33)
+
+___
+
 ### NCCreatePool
 
 Ƭ **NCCreatePool**: `Object`
@@ -38,13 +59,11 @@
 | Name | Type |
 | :------ | :------ |
 | `owner` | `string` |
-| `payer` | `string` |
-| `payer_prv_key` | `string` |
-| `payer_public_key` | `string` |
+| `owner_prv_active_key` | `string` |
 
 #### Defined in
 
-[src/types.ts:25](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L25)
+[src/types.ts:40](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L40)
 
 ___
 
@@ -59,16 +78,18 @@ ___
 | `cpu_amount?` | `string` |
 | `net_amount?` | `string` |
 | `newUser` | `string` |
-| `newacc_public_active_key` | `string` |
-| `newacc_public_owner_key` | `string` |
+| `newacc_prv_active_key` | `string` |
+| `newacc_pub_active_key` | `string` |
+| `newacc_pub_owner_key` | `string` |
 | `payer` | `string` |
 | `payer_prv_key` | `string` |
+| `payer_pub_key` | `string` |
 | `ram_amt?` | `number` |
 | `xfer?` | `boolean` |
 
 #### Defined in
 
-[src/types.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L2)
+[src/types.ts:7](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L7)
 
 ___
 
@@ -85,7 +106,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:86](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L86)
+[src/types.ts:98](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L98)
 
 ___
 
@@ -97,11 +118,29 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `owner` | `string` |
+| `code?` | `string` |
+| `owner?` | `string` |
 
 #### Defined in
 
-[src/types.ts:91](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L91)
+[src/types.ts:103](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L103)
+
+___
+
+### NCKeyPair
+
+Ƭ **NCKeyPair**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `prv_key` | `string` |
+| `pub_key` | `string` |
+
+#### Defined in
+
+[src/types.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L2)
 
 ___
 
@@ -118,7 +157,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:69](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L69)
+[src/types.ts:82](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L82)
 
 ___
 
@@ -136,13 +175,12 @@ ___
 | `mutable_data` | [`NCKeyValPair`](modules.md#nckeyvalpair)[] |
 | `payer` | `string` |
 | `payer_prv_key` | `string` |
-| `payer_public_key` | `string` |
 | `sch_name?` | `string` |
 | `tmpl_id?` | `number` |
 
 #### Defined in
 
-[src/types.ts:74](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L74)
+[src/types.ts:87](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L87)
 
 ___
 
@@ -166,7 +204,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:49](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L49)
+[src/types.ts:62](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L62)
 
 ___
 
@@ -184,7 +222,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:63](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L63)
+[src/types.ts:76](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L76)
 
 ___
 
@@ -200,7 +238,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:95](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L95)
+[src/types.ts:108](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L108)
 
 ___
 
@@ -214,6 +252,7 @@ ___
 | :------ | :------ |
 | `TxID_createAcc?` | `string` |
 | `TxID_createCol?` | `string` |
+| `TxID_createPerm?` | `string` |
 | `TxID_createPool?` | `string` |
 | `TxID_createSch?` | `string` |
 | `TxID_createTpl?` | `string` |
@@ -223,7 +262,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L14)
+[src/types.ts:21](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L21)
 
 ___
 
@@ -243,7 +282,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:32](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L32)
+[src/types.ts:45](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L45)
 
 ___
 
@@ -264,4 +303,4 @@ ___
 
 #### Defined in
 
-[src/types.ts:40](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3aca634/src/types.ts#L40)
+[src/types.ts:53](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/types.ts#L53)
