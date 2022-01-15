@@ -6,8 +6,8 @@ import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
 import { ActionGenerator, RpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 
-//@ts-ignore
-import ecc from "eosjs-ecc";
+// @ts-ignore
+import ecc from "eosjs-ecc-priveos";
 
 //import * as farm  from '@newcoin-foundation/newcoin.farm-js'
 
