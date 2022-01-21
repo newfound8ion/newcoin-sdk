@@ -20,7 +20,7 @@ import {
     NCPoolsInfo, 
     NCReturnTxs,  NCReturnInfo 
   } from "./types"; 
-import { unescapeLeadingUnderscores } from "typescript";
+
 export * from './types'
 //const fetch = require('node-fetch');
 
@@ -582,7 +582,7 @@ export class NCO_BlockchainAPI {
     let r: NCReturnTxs = {};
     type RetT = { rows: PoolPayload[] };
 
-    let q = await api.getPool(p);
+    let q = await api.getPoolByOwner(p);
     let t = await q.json() as RetT;
     let pool_id = t.rows[0].id as string;
 
