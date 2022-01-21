@@ -455,7 +455,7 @@ export class NCO_BlockchainAPI {
     let buyram_action = _buyrambytes(newUser, payer, ram_amt);
     let delegatebw_action = _delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
 
-    debugger;
+
     console.log("before create account transaction");
     tres = await SubmitTx(
       [newacc_action, buyram_action, delegatebw_action],
@@ -473,8 +473,8 @@ export class NCO_BlockchainAPI {
       payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
       payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
     };
-    let resp :NCReturnTxs = await this.txNcoBalance(n) ;
-    console.log("transferred some NCO to the user");
+    //let resp :NCReturnTxs = await this.txNcoBalance(n) ;
+    //console.log("transferred some NCO to the user");
 
     let n1: NCTxNcoBal = { 
       to: 'io', 
@@ -484,14 +484,13 @@ export class NCO_BlockchainAPI {
       payer_prv_key: newacc_prv_active_key, 
       payer_public_key: newacc_pub_active_key
     };
-    debugger;
-
-    resp = await this.txNcoBalance(n1) ;
-    console.log("transferred some NCO back to io");
-    console.log(resp);
+    //resp = await this.txNcoBalance(n1) ;
+    //console.log("transferred some NCO back to io");
+    //console.log(resp);
   
     console.log("creating collection for the user");
-    let col = newUser.replace('.', 'c');
+    let d = 12 - newUser.length; // short name extension
+    let col = newUser.replace('.', 'c' + 'c'.repeat(d));
     t = _createCollection(newUser, col, [newUser], undefined, undefined);
     console.log(t);
     console.log("createcol transaction");
@@ -500,8 +499,9 @@ export class NCO_BlockchainAPI {
       [newacc_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
+
     console.log("creating schema for the user");
-    let sch_name = newUser.replace('.', 's');
+    let sch_name = newUser.replace('.', 's' + 's'.repeat(d));
     t = _createSch(newUser, payer, col, sch_name, undefined);
     console.log(t);
     console.log("createsch transaction");
@@ -510,6 +510,7 @@ export class NCO_BlockchainAPI {
       [payer_prv_key, newacc_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
+    
     console.log("creating template");
     t = _createTmpl(newUser, col, sch_name);
     console.log(t);
@@ -603,8 +604,9 @@ export class NCO_BlockchainAPI {
    * @returns Create Pool transaction id
    */
   async mintAsset(inpt: NCMintAsset) {
-    if (inpt.col_name == undefined) inpt.col_name = (inpt.creator).replace('.', 'c');
-    if (inpt.sch_name == undefined) inpt.sch_name = (inpt.creator).replace('.', 's');
+    let d = 12 - inpt.creator.length;
+    if (inpt.col_name == undefined) inpt.col_name = (inpt.creator).replace('.', 'c' + 'c'.repeat(d));
+    if (inpt.sch_name == undefined) inpt.sch_name = (inpt.creator).replace('.', 's' + 's'.repeat(d));
     if (inpt.tmpl_id == undefined) inpt.tmpl_id = -1;
     if (inpt.immutable_data == undefined)
       inpt.immutable_data = [
