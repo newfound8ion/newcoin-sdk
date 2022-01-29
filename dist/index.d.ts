@@ -1,5 +1,5 @@
 import { GetTransaction } from "@eoscafe/hyperion";
-import { NCKeyPair, NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePerm, NCGetAccInfo, NCGetPoolInfo, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
+import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePerm, NCGetAccInfo, NCGetPoolInfo, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
 export * from './types';
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -31,11 +31,14 @@ export declare class NCO_BlockchainAPI {
     createKeyPair(): Promise<NCKeyPair>;
     /**
      * Create a user
-     * NOTE: New collection, schema and template names are formed from user name with c, s and t
-     * replacing the dot in the user name.
      * @returns Create User transaction id
      */
     createUser(inpt: NCCreateUser): Promise<NCReturnTxs>;
+    /**
+     * Create a user
+     * @returns Create User transaction id
+     */
+    createCollection(inpt: NCCreateCollection): Promise<NCReturnTxs>;
     /**
      * Create a new permission.
      * @returns Create Pool transaction id
