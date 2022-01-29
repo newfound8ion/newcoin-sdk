@@ -4,7 +4,7 @@ export type NCKeyPair = {
   prv_key: string;
 };
 
-export type NCNameValue = {
+export type NCNameType = {
   name: string,
   type: string
 }
@@ -25,9 +25,9 @@ export type NCCreateUser = {
     user: string,
     collection_name: string,
     schema_name: string,
-    schema_fields: NCNameValue[], 
+    schema_fields: NCNameType[], 
     template_name: string,
-    template_fields: NCNameValue[],
+    template_fields: NCNameType[],
     user_prv_active_key: string, 
     mkt_fee?: number,
     allow_notify?: boolean, 
