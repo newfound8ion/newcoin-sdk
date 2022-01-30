@@ -1,10 +1,12 @@
 import { NCO_BlockchainAPI } from '../../src';
 import { 
     NCKeyPair,
-    NCCreateUser,  NCCreatePool, NCCreatePerm, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
+    NCCreateUser,  NCCreateCollection, NCCreatePool, NCCreatePerm, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
-    NCReturnTxs, NCReturnInfo
+    NCReturnTxs, NCReturnInfo,
+    default_schema
 } from "../../src/types";
+import { normalizeUsername } from '../../src/utils';
 //import * as nco from 'newcoin';
 
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
@@ -66,10 +68,8 @@ describe("Basic blockchain operations", () => {
                 newUser: name, 
                 newacc_pub_active_key: pub_key_active,
                 newacc_pub_owner_key:  pub_key_owner,
-                newacc_prv_active_key: prv_key_active,
                 payer: "io", 
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                payer_pub_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
                 ram_amt : 8196, 
                 cpu_amount : "100.0000 NCO", 
                 net_amount : "100.0000 NCO", 
@@ -78,11 +78,41 @@ describe("Basic blockchain operations", () => {
             let resp : NCReturnTxs = await api.createUser(nco_struct) ;
             console.log(resp);
             expect(typeof resp.TxID_createAcc).toBe('string');
+
+        }, 30000)
+    });
+
+    describe("create collection transaction", () => {
+        it("create coll", async () => { 
+
+            let d = 12 - name.length; // short name extension
+            let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
+            let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
+            let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+            
+            let nco_struct : NCCreateCollection = {
+                user: name, 
+                collection_name: col,
+                schema_name: sch,
+                schema_fields: default_schema,
+                template_name: tpn,
+                template_fields: [], 
+                user_prv_active_key: prv_key_active,
+                allow_notify: true,
+                mkt_fee    : 0.05,
+                xferable   : true,
+                burnable   : true,
+                max_supply : 0xffff 
+            };
+
+            let resp : NCReturnTxs = await api.createCollection(nco_struct) ;
+
+            console.log(resp);
             expect(typeof resp.TxID_createCol).toBe('string'); 
             expect(typeof resp.TxID_createSch).toBe('string'); 
             //expect(typeof resp.TxID_createTpl).toBe('string');
 
-        }, 120000)
+        }, 60000)
     });
 
     describe("create permission for an account under active", () => {
@@ -120,8 +150,7 @@ describe("Basic blockchain operations", () => {
             let n: NCStakeToPool = { 
                 to: name, amt: '1000.0000 NCO', 
                 payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
         let resp : NCReturnTxs = await api.stakeToPool(n) ;

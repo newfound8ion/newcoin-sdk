@@ -15,12 +15,14 @@ import fetch from 'cross-fetch';
 
 import { 
     NCKeyPair,
-    NCCreateUser, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePerm,
+    NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePerm,
     NCGetAccInfo, NCGetPoolInfo, 
     NCPoolsInfo, 
     NCReturnTxs,  NCReturnInfo 
   } from "./types"; 
 
+import { info } from "console";
+import { normalizeUsername } from "./utils";
 export * from './types'
 //const fetch = require('node-fetch');
 
@@ -119,8 +121,8 @@ const _createCollection = (
   collection_name: string,
   authorized_accounts: string[],
   notify_accounts: string[] = [],
-  market_fee: number = 0.05,
-  allow_notify: boolean = false
+  market_fee: number,
+  allow_notify: boolean
 ) => {
   const action: any = {
     account: 'atomicassets',
@@ -146,16 +148,7 @@ const _createSch = (
   payer: string,
   collection_name: string,
   schema_name: string,
-  sch: any[] = [
-    { name: 'name', type: "string" },
-    { name: 'description', type: "string" },
-    { name: 'image', type: 'string' },
-    { name: 'external_url', type: 'string' },
-    { name: 'license', type: 'string' }
-  ]
-  //{name: "attributes", type: "string[]"},
-  //{name: "external_url", type:"string"},
-  //{name: "template_name", type: "string"},
+  sch: any[] 
 ) => {
   const action: any = {
     account: 'atomicassets',
@@ -177,9 +170,10 @@ const _createTmpl = (
   author: string,
   collection_name: string,
   schema_name: string,
-  xferable: boolean = true,
-  burnable: boolean = true,
-  max_supply: number = 0xffffff
+  xferable: boolean,
+  burnable: boolean,
+  max_supply: number, 
+  template_fields: any[]
 ) => {
   const action: any = {
     account: 'atomicassets',
@@ -191,7 +185,7 @@ const _createTmpl = (
       transferable: xferable,
       burnable: burnable,
       max_supply: 0xffffff,
-      immutable_data: [] //{key: 'name', value: ['string', 'default'] } ]
+      immutable_data: template_fields //{key: 'name', value: ['string', 'default'] } ]
     },
     authorization: [
       { actor: author, permission: 'active' } 
@@ -239,15 +233,8 @@ const _mintAsset = (
   col_name: string,
   sch_name: string,
   tmpl_id: number,
-  immutable_data: any[] = [
-    { 'key': 'name' }, { 'value': ['string', author + '_' + (new Date()).getTime()] },
-    { 'key': 'description' }, { 'value': ['string', 'demo nft'] },
-    { 'key': 'image' }, { 'value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png'] },
-    { 'key': "external_url" }, { 'value': ['string', ''] }
-    //{'key': "template_name"}, {'value': ['string', '']},
-    //{'key': "attributes"}, { 'value': ['string[]', []] }
-  ],
-  mutable_data: any[] = []
+  immutable_data: any[],
+  mutable_data: any[]
 ) => {
   const action: any = {
     account: 'atomicassets',
@@ -391,6 +378,13 @@ const CREATE_ACCOUNT_DEFAULTS = {
   xfer: false,
 };
 
+let default_schema = [
+  { name: 'name', type: "string" },
+  { name: 'description', type: "string" },
+  { name: 'image', type: 'string' },
+  { name: 'external_url', type: 'string' },
+  { name: 'license', type: 'string' }
+]; 
 
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -435,15 +429,13 @@ export class NCO_BlockchainAPI {
 
   /**
    * Create a user
-   * NOTE: New collection, schema and template names are formed from user name with c, s and t 
-   * replacing the dot in the user name.
    * @returns Create User transaction id
    */
   async createUser(inpt: NCCreateUser) {
 
     const {
-      newUser, newacc_pub_active_key, newacc_pub_owner_key, newacc_prv_active_key, 
-      payer, payer_prv_key, payer_pub_key,
+      newUser, newacc_pub_active_key, newacc_pub_owner_key,  
+      payer, payer_prv_key, 
       ram_amt, net_amount, cpu_amount, xfer
     } = { ...CREATE_ACCOUNT_DEFAULTS, ...inpt };
 
@@ -454,7 +446,7 @@ export class NCO_BlockchainAPI {
     let newacc_action = _newaccount(newUser, payer, newacc_pub_active_key, newacc_pub_owner_key);
     let buyram_action = _buyrambytes(newUser, payer, ram_amt);
     let delegatebw_action = _delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
-
+    let payer_pub_key = ecc.privateToPublic(payer_prv_key);
 
     console.log("before create account transaction");
     tres = await SubmitTx(
@@ -465,64 +457,70 @@ export class NCO_BlockchainAPI {
     res.TxID_createAcc = tres.transaction_id;
     console.log("createuser transaction complete");
 
-    let n: NCTxNcoBal = { 
-      to: newUser, 
-      amt: '5000.0000 NCO', 
-      payer:'io',
-      memo: 'post create account transfer', 
-      payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-      payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
-    };
-    //let resp :NCReturnTxs = await this.txNcoBalance(n) ;
-    //console.log("transferred some NCO to the user");
+    return res;
+  }
 
-    let n1: NCTxNcoBal = { 
-      to: 'io', 
-      amt: '1000.0000 NCO', 
-      payer:newUser,
-      memo: 'post create account transfer', 
-      payer_prv_key: newacc_prv_active_key, 
-      payer_public_key: newacc_pub_active_key
-    };
-    //resp = await this.txNcoBalance(n1) ;
-    //console.log("transferred some NCO back to io");
-    //console.log(resp);
-  
-    console.log("creating collection for the user");
-    let d = 12 - newUser.length; // short name extension
-    let col = newUser.replace('.', 'c' + 'c'.repeat(d));
-    t = _createCollection(newUser, col, [newUser], undefined, undefined);
+  /**
+   * Create a user
+   * @returns Create User transaction id
+   */
+  async createCollection(inpt: NCCreateCollection) {
+
+    let t: any;
+    let res: NCReturnTxs = {};
+    let tres: TransactResult;
+
+    let user_public_active_key = ecc.privateToPublic(inpt.user_prv_active_key);
+    let mkt_fee = inpt.mkt_fee?  inpt.mkt_fee:  0.05; 
+    let allow_notify = inpt.allow_notify? inpt.allow_notify : true;
+
+    t = _createCollection(
+      inpt.user, 
+      inpt.collection_name, 
+      [inpt.user], 
+      [inpt.user], 
+      mkt_fee,
+      allow_notify
+    );
     console.log(t);
     console.log("createcol transaction");
     tres = await SubmitTx([t], 
-      [newacc_pub_active_key], //payer_public_key, 
-      [newacc_prv_active_key], this._url
+      [user_public_active_key],  
+      [inpt.user_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
 
-    console.log("creating schema for the user");
-    let sch_name = newUser.replace('.', 's' + 's'.repeat(d));
-    t = _createSch(newUser, payer, col, sch_name, undefined);
+    console.log("creating schema");
+    let schema_fields = inpt.schema_fields ? inpt.schema_fields : default_schema; 
+    t = _createSch(
+      inpt.user, inpt.user, 
+      inpt.collection_name, inpt.schema_name, 
+      schema_fields);
     console.log(t);
     console.log("createsch transaction");
     tres = await SubmitTx([t], 
-      [payer_pub_key, newacc_pub_active_key], 
-      [payer_prv_key, newacc_prv_active_key], this._url
+      [user_public_active_key], 
+      [inpt.user_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
     
     console.log("creating template");
-    t = _createTmpl(newUser, col, sch_name);
+    let template  = inpt.template_fields? inpt.template_fields : []; 
+    let xferable  = inpt.xferable? inpt.xferable : true;
+    let burnable  = inpt.burnable? inpt.burnable : true; 
+    let max_supply = inpt.max_supply? inpt.max_supply : 0xffffff;
+    t = _createTmpl(inpt.user, inpt.collection_name, inpt.schema_name, xferable, burnable, max_supply, template);
     console.log(t);
+    
     console.log("creating template transaction");
     tres = await SubmitTx([t], 
-      [payer_pub_key, newacc_pub_active_key],
-      [payer_prv_key, newacc_prv_active_key], this._url
+      [user_public_active_key],
+      [inpt.user_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
     return res;
   }
-
+  
   /**
    * Create a new permission.
    * @returns Create Pool transaction id
@@ -555,7 +553,6 @@ export class NCO_BlockchainAPI {
         permission: 'active',
       }
   }*/
-
 
   /**
    * Create a staking pool.
@@ -607,13 +604,15 @@ export class NCO_BlockchainAPI {
    */
   async mintAsset(inpt: NCMintAsset) {
     let d = 12 - inpt.creator.length;
-    if (inpt.col_name == undefined) inpt.col_name = (inpt.creator).replace('.', 'c' + 'c'.repeat(d));
-    if (inpt.sch_name == undefined) inpt.sch_name = (inpt.creator).replace('.', 's' + 's'.repeat(d));
+    if (inpt.col_name == undefined) inpt.col_name = normalizeUsername(inpt.creator, "z");//(inpt.creator).replace('.', 'z' + 'z'.repeat(d));
+    if (inpt.sch_name == undefined) inpt.sch_name = normalizeUsername(inpt.creator, "w"); // (inpt.creator).replace('.', 'w' + 'w'.repeat(d));
     if (inpt.tmpl_id == undefined) inpt.tmpl_id = -1;
+    
     if (inpt.immutable_data == undefined)
       inpt.immutable_data = [
         { key: 'name', value: ['string', inpt.creator + '_' + (new Date()).getTime()] }
       ];
+      
     if (inpt.mutable_data == undefined)
       inpt.mutable_data = [];
 
@@ -680,7 +679,7 @@ export class NCO_BlockchainAPI {
       let r: NCReturnTxs = {};
       let tx = _txNcoBalance(inpt.payer, inpt.to, inpt.amt);
       let res = await SubmitTx([tx], 
-        [inpt.payer_public_key], [inpt.payer_prv_key], 
+        [inpt.payer_pub_key], [inpt.payer_prv_key], 
         this._url
       ) as TransactResult;
       r.TxID_txNcoBalance = res.transaction_id;

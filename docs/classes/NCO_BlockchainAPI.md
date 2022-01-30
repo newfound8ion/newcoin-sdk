@@ -21,6 +21,7 @@ See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of th
 
 ### Methods
 
+- [createCollection](NCO_BlockchainAPI.md#createcollection)
 - [createKeyPair](NCO_BlockchainAPI.md#createkeypair)
 - [createPermission](NCO_BlockchainAPI.md#createpermission)
 - [createPool](NCO_BlockchainAPI.md#createpool)
@@ -52,7 +53,7 @@ Init the api
 
 #### Defined in
 
-[src/index.ts:415](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L415)
+[src/index.ts:408](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L408)
 
 ## Properties
 
@@ -64,7 +65,7 @@ Init the api
 
 #### Defined in
 
-[src/index.ts:407](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L407)
+[src/index.ts:400](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L400)
 
 ___
 
@@ -76,9 +77,29 @@ ___
 
 #### Defined in
 
-[src/index.ts:405](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L405)
+[src/index.ts:398](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L398)
 
 ## Methods
+
+### createCollection
+
+▸ **createCollection**(`inpt`): [`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `inpt` | [`NCCreateCollection`](../modules.md#nccreatecollection) |
+
+#### Returns
+
+[`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
+
+#### Defined in
+
+[src/index.ts:464](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L464)
+
+___
 
 ### createKeyPair
 
@@ -94,7 +115,7 @@ Create User transaction id
 
 #### Defined in
 
-[src/index.ts:424](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L424)
+[src/index.ts:417](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L417)
 
 ___
 
@@ -118,7 +139,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[src/index.ts:529](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L529)
+[src/index.ts:528](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L528)
 
 ___
 
@@ -142,7 +163,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[src/index.ts:563](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L563)
+[src/index.ts:561](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L561)
 
 ___
 
@@ -168,7 +189,7 @@ Create User transaction id
 
 #### Defined in
 
-[src/index.ts:442](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L442)
+[src/index.ts:435](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L435)
 
 ___
 
@@ -192,7 +213,7 @@ Tx data
 
 #### Defined in
 
-[src/index.ts:646](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L646)
+[src/index.ts:648](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L648)
 
 ___
 
@@ -216,7 +237,7 @@ Tx data
 
 #### Defined in
 
-[src/index.ts:691](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L691)
+[src/index.ts:693](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L693)
 
 ___
 
@@ -240,7 +261,7 @@ Tx data
 
 #### Defined in
 
-[src/index.ts:635](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L635)
+[src/index.ts:637](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L637)
 
 ___
 
@@ -264,7 +285,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[src/index.ts:605](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L605)
+[src/index.ts:603](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L603)
 
 ___
 
@@ -288,7 +309,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[src/index.ts:579](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L579)
+[src/index.ts:577](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L577)
 
 ___
 
@@ -312,4 +333,4 @@ Transfer transaction id
 
 #### Defined in
 
-[src/index.ts:675](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/7ad3fe8/src/index.ts#L675)
+[src/index.ts:677](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L677)

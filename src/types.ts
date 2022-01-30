@@ -4,20 +4,38 @@ export type NCKeyPair = {
   prv_key: string;
 };
 
+export type NCNameType = {
+  name: string,
+  type: string
+}
+
 export type NCCreateUser = {
     newUser: string,
     newacc_pub_active_key: string,
-    newacc_pub_owner_key: string,
-    newacc_prv_active_key: string, 
+    newacc_pub_owner_key: string, 
     payer: string,
-    payer_prv_key: string,
-    payer_pub_key: string,
+    payer_prv_key: string
     ram_amt?: number,
     cpu_amount?: string,
     net_amount?: string,
-    xfer?: boolean, // stake or transfer CPU/NET to the account
+    xfer?: boolean // stake or transfer CPU/NET to the account
   };
-  
+
+  export type NCCreateCollection = {
+    user: string,
+    collection_name: string,
+    schema_name: string,
+    schema_fields: NCNameType[], 
+    template_name: string,
+    template_fields: NCNameType[],
+    user_prv_active_key: string, 
+    mkt_fee?: number,
+    allow_notify?: boolean, 
+    xferable?: boolean,
+    burnable?: boolean,
+    max_supply?: number
+  };
+
   export type NCReturnTxs = {
     TxID_createAcc?: string;
     TxID_createCol?: string;
@@ -46,7 +64,6 @@ export type NCCreateUser = {
     to: string;
     amt: string;
     payer: string;
-    payer_public_key: string;
     payer_prv_key: string;
   }
   
@@ -55,7 +72,7 @@ export type NCCreateUser = {
     amt: string;
     payer: string;
     memo: string;
-    payer_public_key: string;
+    payer_pub_key: string;
     payer_prv_key: string;
   }
 
@@ -109,3 +126,21 @@ export type NCCreateUser = {
     acc_balances?: string[]
   }
   
+  export const default_schema = [
+    { name: 'name', type: "string" },
+    { name: 'description', type: "string" },
+    { name: 'image', type: 'string' },
+    { name: 'external_url', type: 'string' },
+    { name: 'license', type: 'string' }
+  ];
+
+  // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+  export const ERC721_schema = [
+    { name: 'name', type: "string" },
+    { name: 'description', type: "string" },
+    { name: 'image', type: 'string' },
+  ];
+
+  // https://docs.opensea.io/docs/metadata-standards
+  // export const OpenSea_schema = [
+  //]

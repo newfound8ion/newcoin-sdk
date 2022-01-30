@@ -2,18 +2,34 @@ export declare type NCKeyPair = {
     pub_key: string;
     prv_key: string;
 };
+export declare type NCNameValue = {
+    name: string;
+    type: string;
+};
 export declare type NCCreateUser = {
     newUser: string;
     newacc_pub_active_key: string;
     newacc_pub_owner_key: string;
-    newacc_prv_active_key: string;
     payer: string;
     payer_prv_key: string;
-    payer_pub_key: string;
     ram_amt?: number;
     cpu_amount?: string;
     net_amount?: string;
     xfer?: boolean;
+};
+export declare type NCCreateCollection = {
+    user: string;
+    collection_name: string;
+    schema_name: string;
+    schema_fields: NCNameValue[];
+    template_name: string;
+    template_fields: NCNameValue[];
+    user_prv_active_key: string;
+    mkt_fee?: number;
+    allow_notify?: boolean;
+    xferable?: boolean;
+    burnable?: boolean;
+    max_supply?: number;
 };
 export declare type NCReturnTxs = {
     TxID_createAcc?: string;
@@ -40,7 +56,6 @@ export declare type NCStakeToPool = {
     to: string;
     amt: string;
     payer: string;
-    payer_public_key: string;
     payer_prv_key: string;
 };
 export declare type NCTxNcoBal = {
@@ -93,3 +108,11 @@ export declare type NCGetPoolInfo = {
 export declare type NCReturnInfo = {
     acc_balances?: string[];
 };
+export declare const default_schema: {
+    name: string;
+    type: string;
+}[];
+export declare const ERC721_schema: {
+    name: string;
+    type: string;
+}[];
