@@ -583,11 +583,13 @@ export class NCO_BlockchainAPI {
     let r: NCReturnTxs = {};
     type RetT = { rows: PoolPayload[] };
 
+    console.log("Get poolbyowner: ", JSON.stringify(p));
     let q = await api.getPoolByOwner(p);
     let t = await q.json() as RetT;
     let pool_id = t.rows[0].id as string;
 
-    //console.log("pool:"+t.rows[0].id);
+    console.log("pool:" + JSON.stringify(t));
+    
     let tx = _stakeToPool(inpt.payer, pool_id, inpt.amt);
     let res = await SubmitTx([tx], 
       [ecc.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key], 
