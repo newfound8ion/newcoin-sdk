@@ -7,7 +7,7 @@ export type NCKeyPair = {
 export type NCNameType = {
   name: string,
   type: string
-}
+};
 
 export type NCCreateUser = {
     newUser: string,
@@ -23,37 +23,33 @@ export type NCCreateUser = {
 
   export type NCCreateCollection = {
     user: string,
-    collection_name: string,
-    schema_name: string,
-    schema_fields: NCNameType[], 
-    template_name: string,
-    template_fields: NCNameType[],
     user_prv_active_key: string, 
+    collection_name?: string,
+    schema_name?: string,
+    schema_fields?: NCNameType[], 
+    template_name?: string,
+    template_fields?: NCNameType[],
     mkt_fee?: number,
     allow_notify?: boolean, 
     xferable?: boolean,
     burnable?: boolean,
     max_supply?: number
   };
-
-  export type NCReturnTxs = {
-    TxID_createAcc?: string;
-    TxID_createCol?: string;
-    TxID_createSch?: string;
-    TxID_createTpl?: string;
-    TxID_createPerm?: string;
-    TxID_createPool?: string;
-    TxID_stakeToPool?: string;
-    TxID_mintAsset?: string;
-    TxID_txNcoBalance?: string;
-  };
   
-  export type NCCreatePerm = {
-    author: string;
-    perm_name: string;
-    perm_pub_key: string;
-    author_prv_active_key: string,
-  }
+  export type NCCreatePermission = {
+    author: string,
+    perm_name: string,
+    perm_pub_key: string,
+    author_prv_active_key: string
+  };
+
+  export type NCLinkPerm = {
+    author: string,               // the owner of the permission
+    perm_to_link: string,
+    action_owner: string,
+    action_to_link: string, 
+    author_prv_active_key: string
+  };
 
   export type NCCreatePool = {
     owner: string;
@@ -65,7 +61,7 @@ export type NCCreateUser = {
     amt: string;
     payer: string;
     payer_prv_key: string;
-  }
+  };
   
   export type NCTxNcoBal = {
     to: string;
@@ -74,7 +70,7 @@ export type NCCreateUser = {
     memo: string;
     payer_pub_key: string;
     payer_prv_key: string;
-  }
+  };
 
   export type NCPoolInfo = {
     id: string;
@@ -88,7 +84,7 @@ export type NCCreateUser = {
     creation_date: string;
     last_update_date: string;
   
-  }
+  };
   
   export type NCPoolsInfo = {
     rows: NCPoolInfo[];
@@ -99,7 +95,7 @@ export type NCCreateUser = {
   export type NCKeyValPair = {
     key: string,
     value: string[];
-  }
+  };
   
   export type NCMintAsset = {
     creator: string,
@@ -110,21 +106,34 @@ export type NCCreateUser = {
     mutable_data: NCKeyValPair[],
     payer: string,
     payer_prv_key: string
-  }
+  };
   
   export type NCGetAccInfo = {
     owner: string,
     contract?: string     // pools.nco one possible value
-  }
+  };
   
   export type NCGetPoolInfo = {
     owner?: string
     code?: string;
-  }
+  };
+
+  export type NCReturnTxs = {
+    TxID_createAcc?: string;
+    TxID_createCol?: string;
+    TxID_createSch?: string;
+    TxID_createTpl?: string;
+    TxID_createPerm?: string;
+    TxID_linkPerm?: string;
+    TxID_createPool?: string;
+    TxID_stakeToPool?: string;
+    TxID_mintAsset?: string;
+    TxID_txNcoBalance?: string;
+  };
   
   export type NCReturnInfo = {
     acc_balances?: string[]
-  }
+  };
   
   export const default_schema = [
     { name: 'name', type: "string" },

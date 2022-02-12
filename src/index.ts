@@ -1,31 +1,39 @@
+// EOS imports
 import { Api, JsonRpc, RpcError } from "eosjs";
 import { Transaction, TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';  // development only
 import { PushTransactionArgs, ReadOnlyTransactResult } from "eosjs/dist/eosjs-rpc-interfaces";
-import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
-import { ActionGenerator, RpcApi } from '@newcoin-foundation/newcoin.pools-js/'
-import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
-
 // @ts-ignore
 import ecc from "eosjs-ecc-priveos";
 
-//import * as farm  from '@newcoin-foundation/newcoin.farm-js'
+// Extra backend services
+import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
+import { ExplorerApi } from 'atomicassets';
 
+// Newcoin services  
+import { ActionGenerator, RpcApi as PRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
+import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
+import { RpcApi as FRpcApi } from '@newcoin-foundation/newcoin.farm-js'
+//import { RpcApi } from "newcoinfarm";
+
+
+// @ts-ignore
+import * as node_fetch from 'node-fetch';
 import fetch from 'cross-fetch';
+import { info } from "console";
 
 import { 
     NCKeyPair,
-    NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePerm,
-    NCGetAccInfo, NCGetPoolInfo, 
-    NCPoolsInfo, 
+    NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePermission,
+    NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
+    NCPoolsInfo,  NCNameType,
     NCReturnTxs,  NCReturnInfo 
   } from "./types"; 
-
-import { info } from "console";
-import { normalizeUsername } from "./utils";
 export * from './types'
-//const fetch = require('node-fetch');
+import { normalizeUsername } from "./utils";
 
+
+const api = new ExplorerApi("https://atomic-api.newcoin.org/", "atomicassets", {fetch : node_fetch});
 
 const _newaccount = (
   new_name: string,
@@ -148,7 +156,7 @@ const _createSch = (
   payer: string,
   collection_name: string,
   schema_name: string,
-  sch: any[] 
+  sch: NCNameType[]
 ) => {
   const action: any = {
     account: 'atomicassets',
@@ -413,7 +421,7 @@ export class NCO_BlockchainAPI {
 
   /**
    * Create a key pair assuming a secure environment (not frontend)
-   * @returns Create User transaction id
+   * @returns A key pair
    */
   async createKeyPair() {
 
@@ -461,14 +469,18 @@ export class NCO_BlockchainAPI {
   }
 
   /**
-   * Create a user
-   * @returns Create User transaction id
+   * Create collection
+   * @returns Create Collection and template transactions' ids
    */
   async createCollection(inpt: NCCreateCollection) {
 
     let t: any;
     let res: NCReturnTxs = {};
     let tres: TransactResult;
+
+    let d = 12 - inpt.user.length;
+    if (inpt.collection_name == undefined) inpt.collection_name = normalizeUsername(inpt.user, "z");//(inpt.creator).replace('.', 'z' + 'z'.repeat(d));
+    if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w"); // (inpt.creator).replace('.', 'w' + 'w'.repeat(d));
 
     let user_public_active_key = ecc.privateToPublic(inpt.user_prv_active_key);
     let mkt_fee = inpt.mkt_fee?  inpt.mkt_fee:  0.05; 
@@ -497,13 +509,14 @@ export class NCO_BlockchainAPI {
       inpt.collection_name, inpt.schema_name, 
       schema_fields);
     console.log(t);
+
     console.log("createsch transaction");
     tres = await SubmitTx([t], 
       [user_public_active_key], 
       [inpt.user_prv_active_key], this._url
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
-    
+
     console.log("creating template");
     let template  = inpt.template_fields? inpt.template_fields : []; 
     let xferable  = inpt.xferable? inpt.xferable : true;
@@ -522,10 +535,10 @@ export class NCO_BlockchainAPI {
   }
   
   /**
-   * Create a new permission.
-   * @returns Create Pool transaction id
+   * Create a new permission subject to Active permission.
+   * @returns Create permission transaction id
    */
-  async createPermission(inpt: NCCreatePerm) {
+  async createPermission(inpt: NCCreatePermission) {
     let t = _createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
     let res = await SubmitTx([t], 
       [ecc.privateToPublic(inpt.author_prv_active_key)], 
@@ -537,22 +550,38 @@ export class NCO_BlockchainAPI {
     return r;    
   }
 
-  /* async linkPermission(inpt: NCLinkPerm) {
+  /**
+   * Link a permission to a specific action of a specific contract. 
+   * @returns Link permission transaction id
+   */
+  async linkPermission(inpt: NCLinkPerm) {
     const linkauth_input = {
-      account: 'useraaaaaaaa',      // the permission's owner to be linked and the payer of the RAM needed to store this link
-      code: 'useraaaaaaaa',         // the owner of the action to be linked
-      type: 'contract_action',      // the action to be linked
-      requirement: 'action_perm',   // the permission to be linked
+      account: inpt.author,      // the permission's owner to be linked and the payer of the RAM needed to store this link
+      code: inpt.action_owner,         // the owner of the action to be linked
+      type: inpt.action_to_link,      // the action to be linked
+      requirement: inpt.perm_to_link,   // 'active', 'owner' ... 
     };
   
-    {
+    // the action which will make the linking 
+    let action = {
       account: 'eosio',
       name: 'linkauth',
+      data: linkauth_input,
       authorization: [{
-        actor: 'useraaaaaaaa',
-        permission: 'active',
-      }
-  }*/
+        actor: inpt.author,
+        permission: 'active'
+      }]      
+    };
+    
+    let res = await SubmitTx([action], 
+        [ecc.privateToPublic(inpt.author_prv_active_key)], 
+        [inpt.author_prv_active_key],  
+        this._url
+      ) as TransactResult;
+      let r: NCReturnTxs = {};
+      r.TxID_linkPerm = res.transaction_id;
+      return r; 
+  }
 
   /**
    * Create a staking pool.
@@ -575,7 +604,7 @@ export class NCO_BlockchainAPI {
    * @returns Create Pool transaction id
    */
   async stakeToPool(inpt: NCStakeToPool) {
-    const api = new RpcApi(this._url, "pools.nco", fetch);
+    const api = new PRpcApi(this._url, "pools.nco", fetch);
     let p: PoolPayload = { owner: inpt.to };
     let r: NCReturnTxs = {};
     type RetT = { rows: PoolPayload[] };
@@ -692,7 +721,7 @@ export class NCO_BlockchainAPI {
    * @returns Tx data
    */
   async getPoolInfo (payload: NCGetPoolInfo) {
-    const api = new RpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
+    const api = new PRpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
 
     try {
       const fn = payload.code ? "getPoolByCode" : "getPoolByOwner";
@@ -710,15 +739,5 @@ export class NCO_BlockchainAPI {
   }
 
   return {} as NCPoolsInfo;
+``}
 }
-}
-
-
-function options(options: any, opts: { secureEnv: boolean; }) {
-  throw new Error("Function not implemented.");
-}
-
-function cpuEntropyBits(cpuEntropyBits: any, undefined: undefined, options: (options: any, opts: { secureEnv: boolean; }) => void, opts: { secureEnv: boolean; ecOptions: undefined; }) {
-  throw new Error("Function not implemented.");
-}
-

@@ -1,7 +1,8 @@
 import { NCO_BlockchainAPI } from '../../src';
 import { 
     NCKeyPair,
-    NCCreateUser,  NCCreateCollection, NCCreatePool, NCCreatePerm, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
+    NCCreateUser,  NCCreateCollection, NCCreatePool, 
+    NCCreatePermission, NCLinkPerm, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,
     default_schema
@@ -117,7 +118,7 @@ describe("Basic blockchain operations", () => {
 
     describe("create permission for an account under active", () => {
         it("create permission", async () => {
-            let n: NCCreatePerm = { 
+            let n: NCCreatePermission = { 
                 author: name, 
                 perm_name: 'nwpermission', 
                 author_prv_active_key: prv_key_active,
@@ -127,6 +128,23 @@ describe("Basic blockchain operations", () => {
             let resp: NCReturnTxs = await api.createPermission(n);
             console.log(resp);
             expect(typeof resp.TxID_createPerm).toBe('string');
+        }, 60000);
+    });
+
+    describe("link permission for an account under active", () => {
+        it("link permission", async () => {
+            let n: NCLinkPerm = { 
+                author: name, 
+                perm_to_link: 'nwpermission', 
+                author_prv_active_key: prv_key_active,
+                action_owner: "atomicassets", 
+                action_to_link: "mintasset" // for an example
+             } ;
+            console.log("linking permission %s for account %s to trigger %s on %s", 
+                        n.perm_to_link, n.author, n.action_to_link, n.action_owner);
+            let resp: NCReturnTxs = await api.linkPermission(n);
+            console.log(resp);
+            expect(typeof resp.TxID_linkPerm).toBe('string');
         }, 60000);
     });
 
@@ -204,7 +222,7 @@ describe("Basic blockchain operations", () => {
                 payer:'io',
                 memo: 'test transfer', 
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-                payer_public_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+                payer_pub_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
             };
             
             let resp :NCReturnTxs = await api.txNcoBalance(n) ;

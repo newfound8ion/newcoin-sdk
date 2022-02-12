@@ -1,5 +1,5 @@
 import { GetTransaction } from "@eoscafe/hyperion";
-import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePerm, NCGetAccInfo, NCGetPoolInfo, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
+import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
 export * from './types';
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -26,7 +26,7 @@ export declare class NCO_BlockchainAPI {
     });
     /**
      * Create a key pair assuming a secure environment (not frontend)
-     * @returns Create User transaction id
+     * @returns A key pair
      */
     createKeyPair(): Promise<NCKeyPair>;
     /**
@@ -35,15 +35,20 @@ export declare class NCO_BlockchainAPI {
      */
     createUser(inpt: NCCreateUser): Promise<NCReturnTxs>;
     /**
-     * Create a user
-     * @returns Create User transaction id
+     * Create collection
+     * @returns Create Collection and template transactions' ids
      */
     createCollection(inpt: NCCreateCollection): Promise<NCReturnTxs>;
     /**
-     * Create a new permission.
-     * @returns Create Pool transaction id
+     * Create a new permission subject to Active permission.
+     * @returns Create permission transaction id
      */
-    createPermission(inpt: NCCreatePerm): Promise<NCReturnTxs>;
+    createPermission(inpt: NCCreatePermission): Promise<NCReturnTxs>;
+    /**
+     * Link a permission to a specific action of a specific contract.
+     * @returns Link permission transaction id
+     */
+    linkPermission(inpt: NCLinkPerm): Promise<NCReturnTxs>;
     /**
      * Create a staking pool.
      * @returns Create Pool transaction id
