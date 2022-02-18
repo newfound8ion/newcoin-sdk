@@ -2,7 +2,7 @@ export declare type NCKeyPair = {
     pub_key: string;
     prv_key: string;
 };
-export declare type NCNameValue = {
+export declare type NCNameType = {
     name: string;
     type: string;
 };
@@ -19,33 +19,29 @@ export declare type NCCreateUser = {
 };
 export declare type NCCreateCollection = {
     user: string;
-    collection_name: string;
-    schema_name: string;
-    schema_fields: NCNameValue[];
-    template_name: string;
-    template_fields: NCNameValue[];
     user_prv_active_key: string;
+    collection_name?: string;
+    schema_name?: string;
+    schema_fields?: NCNameType[];
+    template_name?: string;
+    template_fields?: NCNameType[];
     mkt_fee?: number;
     allow_notify?: boolean;
     xferable?: boolean;
     burnable?: boolean;
     max_supply?: number;
 };
-export declare type NCReturnTxs = {
-    TxID_createAcc?: string;
-    TxID_createCol?: string;
-    TxID_createSch?: string;
-    TxID_createTpl?: string;
-    TxID_createPerm?: string;
-    TxID_createPool?: string;
-    TxID_stakeToPool?: string;
-    TxID_mintAsset?: string;
-    TxID_txNcoBalance?: string;
-};
-export declare type NCCreatePerm = {
+export declare type NCCreatePermission = {
     author: string;
     perm_name: string;
     perm_pub_key: string;
+    author_prv_active_key: string;
+};
+export declare type NCLinkPerm = {
+    author: string;
+    perm_to_link: string;
+    action_owner: string;
+    action_to_link: string;
     author_prv_active_key: string;
 };
 export declare type NCCreatePool = {
@@ -63,7 +59,7 @@ export declare type NCTxNcoBal = {
     amt: string;
     payer: string;
     memo: string;
-    payer_public_key: string;
+    payer_pub_key: string;
     payer_prv_key: string;
 };
 export declare type NCPoolInfo = {
@@ -104,6 +100,18 @@ export declare type NCGetAccInfo = {
 export declare type NCGetPoolInfo = {
     owner?: string;
     code?: string;
+};
+export declare type NCReturnTxs = {
+    TxID_createAcc?: string;
+    TxID_createCol?: string;
+    TxID_createSch?: string;
+    TxID_createTpl?: string;
+    TxID_createPerm?: string;
+    TxID_linkPerm?: string;
+    TxID_createPool?: string;
+    TxID_stakeToPool?: string;
+    TxID_mintAsset?: string;
+    TxID_txNcoBalance?: string;
 };
 export declare type NCReturnInfo = {
     acc_balances?: string[];

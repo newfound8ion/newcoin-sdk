@@ -29,6 +29,7 @@ See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of th
 - [getAccountBalance](NCO_BlockchainAPI.md#getaccountbalance)
 - [getPoolInfo](NCO_BlockchainAPI.md#getpoolinfo)
 - [getTxData](NCO_BlockchainAPI.md#gettxdata)
+- [linkPermission](NCO_BlockchainAPI.md#linkpermission)
 - [mintAsset](NCO_BlockchainAPI.md#mintasset)
 - [stakeToPool](NCO_BlockchainAPI.md#staketopool)
 - [txNcoBalance](NCO_BlockchainAPI.md#txncobalance)
@@ -53,7 +54,7 @@ Init the api
 
 #### Defined in
 
-[src/index.ts:408](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L408)
+[src/index.ts:417](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L417)
 
 ## Properties
 
@@ -65,7 +66,7 @@ Init the api
 
 #### Defined in
 
-[src/index.ts:400](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L400)
+[src/index.ts:409](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L409)
 
 ___
 
@@ -77,13 +78,15 @@ ___
 
 #### Defined in
 
-[src/index.ts:398](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L398)
+[src/index.ts:407](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L407)
 
 ## Methods
 
 ### createCollection
 
 ▸ **createCollection**(`inpt`): [`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
+
+Create collection
 
 #### Parameters
 
@@ -95,9 +98,11 @@ ___
 
 [`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
+Create Collection and template transactions' ids
+
 #### Defined in
 
-[src/index.ts:464](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L464)
+[src/index.ts:475](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L475)
 
 ___
 
@@ -111,11 +116,11 @@ Create a key pair assuming a secure environment (not frontend)
 
 [`Promise`](../modules/internal_.md#promise)<[`NCKeyPair`](../modules.md#nckeypair)\>
 
-Create User transaction id
+A key pair
 
 #### Defined in
 
-[src/index.ts:417](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L417)
+[src/index.ts:426](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L426)
 
 ___
 
@@ -123,23 +128,23 @@ ___
 
 ▸ **createPermission**(`inpt`): [`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
-Create a new permission.
+Create a new permission subject to Active permission.
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCCreatePerm`](../modules.md#nccreateperm) |
+| `inpt` | [`NCCreatePermission`](../modules.md#nccreatepermission) |
 
 #### Returns
 
 [`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
-Create Pool transaction id
+Create permission transaction id
 
 #### Defined in
 
-[src/index.ts:528](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L528)
+[src/index.ts:541](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L541)
 
 ___
 
@@ -163,7 +168,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[src/index.ts:561](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L561)
+[src/index.ts:590](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L590)
 
 ___
 
@@ -172,8 +177,6 @@ ___
 ▸ **createUser**(`inpt`): [`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create a user
-NOTE: New collection, schema and template names are formed from user name with c, s and t
-replacing the dot in the user name.
 
 #### Parameters
 
@@ -189,7 +192,7 @@ Create User transaction id
 
 #### Defined in
 
-[src/index.ts:435](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L435)
+[src/index.ts:442](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L442)
 
 ___
 
@@ -213,7 +216,7 @@ Tx data
 
 #### Defined in
 
-[src/index.ts:648](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L648)
+[src/index.ts:678](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L678)
 
 ___
 
@@ -237,7 +240,7 @@ Tx data
 
 #### Defined in
 
-[src/index.ts:693](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L693)
+[src/index.ts:723](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L723)
 
 ___
 
@@ -261,7 +264,31 @@ Tx data
 
 #### Defined in
 
-[src/index.ts:637](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L637)
+[src/index.ts:667](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L667)
+
+___
+
+### linkPermission
+
+▸ **linkPermission**(`inpt`): [`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
+
+Link a permission to a specific action of a specific contract.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `inpt` | [`NCLinkPerm`](../modules.md#nclinkperm) |
+
+#### Returns
+
+[`Promise`](../modules/internal_.md#promise)<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
+
+Link permission transaction id
+
+#### Defined in
+
+[src/index.ts:557](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L557)
 
 ___
 
@@ -285,7 +312,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[src/index.ts:603](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L603)
+[src/index.ts:634](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L634)
 
 ___
 
@@ -309,7 +336,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[src/index.ts:577](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L577)
+[src/index.ts:606](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L606)
 
 ___
 
@@ -333,4 +360,4 @@ Transfer transaction id
 
 #### Defined in
 
-[src/index.ts:677](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/4f77121/src/index.ts#L677)
+[src/index.ts:707](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c8b6814/src/index.ts#L707)
