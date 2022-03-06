@@ -140,6 +140,8 @@ export type NCCreateUser = {
     { name: 'description', type: "string" },
     { name: 'image', type: 'string' },
     { name: 'external_url', type: 'string' },
+    { name: 'content_type', type: 'string' },
+    { name: 'content', type: 'string' },
     { name: 'license', type: 'string' }
   ];
 

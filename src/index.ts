@@ -16,7 +16,6 @@ import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interface
 import { RpcApi as FRpcApi } from '@newcoin-foundation/newcoin.farm-js'
 //import { RpcApi } from "newcoinfarm";
 
-
 // @ts-ignore
 import * as node_fetch from 'node-fetch';
 import fetch from 'cross-fetch';
@@ -27,9 +26,9 @@ import {
     NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePermission,
     NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
     NCPoolsInfo,  NCNameType,
-    NCReturnTxs,  NCReturnInfo 
+    NCReturnTxs,  NCReturnInfo, default_schema
   } from "./types"; 
-export * from './types'
+export * from './types';
 import { normalizeUsername } from "./utils";
 
 
@@ -385,14 +384,6 @@ const CREATE_ACCOUNT_DEFAULTS = {
   net_amount: '100.0000 NCO',
   xfer: false,
 };
-
-let default_schema = [
-  { name: 'name', type: "string" },
-  { name: 'description', type: "string" },
-  { name: 'image', type: 'string' },
-  { name: 'external_url', type: 'string' },
-  { name: 'license', type: 'string' }
-]; 
 
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
