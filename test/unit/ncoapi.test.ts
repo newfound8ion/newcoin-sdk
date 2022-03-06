@@ -188,7 +188,8 @@ describe("Basic blockchain operations", () => {
                 {'key': 'description','value': ['string', 'demo nft']}, 
                 {'key': 'image','value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png']},
                 {'key': "external_url",'value':['string', '']},
-                {'key': 'content_type','value':['string', 'image']},
+                {'key': 'content_type','value':['string', 'text']},
+                {'key': 'content','value':['string', 'test content']},
                 {'key': "license",'value':['string', 'CC-EX-123456']},
                 //{'key': "template_name"}, {'value': ['string', '']},
                 //{'key': "attributes"}, { 'value': ['string[]', []] }
