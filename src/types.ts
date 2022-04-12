@@ -61,12 +61,6 @@ export type NCCreateUser = {
     payer: string;
     payer_prv_key: string;
   };
-  
-  export type NCUnStakeMainDao = {
-    amt: string;
-    payer: string;
-    payer_prv_key: string;
-  };
 
   export type NCStakeToPool = {
     to: string;
@@ -160,8 +154,8 @@ export type NCCreateUser = {
     TxID_withdrawFromPool?: string;
     TxID_addToWhiteList?: string;
     TxID_removeFromWhiteList?: string;
-    TxID_stakeToMainDAO?: string;
-    TxID_unstakeFromMainDAO?: string;
+    TxID_stakeMainDAO?: string;
+    TxID_unstakeMainDAO?: string;
     
     TxID_mintAsset?: string;
     TxID_txNcoBalance?: string;

@@ -3,7 +3,7 @@ import {
     NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
     NCCreatePermission, NCLinkPerm, 
-    NCStakeMainDao, NCUnStakeMainDao,
+    NCStakeMainDao, 
     NCStakeToPool, NCWithdrawFromPool,
     NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
@@ -159,9 +159,9 @@ describe("Basic blockchain operations", () => {
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
-        let resp : NCReturnTxs = await api.stakeToMainDAO(n) ;
+        let resp : NCReturnTxs = await api.stakeMainDAO(n) ;
         console.log(resp);
-        expect(typeof resp.TxID_stakeToMainDAO).toBe('string');
+        expect(typeof resp.TxID_stakeMainDAO).toBe('string');
         }, 60000)
     });
 
@@ -173,9 +173,9 @@ describe("Basic blockchain operations", () => {
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
-        let resp : NCReturnTxs = await api.instUnstakeFromMainDAO(n) ;
+        let resp : NCReturnTxs = await api.instUnstakeMainDAO(n) ;
         console.log(resp);
-        expect(typeof resp.TxID_unstakeFromMainDAO).toBe('string');
+        expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
         }, 60000)
     });
         
@@ -189,7 +189,7 @@ describe("Basic blockchain operations", () => {
             
         let resp : NCReturnTxs = await api.dldUnstakeMainDAO(n) ;
         console.log(resp);
-        expect(typeof resp.TxID_unstakeFromMainDAO).toBe('string');
+        expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
         }, 60000)
     });
 
@@ -225,7 +225,7 @@ describe("Basic blockchain operations", () => {
     describe("unstake from pool transaction", () => {
         it("withdraw from pool", async () => {
             let n: NCWithdrawFromPool = { 
-                owner: "ncmjerlce.io", 
+                owner: "io", 
                 amt: '460 NCO',  
                 owner_prv_key: "5JFPZT9knjKV91EiWyKDn2TWLSFR2hUbX1pgkpJJUJ65RppaqFR"//prv_key_active
         } ;

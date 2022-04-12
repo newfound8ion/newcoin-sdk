@@ -53,11 +53,6 @@ export declare type NCStakeMainDao = {
     payer: string;
     payer_prv_key: string;
 };
-export declare type NCUnStakeMainDao = {
-    amt: string;
-    payer: string;
-    payer_prv_key: string;
-};
 export declare type NCStakeToPool = {
     to: string;
     amt: string;
@@ -138,8 +133,8 @@ export declare type NCReturnTxs = {
     TxID_withdrawFromPool?: string;
     TxID_addToWhiteList?: string;
     TxID_removeFromWhiteList?: string;
-    TxID_stakeToMainDAO?: string;
-    TxID_unstakeFromMainDAO?: string;
+    TxID_stakeMainDAO?: string;
+    TxID_unstakeMainDAO?: string;
     TxID_mintAsset?: string;
     TxID_txNcoBalance?: string;
 };

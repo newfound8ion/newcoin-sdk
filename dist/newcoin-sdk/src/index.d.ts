@@ -1,5 +1,5 @@
 import { GetTransaction } from "@eoscafe/hyperion";
-import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCWithdrawFromPool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCUnStakeMainDao, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
+import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCWithdrawFromPool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
 export * from './types';
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -59,24 +59,23 @@ export declare class NCO_BlockchainAPI {
      * @param inpt
      * @returns
      */
-    stakeToMainDAO(inpt: NCStakeMainDao): Promise<NCReturnTxs>;
+    stakeMainDAO(inpt: NCStakeMainDao): Promise<NCReturnTxs>;
     /**
     * inst UnStake to mainDAO
     * @param inpt
     * @returns
     */
-    instUnstakeFromMainDAO(inpt: NCUnStakeMainDao): Promise<NCReturnTxs>;
+    instUnstakeMainDAO(inpt: NCStakeMainDao): Promise<NCReturnTxs>;
     /**
      * inst UnStake to mainDAO
      * @param inpt
      * @returns
      */
-    dldUnstakeMainDAO(inpt: NCUnStakeMainDao): Promise<NCReturnTxs>;
+    dldUnstakeMainDAO(inpt: NCStakeMainDao): Promise<NCReturnTxs>;
     /**
      * Stake to pool
      * @returns Create Pool transaction id
      */
-    stakeToPool_old(inpt: NCStakeToPool): Promise<NCReturnTxs>;
     stakeToPool(inpt: NCStakeToPool): Promise<NCReturnTxs>;
     withdrawFromPool(inpt: NCWithdrawFromPool): Promise<NCReturnTxs>;
     addToWhiteList(inpt: NCAddToWhiteList): Promise<NCReturnTxs>;
