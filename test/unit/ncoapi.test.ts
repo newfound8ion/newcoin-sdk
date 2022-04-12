@@ -2,7 +2,10 @@ import { NCO_BlockchainAPI } from '../../src';
 import { 
     NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
-    NCCreatePermission, NCLinkPerm, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
+    NCCreatePermission, NCLinkPerm, 
+    NCStakeMainDao, NCUnStakeMainDao,
+    NCStakeToPool, NCWithdrawFromPool,
+    NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,
     default_schema
@@ -148,6 +151,48 @@ describe("Basic blockchain operations", () => {
         }, 60000);
     });
 
+    describe("stake to MainDAO pool transaction", () => {
+        it("stake maindao pool", async () => {
+            let n: NCStakeMainDao = { 
+                amt: '1000.0000 NCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        } ;
+            
+        let resp : NCReturnTxs = await api.stakeToMainDAO(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_stakeToMainDAO).toBe('string');
+        }, 60000)
+    });
+
+    describe("instant unstake MainDAO pool transaction", () => {
+        it("unstake maindao pool", async () => {
+            let n: NCStakeMainDao = { 
+                amt: '100.0000 GNCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        } ;
+            
+        let resp : NCReturnTxs = await api.instUnstakeFromMainDAO(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_unstakeFromMainDAO).toBe('string');
+        }, 60000)
+    });
+        
+    describe("delayed unstake MainDAO pool transaction", () => {
+        it("delayed unstake maindao pool", async () => {
+            let n: NCStakeMainDao = { 
+                amt: '100.0000 GNCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        } ;
+            
+        let resp : NCReturnTxs = await api.dldUnstakeMainDAO(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_unstakeFromMainDAO).toBe('string');
+        }, 60000)
+    });
+
     describe("'create pool' transaction", () => {
         it("create pool", async () => {
 
@@ -175,6 +220,20 @@ describe("Basic blockchain operations", () => {
         console.log(resp);
         expect(typeof resp.TxID_stakeToPool).toBe('string');
         }, 60000)
+    });
+
+    describe("unstake from pool transaction", () => {
+        it("withdraw from pool", async () => {
+            let n: NCWithdrawFromPool = { 
+                owner: "ncmjerlce.io", 
+                amt: '460 NCO',  
+                owner_prv_key: "5JFPZT9knjKV91EiWyKDn2TWLSFR2hUbX1pgkpJJUJ65RppaqFR"//prv_key_active
+        } ;
+            
+        let resp : NCReturnTxs = await api.withdrawFromPool(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_withdrawFromPool).toBe('string');
+        }, 100000)
     });
 
     describe("mint ERC721 asset", () => {

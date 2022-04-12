@@ -11,9 +11,16 @@ import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
 import { ExplorerApi } from 'atomicassets';
 
 // Newcoin services  
-import { ActionGenerator, RpcApi as PRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
-import { PoolPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
-import { RpcApi as FRpcApi } from '@newcoin-foundation/newcoin.farm-js'
+import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
+
+import { ActionGenerator as MainDAOActionGenerator }  from '../../newcoin.pool-js/src/actions/index' 
+import { RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js'
+
+import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
+import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
+import { EosioAuthorizationObject } from "./actions";
+//import { RpcApi as FRpcApi } from '@newcoin-foundation/newcoin.farm-js'
+
 //import { RpcApi } from "newcoinfarm";
 
 // @ts-ignore
@@ -21,9 +28,13 @@ import * as node_fetch from 'node-fetch';
 import fetch from 'cross-fetch';
 import { info } from "console";
 
+//import * as types from "./types";
 import { 
     NCKeyPair,
-    NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCMintAsset, NCTxNcoBal, NCCreatePermission,
+    NCCreateUser, NCCreateCollection, 
+    NCCreatePool, NCStakeToPool, NCWithdrawFromPool, NCAddToWhiteList, NCRemoveFromWhiteList,
+    NCStakeMainDao, NCUnStakeMainDao,
+    NCMintAsset,  NCTxNcoBal, NCCreatePermission,
     NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
     NCPoolsInfo,  NCNameType,
     NCReturnTxs,  NCReturnInfo, default_schema
@@ -31,8 +42,7 @@ import {
 export * from './types';
 import { normalizeUsername } from "./utils";
 
-
-const api = new ExplorerApi("https://atomic-api.newcoin.org/", "atomicassets", {fetch : node_fetch});
+const aa_api = new ExplorerApi("https://atomic-api.newcoin.org/", "atomicassets", {fetch : node_fetch});
 
 const _newaccount = (
   new_name: string,
@@ -304,6 +314,7 @@ const _stakeToPool = (
   return action;
 }
 
+
 const _txNcoBalance = (
   from: string,
   to: string,
@@ -366,7 +377,7 @@ const SubmitTx = async (
     serializedContextFreeData: undefined,
     abis: abis
   });
-
+  //console.log("signed transaction: " + JSON.stringify(pushTransactionArgs));
   /*
   let tr  = serializedTransaction.buffer.toString();
   let eccst = ecc.sign(serializedTransaction, private_keys[0]);
@@ -591,14 +602,88 @@ export class NCO_BlockchainAPI {
   }
 
   /**
+   * Stake to mainDAO
+   * @param inpt 
+   * @returns 
+   */
+  async stakeToMainDAO(inpt: NCStakeMainDao)
+  {
+    let r: NCReturnTxs = {};
+    const aGen = new MainDAOActionGenerator("pool.nco", "eosio.token");
+    const stakeTx = await aGen.stake(
+        [{ actor: inpt.payer, permission: "active"}],
+        inpt.payer,
+        inpt.amt);
+
+    console.log("action: " + JSON.stringify(stakeTx));
+    const res = await SubmitTx(stakeTx, 
+        [ecc.privateToPublic(inpt.payer_prv_key), ecc.privateToPublic("5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV")], 
+        [inpt.payer_prv_key, "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"], 
+        this._url) as TransactResult;
+
+    r.TxID_stakeToMainDAO = res.transaction_id;
+    return r;
+  }
+
+   /**
+   * inst UnStake to mainDAO
+   * @param inpt 
+   * @returns 
+   */
+  async instUnstakeFromMainDAO(inpt: NCUnStakeMainDao)
+  {
+    let r: NCReturnTxs = {};
+    const aGen = new MainDAOActionGenerator("pool.nco", "eosio.token");
+    const stakeTx = await aGen.instunstake(
+        [{ actor: inpt.payer, permission: "active"}],
+        inpt.payer,
+        inpt.amt);
+
+    console.log("action: " + JSON.stringify(stakeTx));
+    const res = await SubmitTx(stakeTx, 
+        [ecc.privateToPublic(inpt.payer_prv_key)], 
+        [inpt.payer_prv_key], 
+        this._url) as TransactResult;
+
+    r.TxID_unstakeFromMainDAO = res.transaction_id;
+    return r;
+
+  }
+
+  /**
+   * inst UnStake to mainDAO
+   * @param inpt 
+   * @returns 
+   */
+  async dldUnstakeMainDAO(inpt: NCUnStakeMainDao)
+  {
+    let r: NCReturnTxs = {};
+    const aGen = new MainDAOActionGenerator("pool.nco", "eosio.token");
+    const stakeTx = await aGen.dldunstake(
+        [{ actor: inpt.payer, permission: "active"}],
+        inpt.payer,
+        inpt.amt);
+
+    console.log("action: " + JSON.stringify(stakeTx));
+    const res = await SubmitTx(stakeTx, 
+        [ecc.privateToPublic(inpt.payer_prv_key)], 
+        [inpt.payer_prv_key], 
+        this._url) as TransactResult;
+
+    r.TxID_unstakeFromMainDAO = res.transaction_id;
+    return r;
+    
+  }
+
+  /**
    * Stake to pool
    * @returns Create Pool transaction id
    */
-  async stakeToPool(inpt: NCStakeToPool) {
-    const api = new PRpcApi(this._url, "pools.nco", fetch);
-    let p: PoolPayload = { owner: inpt.to };
+  async stakeToPool_old(inpt: NCStakeToPool) {
+    const api = new PoolsRpcApi(this._url, "pools.nco", fetch);
+    let p: PoolsPayload = { owner: inpt.to };
     let r: NCReturnTxs = {};
-    type RetT = { rows: PoolPayload[] };
+    type RetT = { rows: PoolsPayload[] };
 
     console.log("Get poolbyowner: ", JSON.stringify(p));
     let q = await api.getPoolByOwner(p);
@@ -617,6 +702,98 @@ export class NCO_BlockchainAPI {
     //console.log(res);
     return r;
   }
+
+  async stakeToPool(inpt: NCStakeToPool)
+  {
+
+    const api = new PoolsRpcApi(this._url, "pools.nco", fetch);
+    let p: PoolsPayload = { owner: inpt.to };
+    let r: NCReturnTxs = {};
+    type RetT = { rows: PoolsPayload[] };
+
+    console.log("Get poolbyowner: ", JSON.stringify(p));
+    let q = await api.getPoolByOwner(p);
+    let t = await q.json() as RetT;
+    let pool_id = t.rows[0].id as string;
+
+    console.log("pool:" + JSON.stringify(t));
+
+    const aGen = new PoolsActionGenerator("pools.nco", "eosio.token");
+    const stakeTx = await aGen.stakeToPool(
+        [{ actor: inpt.payer, permission: "active"}, 
+         { actor: "io", permission: "active"}],
+        inpt.payer,
+        inpt.amt, 
+        pool_id);
+
+    console.log("action: " + JSON.stringify(t));
+    const res = await SubmitTx(stakeTx, 
+        [ecc.privateToPublic(inpt.payer_prv_key), ecc.privateToPublic("5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV")], 
+        [inpt.payer_prv_key, "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"], 
+        this._url) as TransactResult;
+
+    r.TxID_stakeToPool = res.transaction_id;
+    return r;
+  }
+
+  async withdrawFromPool(inpt: NCWithdrawFromPool)
+  {
+
+      const aGen = new PoolsActionGenerator("pools.nco", "eosio.token");
+      const t = await aGen.withdrawFromPool(
+        [{ actor: inpt.owner, permission: "active"}, 
+         { actor: "io", permission: "active"}],
+        inpt.owner,
+        inpt.amt);
+
+      console.log("action: " + JSON.stringify(t));
+      const res = await SubmitTx(t, 
+        [ecc.privateToPublic(inpt.owner_prv_key), ecc.privateToPublic("5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV")], 
+        [inpt.owner_prv_key, "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"], 
+        this._url) as TransactResult;
+
+      let r: NCReturnTxs = {};
+      r.TxID_withdrawFromPool = res.transaction_id;
+      return r;
+ 
+    }
+
+  async addToWhiteList(inpt: NCAddToWhiteList)
+  {
+      const aGen = new PoolsActionGenerator("pools.nco", "eosio.token");
+      const t = await aGen.addToWhiteList(
+        [{ actor: inpt.owner, permission: "active"}],
+        inpt.pool_id,
+        inpt.owner);
+
+      const res = await SubmitTx(t, 
+        [ecc.privateToPublic(inpt.owner_prv_key)], [inpt.owner_prv_key], 
+        this._url) as TransactResult;
+
+      let r: NCReturnTxs = {};
+      r.TxID_addToWhiteList = res.transaction_id;
+      return r;
+  }
+
+  async removeFromWhiteList(inpt: NCRemoveFromWhiteList)
+  {
+      const aGen = new PoolsActionGenerator("pools.nco", "eosio.token");
+      //const t = await aGen.removeFromWhiteList(
+      //  [{ actor: inpt.owner, permission: "active"}],
+      //  inpt.pool_id,
+      //  inpt.owner);
+
+      //const res = await SubmitTx(t, 
+      //  [ecc.privateToPublic(inpt.owner_prv_key)], [inpt.owner_prv_key], 
+      //  this._url) as TransactResult;
+
+      let r: NCReturnTxs = {};
+      //r.TxID_removeFromWhiteList = res.transaction_id;
+      return r;
+  }
+
+
+
 
   /**
    * Mint an asset
@@ -712,7 +889,7 @@ export class NCO_BlockchainAPI {
    * @returns Tx data
    */
   async getPoolInfo (payload: NCGetPoolInfo) {
-    const api = new PRpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
+    const api = new PoolsRpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
 
     try {
       const fn = payload.code ? "getPoolByCode" : "getPoolByOwner";
