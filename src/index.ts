@@ -702,7 +702,7 @@ export class NCO_BlockchainAPI {
         inpt.amt, 
         pool_id);
 
-    console.log("action: " + JSON.stringify(t));
+    console.log("action: " + JSON.stringify(stakeTx));
     const res = await SubmitTx(stakeTx, 
         [ecc.privateToPublic(inpt.payer_prv_key), ecc.privateToPublic("5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV")], 
         [inpt.payer_prv_key, "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"], 

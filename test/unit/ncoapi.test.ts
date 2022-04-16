@@ -211,7 +211,8 @@ describe("Basic blockchain operations", () => {
     describe("stake to pool transaction", () => {
         it("stake pool", async () => {
             let n: NCStakeToPool = { 
-                to: name, amt: '1000.0000 NCO', 
+                to: name, 
+                amt: '1000.0000 NCO', 
                 payer:'io',  
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
