@@ -54,6 +54,10 @@ export type NCCreateUser = {
   export type NCCreatePool = {
     owner: string;
     owner_prv_active_key: string;
+    ticker?: string;
+    is_inflatable?: boolean;
+    is_deflatable?: boolean;
+    is_treasury?: boolean;
   };
   
   export type NCStakeMainDao = {
