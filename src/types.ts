@@ -62,17 +62,17 @@ export type NCCreateUser = {
     payer_prv_key: string;
   };
 
-  export type NCStakeToPool = {
-    to: string;
+  export type NCStakePool = {
+    owner: string;
     amt: string;
     payer: string;
     payer_prv_key: string;
   };
   
-  export type NCWithdrawFromPool = {
-    amt: string;
-    owner: string;
-    owner_prv_key: string;
+  export type NCUnstakePool = {
+    amt: string; 
+    payer: string;
+    payer_prv_key: string;
   };
   
   export type NCAddToWhiteList = {
@@ -147,10 +147,14 @@ export type NCCreateUser = {
     TxID_createCol?: string;
     TxID_createSch?: string;
     TxID_createTpl?: string;
+
     TxID_createPerm?: string;
     TxID_linkPerm?: string;
+    
     TxID_createPool?: string;
-    TxID_stakeToPool?: string;
+    TxID_stakePool?: string; pool_code?: string; pool_id?: string;
+    TxID_unstakePool?: string;
+    
     TxID_withdrawFromPool?: string;
     TxID_addToWhiteList?: string;
     TxID_removeFromWhiteList?: string;

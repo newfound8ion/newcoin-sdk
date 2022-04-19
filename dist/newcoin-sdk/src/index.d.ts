@@ -1,5 +1,5 @@
 import { GetTransaction } from "@eoscafe/hyperion";
-import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakeToPool, NCWithdrawFromPool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
+import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakePool, NCUnstakePool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
 export * from './types';
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -76,8 +76,8 @@ export declare class NCO_BlockchainAPI {
      * Stake to pool
      * @returns Create Pool transaction id
      */
-    stakeToPool(inpt: NCStakeToPool): Promise<NCReturnTxs>;
-    withdrawFromPool(inpt: NCWithdrawFromPool): Promise<NCReturnTxs>;
+    stakePool(inpt: NCStakePool): Promise<NCReturnTxs>;
+    unstakePool(inpt: NCUnstakePool): Promise<NCReturnTxs>;
     addToWhiteList(inpt: NCAddToWhiteList): Promise<NCReturnTxs>;
     removeFromWhiteList(inpt: NCRemoveFromWhiteList): Promise<NCReturnTxs>;
     /**

@@ -32,7 +32,8 @@ import { info } from "console";
 import { 
     NCKeyPair,
     NCCreateUser, NCCreateCollection, 
-    NCCreatePool, NCStakeToPool, NCWithdrawFromPool, NCAddToWhiteList, NCRemoveFromWhiteList,
+    NCCreatePool, NCStakePool, NCUnstakePool, 
+    NCAddToWhiteList, NCRemoveFromWhiteList,
     NCStakeMainDao,
     NCMintAsset,  NCTxNcoBal, NCCreatePermission,
     NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
@@ -293,7 +294,7 @@ const _createPool = (
   return action;
 }
 
-const _stakeToPool = (
+const _stakePool = (
   from: string,
   id: string,
   amt: string
@@ -679,11 +680,11 @@ export class NCO_BlockchainAPI {
    * Stake to pool
    * @returns Create Pool transaction id
    */
-  async stakeToPool(inpt: NCStakeToPool)
+  async stakePool(inpt: NCStakePool)
   {
 
     const api = new PoolsRpcApi(this._url, "pools.nco", fetch);
-    let p: PoolsPayload = { owner: inpt.to };
+    let p: PoolsPayload = { owner: inpt.owner };
     let r: NCReturnTxs = {};
     type RetT = { rows: PoolsPayload[] };
 
@@ -691,6 +692,7 @@ export class NCO_BlockchainAPI {
     let q = await api.getPoolByOwner(p);
     let t = await q.json() as RetT;
     let pool_id = t.rows[0].id as string;
+    let pool_code = t.rows[0].code as string;
 
     console.log("pool:" + JSON.stringify(t));
 
@@ -704,32 +706,33 @@ export class NCO_BlockchainAPI {
 
     console.log("action: " + JSON.stringify(stakeTx));
     const res = await SubmitTx(stakeTx, 
-        [ecc.privateToPublic(inpt.payer_prv_key), ecc.privateToPublic("5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV")], 
-        [inpt.payer_prv_key, "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"], 
+        [ecc.privateToPublic(inpt.payer_prv_key)], 
+        [inpt.payer_prv_key], 
         this._url) as TransactResult;
 
-    r.TxID_stakeToPool = res.transaction_id;
+    r.TxID_stakePool = res.transaction_id;
+    r.pool_id = pool_id;
+    r.pool_code = pool_code;
     return r;
   }
 
-  async withdrawFromPool(inpt: NCWithdrawFromPool)
+  async unstakePool(inpt: NCUnstakePool)
   {
 
       const aGen = new PoolsActionGenerator("pools.nco", "eosio.token");
       const t = await aGen.withdrawFromPool(
-        [{ actor: inpt.owner, permission: "active"}, 
-         { actor: "io", permission: "active"}],
-        inpt.owner,
+        [{ actor: inpt.payer, permission: "active"}], //{ actor: "io", permission: "active"}
+        inpt.payer,
         inpt.amt);
 
       console.log("action: " + JSON.stringify(t));
       const res = await SubmitTx(t, 
-        [ecc.privateToPublic(inpt.owner_prv_key), ecc.privateToPublic("5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV")], 
-        [inpt.owner_prv_key, "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"], 
+        [ecc.privateToPublic(inpt.payer_prv_key)], 
+        [inpt.payer_prv_key], 
         this._url) as TransactResult;
 
       let r: NCReturnTxs = {};
-      r.TxID_withdrawFromPool = res.transaction_id;
+      r.TxID_unstakePool = res.transaction_id;
       return r;
  
     }

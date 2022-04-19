@@ -53,16 +53,16 @@ export declare type NCStakeMainDao = {
     payer: string;
     payer_prv_key: string;
 };
-export declare type NCStakeToPool = {
-    to: string;
+export declare type NCStakePool = {
+    owner: string;
     amt: string;
     payer: string;
     payer_prv_key: string;
 };
-export declare type NCWithdrawFromPool = {
+export declare type NCUnstakePool = {
     amt: string;
-    owner: string;
-    owner_prv_key: string;
+    payer: string;
+    payer_prv_key: string;
 };
 export declare type NCAddToWhiteList = {
     pool_id: number;
@@ -129,7 +129,10 @@ export declare type NCReturnTxs = {
     TxID_createPerm?: string;
     TxID_linkPerm?: string;
     TxID_createPool?: string;
-    TxID_stakeToPool?: string;
+    TxID_stakePool?: string;
+    pool_code?: string;
+    pool_id?: string;
+    TxID_unstakePool?: string;
     TxID_withdrawFromPool?: string;
     TxID_addToWhiteList?: string;
     TxID_removeFromWhiteList?: string;

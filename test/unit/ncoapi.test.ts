@@ -4,7 +4,7 @@ import {
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
     NCCreatePermission, NCLinkPerm, 
     NCStakeMainDao, 
-    NCStakeToPool, NCWithdrawFromPool,
+    NCStakePool, NCUnstakePool,
     NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,
@@ -27,6 +27,7 @@ let prv_key_owner = "5JvR9dzATtTkPPDcUdNZzQ8Grp6w4eKJz4xqomCx9T7M9VCaQgN";
 let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
 let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
+let pool_code: string;
 
 const api = new NCO_BlockchainAPI(
     {
@@ -151,6 +152,51 @@ describe("Basic blockchain operations", () => {
         }, 60000);
     });
 
+    describe("'create pool' transaction", () => {
+        it("create pool", async () => {
+
+            let n: NCCreatePool = { 
+                owner: name, 
+                owner_prv_active_key: prv_key_active
+            } ;
+            
+            let resp :NCReturnTxs = await api.createPool(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_createPool).toBe('string');
+
+        }, 60000)
+    });
+
+    describe("stake to pool transaction", () => {
+        it("stake pool", async () => {
+            let n: NCStakePool = { 
+                owner: name, 
+                amt: '1000.0000 NCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        } ;
+            
+        let resp : NCReturnTxs = await api.stakePool(n) ;
+        console.log(resp);
+        pool_code = resp.pool_code as string;
+        expect(typeof resp.TxID_stakePool).toBe('string');
+        }, 60000)
+    });
+
+    describe("unstake from pool transaction", () => {
+        it("withdraw from pool", async () => {
+            let n: NCUnstakePool = { 
+                payer: "io",
+                amt: '5 '+pool_code,  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
+        } ;
+        console.log("unstake action: "+ JSON.stringify(n));
+        let resp : NCReturnTxs = await api.unstakePool(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_unstakePool).toBe('string');
+        }, 100000)
+    });
+
     describe("stake to MainDAO pool transaction", () => {
         it("stake maindao pool", async () => {
             let n: NCStakeMainDao = { 
@@ -191,50 +237,6 @@ describe("Basic blockchain operations", () => {
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
         }, 60000)
-    });
-
-    describe("'create pool' transaction", () => {
-        it("create pool", async () => {
-
-            let n: NCCreatePool = { 
-                owner: name, 
-                owner_prv_active_key: prv_key_active
-            } ;
-            
-            let resp :NCReturnTxs = await api.createPool(n) ;
-            console.log(resp);
-            expect(typeof resp.TxID_createPool).toBe('string');
-
-        }, 60000)
-    });
-
-    describe("stake to pool transaction", () => {
-        it("stake pool", async () => {
-            let n: NCStakeToPool = { 
-                to: name, 
-                amt: '1000.0000 NCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
-        } ;
-            
-        let resp : NCReturnTxs = await api.stakeToPool(n) ;
-        console.log(resp);
-        expect(typeof resp.TxID_stakeToPool).toBe('string');
-        }, 60000)
-    });
-
-    describe("unstake from pool transaction", () => {
-        it("withdraw from pool", async () => {
-            let n: NCWithdrawFromPool = { 
-                owner: "io", 
-                amt: '460 NCO',  
-                owner_prv_key: "5JFPZT9knjKV91EiWyKDn2TWLSFR2hUbX1pgkpJJUJ65RppaqFR"//prv_key_active
-        } ;
-            
-        let resp : NCReturnTxs = await api.withdrawFromPool(n) ;
-        console.log(resp);
-        expect(typeof resp.TxID_withdrawFromPool).toBe('string');
-        }, 100000)
     });
 
     describe("mint ERC721 asset", () => {
