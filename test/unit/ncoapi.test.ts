@@ -1,8 +1,12 @@
+import exp from 'constants';
 import { NCO_BlockchainAPI } from '../../src';
 import { 
     NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
-    NCCreatePermission, NCLinkPerm, NCStakeToPool, NCMintAsset, NCTxNcoBal, 
+    NCCreatePermission, NCLinkPerm, 
+    NCStakeMainDao, 
+    NCStakePool, NCUnstakePool,
+    NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,
     default_schema
@@ -24,6 +28,7 @@ let prv_key_owner = "5JvR9dzATtTkPPDcUdNZzQ8Grp6w4eKJz4xqomCx9T7M9VCaQgN";
 let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
 let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
+let pool_code: string;
 
 const api = new NCO_BlockchainAPI(
     {
@@ -163,20 +168,85 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe("stake to pool transaction", () => {
-        it("stake pool", async () => {
-            let n: NCStakeToPool = { 
-                to: name, amt: '1000.0000 NCO', 
+
+    describe("stake to MainDAO pool transaction", () => {
+        it("stake maindao pool", async () => {
+            let n: NCStakeMainDao = { 
+                amt: '1000.0000 NCO', 
                 payer:'io',  
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
-        let resp : NCReturnTxs = await api.stakeToPool(n) ;
+        let resp : NCReturnTxs = await api.stakeMainDAO(n) ;
         console.log(resp);
-        expect(typeof resp.TxID_stakeToPool).toBe('string');
+        expect(typeof resp.TxID_stakeMainDAO).toBe('string');
         }, 60000)
     });
 
+    describe("instant unstake MainDAO pool transaction", () => {
+        it("unstake maindao pool", async () => {
+            let n: NCStakeMainDao = { 
+                amt: '100.0000 GNCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        } ;
+            
+        let resp : NCReturnTxs = await api.instUnstakeMainDAO(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
+        }, 60000)
+    });
+        
+    describe("delayed unstake MainDAO pool transaction", () => {
+        it("delayed unstake maindao pool", async () => {
+            let n: NCStakeMainDao = { 
+                amt: '100.0000 GNCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        } ;
+            
+        let resp : NCReturnTxs = await api.dldUnstakeMainDAO(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
+        }, 60000)
+    });
+
+    describe("stake to pool transaction", () => {
+        it("stake pool", async () => {
+            let n: NCStakePool = { 
+                owner: name, 
+                amt: '100.0000 GNCO', 
+                payer:'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        } ;
+            
+        let resp : NCReturnTxs = await api.stakePool(n) ;
+        console.log(resp);
+        pool_code = resp.pool_code as string;
+        
+        expect(pool_code).toBeDefined();
+        expect(typeof resp.TxID_stakePool).toBe('string');
+        }, 60000)
+    });
+
+    describe("unstake from pool transaction", () => {
+        it("withdraw from pool", async () => {
+        expect(pool_code).toBeDefined();
+
+        const n: NCUnstakePool = { 
+                payer: "io",
+                amt: '5.0000 '+pool_code,  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
+        } ;
+        console.log("unstake action: "+ JSON.stringify(n));
+        let resp : NCReturnTxs = await api.unstakePool(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_unstakePool).toBe('string');
+        }, 60000)
+    });
+
+
+    
     describe("mint ERC721 asset", () => {
         it("Mint asset", async () => {
             let n: NCMintAsset = { 
@@ -205,7 +275,7 @@ describe("Basic blockchain operations", () => {
 
     describe("get account pools balances", () => {
         it("get pool balances", async () => {
-            let n:   NCGetAccInfo = { owner: 'io', contract: 'pools.nco' } ;
+            let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;
             let resp:NCReturnInfo = { acc_balances: [] }
             resp = await api.getAccountBalance(n) as NCReturnInfo ;
             console.log(resp);
