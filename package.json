@@ -28,7 +28,8 @@
     "node-fetch": "^2.6.6",
     "stream": "^0.0.2",
     "ts-install": "^1.0.0",
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.4.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.35",

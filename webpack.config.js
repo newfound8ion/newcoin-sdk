@@ -1,4 +1,5 @@
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: './src/index.ts',
@@ -19,6 +20,8 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js']
     },
+    externals: [nodeExternals()], // ignore all modules in node_modules folder
+
     output: {
         filename: "index.js", // => x.chunk.name.replace('_', '-') + '.js',
         library: {

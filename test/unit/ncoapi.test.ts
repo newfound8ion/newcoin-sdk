@@ -27,8 +27,8 @@ let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
 const api = new NCO_BlockchainAPI(
     {
-        bc_url:  "http://testnet.newcoin.org",
-        hyp_url: "http://hyperion.newcoin.org"
+        bc_url:  "http://nodeos-dev.newcoin.org",
+        hyp_url: "http://hyperion-dev.newcoin.org"
     }
 );
 

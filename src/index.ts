@@ -8,7 +8,7 @@ import ecc from "eosjs-ecc-priveos";
 
 // Extra backend services
 import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
-import { ExplorerApi } from 'atomicassets';
+// import { ExplorerApi } from 'atomicassets';
 
 // Newcoin services  
 import { ActionGenerator, RpcApi as PRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
@@ -17,7 +17,7 @@ import { RpcApi as FRpcApi } from '@newcoin-foundation/newcoin.farm-js'
 //import { RpcApi } from "newcoinfarm";
 
 // @ts-ignore
-import * as node_fetch from 'node-fetch';
+// import * as node_fetch from 'node-fetch';
 import fetch from 'cross-fetch';
 import { info } from "console";
 
@@ -31,8 +31,7 @@ import {
 export * from './types';
 import { normalizeUsername } from "./utils";
 
-
-const api = new ExplorerApi("https://atomic-api.newcoin.org/", "atomicassets", {fetch : node_fetch});
+// const api = new ExplorerApi("https://atomic-api.newcoin.org/", "atomicassets", {fetch : fetch as any});
 
 const _newaccount = (
   new_name: string,
@@ -330,7 +329,7 @@ const SubmitTx = async (
   actions: any[],
   public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
   private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
-  net_url = 'https://testnet.newcoin.org'
+  net_url = 'https://newcoin-dev.newcoin.org'
 ) => {
   const signatureProvider = new JsSignatureProvider(private_keys);
   signatureProvider.availableKeys = public_keys;
@@ -673,7 +672,7 @@ export class NCO_BlockchainAPI {
 
     let rc : NCReturnInfo = { acc_balances: []};
     try {
-      let t  = await fetch(`https://testnet.newcoin.org/v1/chain/get_currency_balance`, {
+      let t  = await fetch(`https://nodeos-dev.newcoin.org/v1/chain/get_currency_balance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -712,7 +711,7 @@ export class NCO_BlockchainAPI {
    * @returns Tx data
    */
   async getPoolInfo (payload: NCGetPoolInfo) {
-    const api = new PRpcApi("https://testnet.newcoin.org", "pools.nco", fetch);
+    const api = new PRpcApi("https://nodeos-dev.newcoin.org", "pools.nco", fetch);
 
     try {
       const fn = payload.code ? "getPoolByCode" : "getPoolByOwner";
