@@ -1,5 +1,5 @@
 import { GetTransaction } from "@eoscafe/hyperion";
-import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakePool, NCUnstakePool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
+import { NCKeyPair, NCCreateUser, NCCreateCollection, NCCreatePool, NCStakePool, NCUnstakePool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCExecuteDaoProposal, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCPoolsInfo, NCReturnTxs, NCReturnInfo } from "./types";
 export * from './types';
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -80,6 +80,10 @@ export declare class NCO_BlockchainAPI {
     unstakePool(inpt: NCUnstakePool): Promise<NCReturnTxs>;
     addToWhiteList(inpt: NCAddToWhiteList): Promise<NCReturnTxs>;
     removeFromWhiteList(inpt: NCRemoveFromWhiteList): Promise<NCReturnTxs>;
+    createDao(inpt: NCCreateDao): Promise<NCReturnTxs>;
+    createDaoProposal(inpt: NCCreateDaoProposal): Promise<NCReturnTxs>;
+    approveDaoProposal(inpt: NCApproveDaoProposal): Promise<NCReturnTxs>;
+    executeDaoProposal(inpt: NCExecuteDaoProposal): Promise<NCReturnTxs>;
     /**
      * Mint an asset
      * @returns Create Pool transaction id

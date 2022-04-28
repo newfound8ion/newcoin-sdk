@@ -12,13 +12,13 @@ import { ExplorerApi } from 'atomicassets';
 
 // Newcoin services  
 import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
-
 import { ActionGenerator as MainDAOActionGenerator }  from '../../newcoin.pool-js/src/actions/index' 
-import { RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js'
-
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
+
+import { RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js'
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
-import { EosioAuthorizationObject } from "./actions";
+
+import { EosioAuthorizationObject, ActionGenerator as sdkActionGen } from "./actions";
 //import { RpcApi as FRpcApi } from '@newcoin-foundation/newcoin.farm-js'
 
 //import { RpcApi } from "newcoinfarm";
@@ -35,6 +35,7 @@ import {
     NCCreatePool, NCStakePool, NCUnstakePool, 
     NCAddToWhiteList, NCRemoveFromWhiteList,
     NCStakeMainDao,
+    NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCExecuteDaoProposal,
     NCMintAsset,  NCTxNcoBal, NCCreatePermission,
     NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
     NCPoolsInfo,  NCNameType,
@@ -43,288 +44,14 @@ import {
 export * from './types';
 import { normalizeUsername } from "./utils";
 import { unescapeLeadingUnderscores } from "typescript";
+import { DAOPayload, ProposalPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
 
 const aa_api = new ExplorerApi("https://atomic-dev.newcoin.org/", "atomicassets", {fetch : node_fetch});
 
-const _newaccount = (
-  new_name: string,
-  payer: string,
-  newacc_public_active_key: string, 
-  newacc_public_owner_key: string    
-) => (
-  {
-    account: 'eosio',
-    name: 'newaccount', // action
-    authorization: [{
-      actor: payer,
-      permission: 'active',
-    }],
-    data: {
-      creator: payer,
-      name: new_name,
-      owner: {
-        threshold: 1,
-        keys: [{
-          key: newacc_public_owner_key,
-          weight: 1
-        }],
-        accounts: [],
-        waits: []
-      },
-      active: {
-        threshold: 1,
-        keys: [{
-          key: newacc_public_active_key,
-          weight: 1
-        }],
-        accounts: [],
-        waits: []
-      },
-    }
-  });
+const aGen = new DaosAG("daos.nco", "eosio.token");
+const mGen = new MainDAOActionGenerator("pool.nco", "eosio.token");
+const sdkGen = new sdkActionGen("eosio", "eosio.token");
 
-const _buyrambytes = (
-  receiver: string,
-  payer: string = 'io',
-  amt: number = 8192
-) => ({
-  account: 'eosio',
-  name: 'buyrambytes',
-  authorization: [{ actor: payer, permission: 'active'}],
-  data: {
-    payer: payer,
-    receiver: receiver,
-    bytes: amt,
-  },
-});
-
-const _delegateBw = (
-  receiver: string,
-  payer: string = 'io',
-  net_amount: string = '100.0000 NCO',
-  cpu_amount: string = '100.0000 NCO',
-  trfer: boolean = true
-) =>
-({
-  account: 'eosio',
-  name: 'delegatebw',
-  authorization: [{
-    actor: payer,
-    permission: 'active',
-  }],
-  data: {
-    from: payer,
-    receiver: receiver,
-    stake_net_quantity: net_amount,
-    stake_cpu_quantity: cpu_amount,
-    transfer: trfer,
-  }
-});
-
-const _createUser = async (
-  newUser: string,
-  payer: string,
-  public_active_key: string,
-  public_owner_key: string
-) => {
-
-  let newacc_action = _newaccount(newUser, payer, public_active_key, public_owner_key);
-  let buyram_action = _buyrambytes(newUser, payer);
-  let delegatebw_action = _delegateBw(newUser, payer);
-
-  return [newacc_action, buyram_action, delegatebw_action]
-};
-
-const _createCollection = (
-  author: string,
-  collection_name: string,
-  authorized_accounts: string[],
-  notify_accounts: string[] = [],
-  market_fee: number,
-  allow_notify: boolean
-) => {
-  const action: any = {
-    account: 'atomicassets',
-    name: 'createcol',
-    data: {
-      author: author,
-      collection_name: collection_name,
-      allow_notify: allow_notify,
-      authorized_accounts: authorized_accounts,
-      notify_accounts: notify_accounts,
-      market_fee: market_fee,
-      data: []
-    },
-    authorization: [
-      { actor: author, permission: 'active' } 
-    ]
-  }
-  return action;
-}
-
-const _createSch = (
-  author: string,
-  payer: string,
-  collection_name: string,
-  schema_name: string,
-  sch: NCNameType[]
-) => {
-  const action: any = {
-    account: 'atomicassets',
-    name: 'createschema',
-    data: {
-      authorized_creator: author,
-      collection_name: collection_name,
-      schema_name: schema_name,
-      schema_format: sch
-    },
-    authorization: [
-      { actor: author, permission: 'active' }
-    ]
-  }
-  return action;
-}
-
-const _createTmpl = (
-  author: string,
-  collection_name: string,
-  schema_name: string,
-  xferable: boolean,
-  burnable: boolean,
-  max_supply: number, 
-  template_fields: any[]
-) => {
-  const action: any = {
-    account: 'atomicassets',
-    name: 'createtempl',
-    data: {
-      authorized_creator: author,
-      collection_name: collection_name,
-      schema_name: schema_name,
-      transferable: xferable,
-      burnable: burnable,
-      max_supply: 0xffffff,
-      immutable_data: template_fields //{key: 'name', value: ['string', 'default'] } ]
-    },
-    authorization: [
-      { actor: author, permission: 'active' } 
-    ]
-  }
-  return action;
-}
-
-const _createPermission = (
-  author: string,
-  perm_name: string,
-  perm_key: string
-) => {
-
-    const authorization_object = { 
-      threshold: 1, 
-      accounts: [{ permission: { actor: author, permission: 'active' }, weight: 1 }], 
-      keys: [{ key: perm_key, weight: 1 }],
-      waits: []
-    };
-    
-    const updateauth_input = {
-      account: author,
-      permission: perm_name,
-      parent: 'active',
-      auth: authorization_object
-    };
-
-    const action = {
-      account: 'eosio',
-      name: 'updateauth',
-      data: updateauth_input,
-      authorization: [
-        { actor: author, permission: 'active'}
-      ]
-  }
-  
-  return action;
-}
-
-
-const _mintAsset = (
-  author: string,
-  payer: string,
-  col_name: string,
-  sch_name: string,
-  tmpl_id: number,
-  immutable_data: any[],
-  mutable_data: any[]
-) => {
-  const action: any = {
-    account: 'atomicassets',
-    name: 'mintasset',
-    data: {
-      authorized_minter: author,
-      collection_name: col_name,
-      schema_name: sch_name,
-      template_id: tmpl_id,  //template id 
-      new_asset_owner: author,//new owner 
-      immutable_data: immutable_data,//immutable data {key: 'name', value:[ 'string', '1testasset12']}
-      mutable_data: mutable_data,  //mutable data  
-      tokens_to_back: []//tokens to back 
-    },
-    authorization: [
-      { actor: author, permission: 'active' } 
-    ]
-  };
-  return action;
-}
-
-const _createPool = (
-  creator: string,
-  ticker: string,
-  is_inflatable: boolean,
-  is_deflatable: boolean,
-  is_treasury: boolean,
-  payer: string,
-  descr: string = creator + ' pool'
-) => {
-  const action = {
-    account: 'pools2.nco',
-    name: 'createpool',
-    data: {
-      owner: creator,
-      ticker: ticker,
-      description: descr,
-      is_inflatable: is_inflatable,
-      is_deflatable: is_deflatable,
-      is_treasury: is_treasury
-    },
-    authorization: [
-      { actor: creator, permission: 'active'}
-    ]
-  };
-
-  return action;
-}
-
-
-const _txNcoBalance = (
-  from: string,
-  to: string,
-  amt: string, 
-  memo: string = ''
-) => {
-  const action = {
-    account: 'eosio.token',
-    name: 'transfer',
-    data: {
-      from: from,
-      to: to,
-      quantity: amt,//'10.0000 NCO',
-      memo: memo //''
-    },
-    authorization: [
-      { 'actor': from, 'permission': 'active' }
-    ]
-  }
-  return action;
-}
 
 const SubmitTx = async (
   actions: any[],
@@ -442,9 +169,9 @@ export class NCO_BlockchainAPI {
     let res: NCReturnTxs = {};
     let tres: TransactResult;
 
-    let newacc_action = _newaccount(newUser, payer, newacc_pub_active_key, newacc_pub_owner_key);
-    let buyram_action = _buyrambytes(newUser, payer, ram_amt);
-    let delegatebw_action = _delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
+    let newacc_action = sdkGen.newaccount(newUser, payer, newacc_pub_active_key, newacc_pub_owner_key);
+    let buyram_action = sdkGen.buyrambytes(newUser, payer, ram_amt);
+    let delegatebw_action = sdkGen.delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
     let payer_pub_key = ecc.privateToPublic(payer_prv_key);
 
     console.log("before create account transaction");
@@ -477,7 +204,7 @@ export class NCO_BlockchainAPI {
     let mkt_fee = inpt.mkt_fee?  inpt.mkt_fee:  0.05; 
     let allow_notify = inpt.allow_notify? inpt.allow_notify : true;
 
-    t = _createCollection(
+    t = sdkGen.createCollection(
       inpt.user, 
       inpt.collection_name, 
       [inpt.user], 
@@ -495,7 +222,7 @@ export class NCO_BlockchainAPI {
 
     console.log("creating schema");
     let schema_fields = inpt.schema_fields ? inpt.schema_fields : default_schema; 
-    t = _createSch(
+    t = sdkGen.createSchema(
       inpt.user, inpt.user, 
       inpt.collection_name, inpt.schema_name, 
       schema_fields);
@@ -513,7 +240,7 @@ export class NCO_BlockchainAPI {
     let xferable  = inpt.xferable? inpt.xferable : true;
     let burnable  = inpt.burnable? inpt.burnable : true; 
     let max_supply = inpt.max_supply? inpt.max_supply : 0xffffff;
-    t = _createTmpl(inpt.user, inpt.collection_name, inpt.schema_name, xferable, burnable, max_supply, template);
+    t = sdkGen.createTemplate(inpt.user, inpt.collection_name, inpt.schema_name, xferable, burnable, max_supply, template);
     console.log(t);
     
     console.log("creating template transaction");
@@ -530,7 +257,7 @@ export class NCO_BlockchainAPI {
    * @returns Create permission transaction id
    */
   async createPermission(inpt: NCCreatePermission) {
-    let t = _createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
+    let t = sdkGen.createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
     let res = await SubmitTx([t], 
       [ecc.privateToPublic(inpt.author_prv_active_key)], 
       [inpt.author_prv_active_key],  
@@ -589,7 +316,7 @@ export class NCO_BlockchainAPI {
       inpt.is_treasury = true;
     
     console.log("Creating pool: " + JSON.stringify(inpt));
-    let t = _createPool(inpt.owner, inpt.ticker, 
+    let t = sdkGen.createPool(inpt.owner, inpt.ticker, 
       inpt.is_inflatable,     
       inpt.is_deflatable,
       inpt.is_treasury,
@@ -613,8 +340,8 @@ export class NCO_BlockchainAPI {
   async stakeMainDAO(inpt: NCStakeMainDao)
   {
     let r: NCReturnTxs = {};
-    const aGen = new MainDAOActionGenerator("pool.nco", "eosio.token");
-    const stakeTx = await aGen.stake(
+    
+    const stakeTx = await mGen.stake(
         [{ actor: inpt.payer, permission: "active"}],
         inpt.payer,
         inpt.amt);
@@ -638,7 +365,7 @@ export class NCO_BlockchainAPI {
   {
     let r: NCReturnTxs = {};
     const aGen = new MainDAOActionGenerator("pool.nco", "eosio.token");
-    const stakeTx = await aGen.instunstake(
+    const stakeTx = await mGen.instunstake(
         [{ actor: inpt.payer, permission: "active"}],
         inpt.payer,
         inpt.amt);
@@ -663,7 +390,7 @@ export class NCO_BlockchainAPI {
   {
     let r: NCReturnTxs = {};
     const aGen = new MainDAOActionGenerator("pool.nco", "eosio.token");
-    const stakeTx = await aGen.dldunstake(
+    const stakeTx = await mGen.dldunstake(
         [{ actor: inpt.payer, permission: "active"}],
         inpt.payer,
         inpt.amt);
@@ -699,8 +426,8 @@ export class NCO_BlockchainAPI {
 
     console.log("pool:" + JSON.stringify(t));
 
-    const aGen = new PoolsActionGenerator("pools2.nco", "pool.nco");
-    const stakeTx = await aGen.stakeToPool(
+    const pGen = new PoolsActionGenerator("pools2.nco", "pool.nco");
+    const stakeTx = await pGen.stakeToPool(
         [{ actor: inpt.payer, permission: "active"}, 
          { actor: "io", permission: "active"}],
         inpt.payer, inpt.amt, pool_id);
@@ -772,7 +499,161 @@ export class NCO_BlockchainAPI {
       return r;
   }
 
+  async createDao(inpt: NCCreateDao)
+  {
+      const aGen = new DaosAG("daos.nco", "eosio.token");
+      const t = await aGen.createDao(
+        [{ actor: inpt.author, permission: "active"}],
+        inpt.author,
+        inpt.descr  
+      );
 
+      const res = await SubmitTx(t, 
+        [ecc.privateToPublic(inpt.authpr_prv_key)], [inpt.authpr_prv_key], 
+        this._url) as TransactResult;
+
+      let r: NCReturnTxs = {};
+      r.TxID_createDao = res.transaction_id;
+      return r;
+  }
+
+  async createDaoProposal(inpt: NCCreateDaoProposal)
+  {
+    
+    if(inpt.dao_id == undefined) 
+    {
+      if (inpt.dao_owner == undefined)
+        throw("DAO undefined");
+      const api = new DaosChainApi(this._url, "daos.nco", fetch);
+      let p: DAOPayload = { owner: inpt.dao_owner };
+      
+      console.log("Get dao by owner: ", JSON.stringify(p));
+      let q = await api.getDAOByOwner(p);
+      let w = await q.json();
+
+      console.log("received from getDaoByOwner" + JSON.stringify(w));
+      inpt.dao_id = w.rows[0].id as number;
+    }  
+    
+    const t = await aGen.createProposal(
+        [{ actor: inpt.proposer, permission: "active"}],
+        inpt.proposer, inpt.dao_id,
+        inpt.title, inpt.summary,
+        inpt.url, inpt.vote_start, inpt.vote_end
+    );
+
+    const res = await SubmitTx(t, 
+      [ecc.privateToPublic(inpt.proposer_prv_key)], [inpt.proposer_prv_key], 
+      this._url) as TransactResult;
+
+      let r: NCReturnTxs = {};
+      r.TxID_createDaoProposal = res.transaction_id;
+      r.dao_id = inpt.dao_id;
+      return r;
+  }
+  
+  async approveDaoProposal(inpt: NCApproveDaoProposal)
+  {
+      const cApi = new DaosChainApi(this._url, "daos.nco", fetch);
+      if (inpt.dao_id == undefined)
+      {
+        if (inpt.dao_owner == undefined)
+          throw("DAO undefined");
+
+        
+        let p: DAOPayload = { owner: inpt.dao_owner };
+        
+        console.log("Get dao by owner: ", JSON.stringify(p));
+        let q = await cApi.getDAOByOwner(p);
+        let w = await q.json();
+
+        console.log("received from getDaoByOwner" + JSON.stringify(w));
+        inpt.dao_id = w.rows[0].id as number;
+      }
+
+      if (inpt.proposal_id == undefined)
+      {
+        if (inpt.proposal_author == undefined)
+          throw("Proposal undefined neither ID nor name");
+
+        let p: ProposalPayload = {
+          daoID: inpt.dao_id.toString(), 
+          proposer: inpt.proposal_author 
+        };
+      
+        console.log("Get proposal by author: ", JSON.stringify(p));
+        let q = await cApi.getProposalByProposer(p);
+        let w = await q.json();
+
+        console.log("received from getProposalByOwner" + JSON.stringify(w));
+        inpt.proposal_id = w.rows[0].id as number;
+      }
+
+      const t = await aGen.approveProposal(
+        [{ actor: inpt.approver, permission: "active"}],
+        inpt.dao_id, inpt.proposal_id
+      );
+
+      const res = await SubmitTx(t, 
+        [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key], 
+        this._url) as TransactResult;
+
+      let r: NCReturnTxs = {};
+      r.TxID_approveDaoProposal = res.transaction_id;
+      return r;
+  }
+
+
+  async executeDaoProposal(inpt: NCExecuteDaoProposal)
+  {
+
+    const cApi = new DaosChainApi(this._url, "daos.nco", fetch);
+    if (inpt.dao_id == undefined)
+    {
+      if (inpt.dao_owner == undefined)
+        throw("DAO undefined");
+
+      
+      let p: DAOPayload = { owner: inpt.dao_owner };
+      
+      console.log("Get dao by owner: ", JSON.stringify(p));
+      let q = await cApi.getDAOByOwner(p);
+      let w = await q.json();
+
+      console.log("received from getDaoByOwner" + JSON.stringify(w));
+      inpt.dao_id = w.rows[0].id as number;
+    }
+
+    if (inpt.proposal_id == undefined)
+    {
+      if (inpt.proposal_author == undefined)
+        throw("Proposal undefined neither ID nor name");
+
+      let p: ProposalPayload = {
+        daoID: inpt.dao_id.toString(), 
+        proposer: inpt.proposal_author 
+      };
+    
+      console.log("Get proposal by author: ", JSON.stringify(p));
+      let q = await cApi.getProposalByProposer(p);
+      let w = await q.json();
+
+      console.log("received from getProposalByOwner" + JSON.stringify(w));
+      inpt.proposal_id = w.rows[0].id as number;
+    }
+      const t = await aGen.executeProposal(
+        [{ actor: inpt.exec, permission: "active"}],
+        inpt.dao_id, inpt.proposal_id
+      );
+
+      const res = await SubmitTx(t, 
+        [ecc.privateToPublic(inpt.exec_prv_key)], [inpt.exec_prv_key], 
+        this._url) as TransactResult;
+
+      let r: NCReturnTxs = {};
+      r.TxID_executeDaoProposal = res.transaction_id;
+      return r;
+  }
 
 
   /**
@@ -793,7 +674,7 @@ export class NCO_BlockchainAPI {
     if (inpt.mutable_data == undefined)
       inpt.mutable_data = [];
 
-    const t = _mintAsset(
+    const t = sdkGen.mintAsset(
       inpt.creator, inpt.payer, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
       inpt.immutable_data, inpt.mutable_data
     );
@@ -854,7 +735,7 @@ export class NCO_BlockchainAPI {
    */
   async txNcoBalance(inpt: NCTxNcoBal): Promise<NCReturnTxs> {
       let r: NCReturnTxs = {};
-      let tx = _txNcoBalance(inpt.payer, inpt.to, inpt.amt);
+      let tx = sdkGen.txNcoBalance(inpt.payer, inpt.to, inpt.amt);
       let res = await SubmitTx([tx], 
         [inpt.payer_pub_key], [inpt.payer_prv_key], 
         this._url
@@ -888,4 +769,8 @@ export class NCO_BlockchainAPI {
 
   return {} as NCPoolsInfo;
 ``}
+
+
+
+
 }

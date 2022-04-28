@@ -1,3 +1,4 @@
+import exp from "constants";
 
 export type NCKeyPair = {
   pub_key: string;
@@ -120,6 +121,45 @@ export type NCCreateUser = {
     next_key: string;
   }
   
+
+  export type NCCreateDao = {
+    author: string,
+    authpr_prv_key: string,
+    token?: string,
+    descr: string
+  }
+
+  export type NCCreateDaoProposal = {
+    proposer: string,
+    proposer_prv_key: string,
+    dao_id?: number,
+    dao_owner: string,
+    title: string,
+    summary: string,
+    url: string,
+    vote_start: string,
+    vote_end: string
+  };
+
+  export type NCApproveDaoProposal = {
+    approver: string,
+    approver_prv_key: string,
+    dao_id?: number,
+    dao_owner?: string,
+    proposal_id?: number,
+    proposal_author?: string
+  };
+
+  export type NCExecuteDaoProposal = {
+    exec: string,
+    exec_prv_key: string,
+    dao_id?: number,
+    dao_owner?: string,
+    proposal_id?: number,
+    proposal_author?: string
+
+  };
+
   export type NCKeyValPair = {
     key: string,
     value: string[];
@@ -159,6 +199,11 @@ export type NCCreateUser = {
     TxID_stakePool?: string; pool_code?: string; pool_id?: string;
     TxID_unstakePool?: string;
     
+    TxID_createDao?: string;
+    TxID_createDaoProposal?: string; dao_id?: number;
+    TxID_approveDaoProposal?: string,
+    TxID_executeDaoProposal?: string,
+
     TxID_withdrawFromPool?: string;
     TxID_addToWhiteList?: string;
     TxID_removeFromWhiteList?: string;
