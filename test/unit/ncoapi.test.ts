@@ -1,5 +1,5 @@
 import exp from 'constants';
-import { NCO_BlockchainAPI } from '../../src';
+import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src';
 import { 
     NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
@@ -15,9 +15,6 @@ import {
 import { normalizeUsername } from '../../src/utils';
 //import * as nco from 'newcoin';
 
-import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
-import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
-import { ChainApi as DaoChainApi } from "@newcoin-foundation/newcoin.daos-js"
 
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
 let name = randomname();
@@ -36,10 +33,7 @@ let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 let pool_code: string;
 
 const api = new NCO_BlockchainAPI(
-    {
-        bc_url:  "http://testnet.newcoin.org",
-        hyp_url: "http://hyperion.newcoin.org"
-    }
+    devnet_urls, devnet_services
 );
 
 describe("Basic blockchain operations", () => {
