@@ -305,9 +305,9 @@ export class NCO_BlockchainAPI {
    */
   async createPool(inpt: NCCreatePool) {
     inpt.ticker = (inpt.ticker || inpt.owner.substring(0, 3)).toUpperCase();
-    inpt.is_inflatable = inpt.is_inflatable ?? true;
-    inpt.is_deflatable = inpt.is_deflatable ?? true;
-    inpt.is_treasury = inpt.is_treasury ?? false;
+    inpt.is_inflatable ??= true;
+    inpt.is_deflatable ??= true;
+    inpt.is_treasury   ??= false;
 
     console.log("Creating pool: " + JSON.stringify(inpt));
     let t = this.sdkGen.createPool(inpt.owner, inpt.ticker,
@@ -747,7 +747,7 @@ export class NCO_BlockchainAPI {
    */
    async txNcoBalance(inpt: NCTxNcoBal): Promise<NCReturnTxs> {
     let r: NCReturnTxs = {};
-    let tx = this.sdkGen.txNcoBalance(inpt.payer, inpt.to, inpt.amt);
+    let tx = this.sdkGen.txNcoBalance(inpt.payer, inpt.to, inpt.amt, inpt.memo ??="");
     let res = await this.SubmitTx([tx],
       [inpt.payer_pub_key],
       [inpt.payer_prv_key]

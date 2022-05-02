@@ -167,13 +167,14 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe("stake to MainDAO pool transaction", () => {
+    describe.only("stake to MainDAO pool transaction", () => {
         it("stake maindao pool", async () => {
+        
             let n: NCStakeMainDao = { 
-                amt: '100.0000 NCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
-        } ;
+                    amt: '100.0000 NCO', 
+                    payer: name,
+                    payer_prv_key: prv_key_active
+            } ;
             
         let resp : NCReturnTxs = await api.stakeMainDAO(n) ;
         console.log(resp);
@@ -185,8 +186,8 @@ describe("Basic blockchain operations", () => {
         it("unstake maindao pool", async () => {
             let n: NCStakeMainDao = { 
                 amt: '100.0000 GNCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+                payer: name,
+                payer_prv_key: prv_key_active
         } ;
             
         let resp : NCReturnTxs = await api.instUnstakeMainDAO(n) ;
@@ -199,8 +200,8 @@ describe("Basic blockchain operations", () => {
         it("delayed unstake maindao pool", async () => {
             let n: NCStakeMainDao = { 
                 amt: '100.0000 GNCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+                payer: name,
+                payer_prv_key: prv_key_active
         } ;
             
         let resp : NCReturnTxs = await api.dldUnstakeMainDAO(n) ;
@@ -211,17 +212,20 @@ describe("Basic blockchain operations", () => {
 
     describe("stake to pool transaction", () => {
         it("stake pool", async () => {
-            let n: NCStakePool = { 
-                owner: name, 
-                amt: '100.0000 GNCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        let n: NCStakePool = { 
+            owner: name, 
+            amt: '100.0000 GNCO', 
+            payer:'io',  
+            payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
         let resp : NCReturnTxs = await api.stakePool(n) ;
         console.log(resp);
         pool_code = resp.pool_code as string;
         
+        n.owner
+
+
         expect(pool_code).toBeDefined();
         expect(typeof resp.TxID_stakePool).toBe('string');
         }, 60000);
@@ -363,7 +367,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
     
-    describe.only("list daos", () => {
+    describe("list daos", () => {
         it("list proposals for dao", async () => {
 
             // const now = new Date();
@@ -379,7 +383,7 @@ describe("Basic blockchain operations", () => {
             // console.log("Arguments for DAO proposal approval: " + JSON.stringify(n));
             let resp = await api.getDaoProposals({ dao_id: "28" });
             console.log(resp);
-            debugger;
+            //debugger;
             // expect(typeof resp.TxID_executeDaoProposal).toBe('string');
 
         }, 60000)
@@ -411,12 +415,18 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe("get account pools balances", () => {
+    describe.only("get account pools balances", () => {
         it("get pool balances", async () => {
+            
             let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;
             let resp:NCReturnInfo = { acc_balances: [] }
             resp = await api.getAccountBalance(n) as NCReturnInfo ;
             console.log(resp);
+            
+            n.contract = "pool.nco";
+            resp = await api.getAccountBalance(n) as NCReturnInfo ;
+            console.log(resp);
+            
             if(resp.acc_balances)
                 expect(typeof resp.acc_balances[0]).toBe('string'); 
             else 
@@ -427,8 +437,8 @@ describe("Basic blockchain operations", () => {
     describe("tx NCO transaction", () => {
         it("tx nco balance", async () => {
             let n: NCTxNcoBal = { 
-                to: name, 
-                amt: '5000.0000 NCO', 
+                to:   name, 
+                amt: '1000.0000 NCO', 
                 payer:'io',
                 memo: 'test transfer', 
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
