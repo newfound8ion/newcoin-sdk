@@ -181,6 +181,7 @@ export type NCDaoProposalVote = {
   option: string;
   proposal_type?: string;
   voter_prv_key: string;
+  quantity: string;
 }
 
 

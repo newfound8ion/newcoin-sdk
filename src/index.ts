@@ -631,7 +631,9 @@ export class NCO_BlockchainAPI {
     
     const t = await this.aGen.vote(
       [{ actor: inpt.voter, permission: "active" }],
-      inpt.voter, "1 GNCO", inpt.proposal_type || "standard",
+      inpt.voter, 
+      inpt.quantity, 
+      inpt.proposal_type || "standart",
       inpt.dao_id,
       inpt.proposal_id,
       inpt.option
