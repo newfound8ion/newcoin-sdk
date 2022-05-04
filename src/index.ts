@@ -310,7 +310,9 @@ export class NCO_BlockchainAPI {
     inpt.is_treasury = inpt.is_treasury ?? false;
 
     console.log("Creating pool: " + JSON.stringify(inpt));
-    let t = this.sdkGen.createPool(inpt.owner, inpt.ticker,
+    let t = this.sdkGen.createPool(
+      inpt.owner, 
+      inpt.ticker,
       inpt.is_inflatable,
       inpt.is_deflatable,
       inpt.is_treasury,
