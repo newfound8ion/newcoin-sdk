@@ -47,19 +47,51 @@ export declare type NCLinkPerm = {
 export declare type NCCreatePool = {
     owner: string;
     owner_prv_active_key: string;
+    ticker?: string;
+    is_inflatable?: boolean;
+    is_deflatable?: boolean;
+    is_treasury?: boolean;
 };
-export declare type NCStakeToPool = {
-    to: string;
+export declare type NCStakeMainDao = {
     amt: string;
     payer: string;
     payer_prv_key: string;
+};
+export declare type NCStakePool = {
+    owner: string;
+    amt: string;
+    payer: string;
+    payer_prv_key: string;
+};
+export declare type NCUnstakePool = {
+    amt: string;
+    payer: string;
+    payer_prv_key: string;
+};
+export declare type NCAddToWhiteList = {
+    dao_id: string;
+    account: string;
+    owner: string;
+    owner_prv_key: string;
+};
+export declare type NCRemoveFromWhiteList = {
+    dao_id: string;
+    account: string;
+    owner: string;
+    owner_prv_key: string;
 };
 export declare type NCTxNcoBal = {
     to: string;
     amt: string;
     payer: string;
     memo: string;
-    payer_pub_key: string;
+    payer_prv_key: string;
+};
+export declare type NCTxBal = {
+    to: string;
+    amt: string;
+    payer: string;
+    memo?: string;
     payer_prv_key: string;
 };
 export declare type NCPoolInfo = {
@@ -78,6 +110,54 @@ export declare type NCPoolsInfo = {
     rows: NCPoolInfo[];
     more: boolean;
     next_key: string;
+};
+export declare type NCCreateDao = {
+    author: string;
+    authpr_prv_key: string;
+    token?: string;
+    descr: string;
+};
+export declare type NCCreateDaoProposal = {
+    proposer: string;
+    proposer_prv_key: string;
+    dao_id?: number;
+    dao_owner: string;
+    title: string;
+    summary: string;
+    url: string;
+    vote_start: string;
+    vote_end: string;
+};
+export declare type NCApproveDaoProposal = {
+    approver: string;
+    approver_prv_key: string;
+    dao_id?: number;
+    dao_owner?: string;
+    proposal_id?: number;
+    proposal_author?: string;
+};
+export declare type NCExecuteDaoProposal = {
+    exec: string;
+    exec_prv_key: string;
+    dao_id?: number;
+    dao_owner?: string;
+    proposal_id?: number;
+    proposal_author?: string;
+};
+export declare type NCGetDaoProposals = {
+    dao_id?: string;
+    dao_owner?: string;
+    proposal_id?: string;
+    proposal_author?: string;
+};
+export declare type NCDaoProposalVote = {
+    voter: string;
+    dao_id: string;
+    proposal_id: string;
+    option: string;
+    proposal_type?: string;
+    voter_prv_key: string;
+    quantity: string;
 };
 export declare type NCKeyValPair = {
     key: string;
@@ -109,9 +189,24 @@ export declare type NCReturnTxs = {
     TxID_createPerm?: string;
     TxID_linkPerm?: string;
     TxID_createPool?: string;
-    TxID_stakeToPool?: string;
+    TxID_stakePool?: string;
+    pool_code?: string;
+    pool_id?: string;
+    TxID_unstakePool?: string;
+    TxID_createDao?: string;
+    TxID_createDaoProposal?: string;
+    dao_id?: number;
+    TxID_approveDaoProposal?: string;
+    TxID_executeDaoProposal?: string;
+    TxID_voteDaoProposal?: string;
+    TxID_withdrawFromPool?: string;
+    TxID_addToWhiteList?: string;
+    TxID_removeFromWhiteList?: string;
+    TxID_stakeMainDAO?: string;
+    TxID_unstakeMainDAO?: string;
     TxID_mintAsset?: string;
     TxID_txNcoBalance?: string;
+    TxID?: string;
 };
 export declare type NCReturnInfo = {
     acc_balances?: string[];

@@ -1,6 +1,6 @@
 {
   "name": "@newcoin-foundation/newcoin-sdk",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "@jest/test-sequencer": "^27.4.5",
     "@newcoin-foundation/newcoin.daos-js": "^2.0.2",
     "@newcoin-foundation/newcoin.farm-js": "^1.0.1",
-    "@newcoin-foundation/newcoin.pool-js": "^2.0.0",
+    "@newcoin-foundation/newcoin.pool-js": "^1.0.3",
     "@newcoin-foundation/newcoin.pools-js": "^1.1.5",
     "@types/faker": "5.5.9",
     "@types/node": "^16.10.2",
