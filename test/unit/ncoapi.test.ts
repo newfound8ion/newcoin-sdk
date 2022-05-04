@@ -161,8 +161,7 @@ describe("Basic blockchain operations", () => {
                 amt: '1000.0000 NCO', 
                 payer:'io',
                 memo: 'initial balance transfer', 
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-                payer_pub_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
             };
             
             let resp :NCReturnTxs = await api.txNcoBalance(n) ;

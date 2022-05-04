@@ -69,12 +69,14 @@ export declare type NCUnstakePool = {
     payer_prv_key: string;
 };
 export declare type NCAddToWhiteList = {
-    pool_id: number;
+    dao_id: string;
+    account: string;
     owner: string;
     owner_prv_key: string;
 };
 export declare type NCRemoveFromWhiteList = {
-    pool_id: number;
+    dao_id: string;
+    account: string;
     owner: string;
     owner_prv_key: string;
 };
@@ -83,7 +85,13 @@ export declare type NCTxNcoBal = {
     amt: string;
     payer: string;
     memo: string;
-    payer_pub_key: string;
+    payer_prv_key: string;
+};
+export declare type NCTxBal = {
+    to: string;
+    amt: string;
+    payer: string;
+    memo?: string;
     payer_prv_key: string;
 };
 export declare type NCPoolInfo = {
@@ -136,6 +144,21 @@ export declare type NCExecuteDaoProposal = {
     proposal_id?: number;
     proposal_author?: string;
 };
+export declare type NCGetDaoProposals = {
+    dao_id?: string;
+    dao_owner?: string;
+    proposal_id?: string;
+    proposal_author?: string;
+};
+export declare type NCDaoProposalVote = {
+    voter: string;
+    dao_id: string;
+    proposal_id: string;
+    option: string;
+    proposal_type?: string;
+    voter_prv_key: string;
+    quantity: string;
+};
 export declare type NCKeyValPair = {
     key: string;
     value: string[];
@@ -175,6 +198,7 @@ export declare type NCReturnTxs = {
     dao_id?: number;
     TxID_approveDaoProposal?: string;
     TxID_executeDaoProposal?: string;
+    TxID_voteDaoProposal?: string;
     TxID_withdrawFromPool?: string;
     TxID_addToWhiteList?: string;
     TxID_removeFromWhiteList?: string;
@@ -182,6 +206,7 @@ export declare type NCReturnTxs = {
     TxID_unstakeMainDAO?: string;
     TxID_mintAsset?: string;
     TxID_txNcoBalance?: string;
+    TxID?: string;
 };
 export declare type NCReturnInfo = {
     acc_balances?: string[];
