@@ -1,11 +1,3 @@
-/*
- * ATTENTION: An "eval-source-map" devtool has been used.
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
@@ -16,7 +8,248 @@
   \************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.ActionGenerator = void 0;\r\nclass ActionGenerator {\r\n    constructor(contract, token_contract) {\r\n        this.contract = contract;\r\n        this.token_contract = token_contract;\r\n        this.newaccount = (new_name, payer, newacc_public_active_key, newacc_public_owner_key) => ({\r\n            account: 'eosio',\r\n            name: 'newaccount',\r\n            authorization: [{\r\n                    actor: payer,\r\n                    permission: 'active',\r\n                }],\r\n            data: {\r\n                creator: payer,\r\n                name: new_name,\r\n                owner: {\r\n                    threshold: 1,\r\n                    keys: [{\r\n                            key: newacc_public_owner_key,\r\n                            weight: 1\r\n                        }],\r\n                    accounts: [],\r\n                    waits: []\r\n                },\r\n                active: {\r\n                    threshold: 1,\r\n                    keys: [{\r\n                            key: newacc_public_active_key,\r\n                            weight: 1\r\n                        }],\r\n                    accounts: [],\r\n                    waits: []\r\n                },\r\n            }\r\n        });\r\n        this.buyrambytes = (receiver, payer = 'io', amt = 8192) => ({\r\n            account: 'eosio',\r\n            name: 'buyrambytes',\r\n            authorization: [{ actor: payer, permission: 'active' }],\r\n            data: {\r\n                payer: payer,\r\n                receiver: receiver,\r\n                bytes: amt,\r\n            },\r\n        });\r\n        this.delegateBw = (receiver, payer = 'io', net_amount = '100.0000 NCO', cpu_amount = '100.0000 NCO', trfer = true) => ({\r\n            account: 'eosio',\r\n            name: 'delegatebw',\r\n            authorization: [{\r\n                    actor: payer,\r\n                    permission: 'active',\r\n                }],\r\n            data: {\r\n                from: payer,\r\n                receiver: receiver,\r\n                stake_net_quantity: net_amount,\r\n                stake_cpu_quantity: cpu_amount,\r\n                transfer: trfer,\r\n            }\r\n        });\r\n        /*createUser = async (\r\n          newUser: string,\r\n          payer: string,\r\n          public_active_key: string,\r\n          public_owner_key: string\r\n        ) => {\r\n        \r\n          let newacc_action = this._newaccount(newUser, payer, public_active_key, public_owner_key);\r\n          let buyram_action = this._buyrambytes(newUser, payer);\r\n          let delegatebw_action = this._delegateBw(newUser, payer);\r\n        \r\n          return [newacc_action, buyram_action, delegatebw_action]\r\n        };\r\n        \r\n        createAccount(\r\n          authorization: EosioAuthorizationObject[],\r\n          owner: string,\r\n          symbol: string,\r\n          payer: string\r\n        ) {\r\n          return this._pack(this.contract, authorization, \"open\", {\r\n            owner,\r\n            symbol,\r\n            payer\r\n          });\r\n        }*/\r\n        this.createCollection = (author, collection_name, authorized_accounts, notify_accounts = [], market_fee, allow_notify) => {\r\n            const action = {\r\n                account: 'atomicassets',\r\n                name: 'createcol',\r\n                data: {\r\n                    author: author,\r\n                    collection_name: collection_name,\r\n                    allow_notify: allow_notify,\r\n                    authorized_accounts: authorized_accounts,\r\n                    notify_accounts: notify_accounts,\r\n                    market_fee: market_fee,\r\n                    data: []\r\n                },\r\n                authorization: [\r\n                    { actor: author, permission: 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n        this.createSchema = (author, payer, collection_name, schema_name, sch) => {\r\n            const action = {\r\n                account: 'atomicassets',\r\n                name: 'createschema',\r\n                data: {\r\n                    authorized_creator: author,\r\n                    collection_name: collection_name,\r\n                    schema_name: schema_name,\r\n                    schema_format: sch\r\n                },\r\n                authorization: [\r\n                    { actor: author, permission: 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n        this.createTemplate = (author, collection_name, schema_name, xferable, burnable, max_supply, template_fields) => {\r\n            const action = {\r\n                account: 'atomicassets',\r\n                name: 'createtempl',\r\n                data: {\r\n                    authorized_creator: author,\r\n                    collection_name: collection_name,\r\n                    schema_name: schema_name,\r\n                    transferable: xferable,\r\n                    burnable: burnable,\r\n                    max_supply: 0xffffff,\r\n                    immutable_data: template_fields //{key: 'name', value: ['string', 'default'] } ]\r\n                },\r\n                authorization: [\r\n                    { actor: author, permission: 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n        this.createPermission = (author, perm_name, perm_key) => {\r\n            const authorization_object = {\r\n                threshold: 1,\r\n                accounts: [{ permission: { actor: author, permission: 'active' }, weight: 1 }],\r\n                keys: [{ key: perm_key, weight: 1 }],\r\n                waits: []\r\n            };\r\n            const updateauth_input = {\r\n                account: author,\r\n                permission: perm_name,\r\n                parent: 'active',\r\n                auth: authorization_object\r\n            };\r\n            const action = {\r\n                account: 'eosio',\r\n                name: 'updateauth',\r\n                data: updateauth_input,\r\n                authorization: [\r\n                    { actor: author, permission: 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n        this.mintAsset = (author, payer, col_name, sch_name, tmpl_id, immutable_data, mutable_data) => {\r\n            const action = {\r\n                account: 'atomicassets',\r\n                name: 'mintasset',\r\n                data: {\r\n                    authorized_minter: author,\r\n                    collection_name: col_name,\r\n                    schema_name: sch_name,\r\n                    template_id: tmpl_id,\r\n                    new_asset_owner: author,\r\n                    immutable_data: immutable_data,\r\n                    mutable_data: mutable_data,\r\n                    tokens_to_back: [] //tokens to back \r\n                },\r\n                authorization: [\r\n                    { actor: author, permission: 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n        this.createPool = (creator, ticker, is_inflatable, is_deflatable, is_treasury, descr) => {\r\n            const action = {\r\n                account: 'pools2.nco',\r\n                name: 'createpool',\r\n                data: {\r\n                    owner: creator,\r\n                    ticker: ticker,\r\n                    description: descr,\r\n                    is_inflatable: is_inflatable,\r\n                    is_deflatable: is_deflatable,\r\n                    is_treasury: is_treasury\r\n                },\r\n                authorization: [\r\n                    { actor: creator, permission: 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n        this.txNcoBalance = (from, to, amt, memo) => {\r\n            const action = {\r\n                account: 'eosio.token',\r\n                name: 'transfer',\r\n                data: {\r\n                    from: from,\r\n                    to: to,\r\n                    quantity: amt,\r\n                    memo: memo //''\r\n                },\r\n                authorization: [\r\n                    { 'actor': from, 'permission': 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n        this.txBalance = (contract, from, to, amt, memo) => {\r\n            const action = {\r\n                account: contract,\r\n                name: 'transfer',\r\n                data: {\r\n                    from: from,\r\n                    to: to,\r\n                    quantity: amt,\r\n                    memo: memo //''\r\n                },\r\n                authorization: [\r\n                    { 'actor': from, 'permission': 'active' }\r\n                ]\r\n            };\r\n            return action;\r\n        };\r\n    }\r\n    _pack(account, authorization, name, data) {\r\n        return [{ account, name, authorization, data }];\r\n    }\r\n}\r\nexports.ActionGenerator = ActionGenerator;\r\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvYWN0aW9ucy50cy5qcyIsIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZXMiOlsid2VicGFjazovL05DT19CbG9ja2NoYWluQVBJLy4vc3JjL2FjdGlvbnMudHM/NjRiZiJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcclxuT2JqZWN0LmRlZmluZVByb3BlcnR5KGV4cG9ydHMsIFwiX19lc01vZHVsZVwiLCB7IHZhbHVlOiB0cnVlIH0pO1xyXG5leHBvcnRzLkFjdGlvbkdlbmVyYXRvciA9IHZvaWQgMDtcclxuY2xhc3MgQWN0aW9uR2VuZXJhdG9yIHtcclxuICAgIGNvbnN0cnVjdG9yKGNvbnRyYWN0LCB0b2tlbl9jb250cmFjdCkge1xyXG4gICAgICAgIHRoaXMuY29udHJhY3QgPSBjb250cmFjdDtcclxuICAgICAgICB0aGlzLnRva2VuX2NvbnRyYWN0ID0gdG9rZW5fY29udHJhY3Q7XHJcbiAgICAgICAgdGhpcy5uZXdhY2NvdW50ID0gKG5ld19uYW1lLCBwYXllciwgbmV3YWNjX3B1YmxpY19hY3RpdmVfa2V5LCBuZXdhY2NfcHVibGljX293bmVyX2tleSkgPT4gKHtcclxuICAgICAgICAgICAgYWNjb3VudDogJ2Vvc2lvJyxcclxuICAgICAgICAgICAgbmFtZTogJ25ld2FjY291bnQnLFxyXG4gICAgICAgICAgICBhdXRob3JpemF0aW9uOiBbe1xyXG4gICAgICAgICAgICAgICAgICAgIGFjdG9yOiBwYXllcixcclxuICAgICAgICAgICAgICAgICAgICBwZXJtaXNzaW9uOiAnYWN0aXZlJyxcclxuICAgICAgICAgICAgICAgIH1dLFxyXG4gICAgICAgICAgICBkYXRhOiB7XHJcbiAgICAgICAgICAgICAgICBjcmVhdG9yOiBwYXllcixcclxuICAgICAgICAgICAgICAgIG5hbWU6IG5ld19uYW1lLFxyXG4gICAgICAgICAgICAgICAgb3duZXI6IHtcclxuICAgICAgICAgICAgICAgICAgICB0aHJlc2hvbGQ6IDEsXHJcbiAgICAgICAgICAgICAgICAgICAga2V5czogW3tcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleTogbmV3YWNjX3B1YmxpY19vd25lcl9rZXksXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB3ZWlnaHQ6IDFcclxuICAgICAgICAgICAgICAgICAgICAgICAgfV0sXHJcbiAgICAgICAgICAgICAgICAgICAgYWNjb3VudHM6IFtdLFxyXG4gICAgICAgICAgICAgICAgICAgIHdhaXRzOiBbXVxyXG4gICAgICAgICAgICAgICAgfSxcclxuICAgICAgICAgICAgICAgIGFjdGl2ZToge1xyXG4gICAgICAgICAgICAgICAgICAgIHRocmVzaG9sZDogMSxcclxuICAgICAgICAgICAgICAgICAgICBrZXlzOiBbe1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBuZXdhY2NfcHVibGljX2FjdGl2ZV9rZXksXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB3ZWlnaHQ6IDFcclxuICAgICAgICAgICAgICAgICAgICAgICAgfV0sXHJcbiAgICAgICAgICAgICAgICAgICAgYWNjb3VudHM6IFtdLFxyXG4gICAgICAgICAgICAgICAgICAgIHdhaXRzOiBbXVxyXG4gICAgICAgICAgICAgICAgfSxcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH0pO1xyXG4gICAgICAgIHRoaXMuYnV5cmFtYnl0ZXMgPSAocmVjZWl2ZXIsIHBheWVyID0gJ2lvJywgYW10ID0gODE5MikgPT4gKHtcclxuICAgICAgICAgICAgYWNjb3VudDogJ2Vvc2lvJyxcclxuICAgICAgICAgICAgbmFtZTogJ2J1eXJhbWJ5dGVzJyxcclxuICAgICAgICAgICAgYXV0aG9yaXphdGlvbjogW3sgYWN0b3I6IHBheWVyLCBwZXJtaXNzaW9uOiAnYWN0aXZlJyB9XSxcclxuICAgICAgICAgICAgZGF0YToge1xyXG4gICAgICAgICAgICAgICAgcGF5ZXI6IHBheWVyLFxyXG4gICAgICAgICAgICAgICAgcmVjZWl2ZXI6IHJlY2VpdmVyLFxyXG4gICAgICAgICAgICAgICAgYnl0ZXM6IGFtdCxcclxuICAgICAgICAgICAgfSxcclxuICAgICAgICB9KTtcclxuICAgICAgICB0aGlzLmRlbGVnYXRlQncgPSAocmVjZWl2ZXIsIHBheWVyID0gJ2lvJywgbmV0X2Ftb3VudCA9ICcxMDAuMDAwMCBOQ08nLCBjcHVfYW1vdW50ID0gJzEwMC4wMDAwIE5DTycsIHRyZmVyID0gdHJ1ZSkgPT4gKHtcclxuICAgICAgICAgICAgYWNjb3VudDogJ2Vvc2lvJyxcclxuICAgICAgICAgICAgbmFtZTogJ2RlbGVnYXRlYncnLFxyXG4gICAgICAgICAgICBhdXRob3JpemF0aW9uOiBbe1xyXG4gICAgICAgICAgICAgICAgICAgIGFjdG9yOiBwYXllcixcclxuICAgICAgICAgICAgICAgICAgICBwZXJtaXNzaW9uOiAnYWN0aXZlJyxcclxuICAgICAgICAgICAgICAgIH1dLFxyXG4gICAgICAgICAgICBkYXRhOiB7XHJcbiAgICAgICAgICAgICAgICBmcm9tOiBwYXllcixcclxuICAgICAgICAgICAgICAgIHJlY2VpdmVyOiByZWNlaXZlcixcclxuICAgICAgICAgICAgICAgIHN0YWtlX25ldF9xdWFudGl0eTogbmV0X2Ftb3VudCxcclxuICAgICAgICAgICAgICAgIHN0YWtlX2NwdV9xdWFudGl0eTogY3B1X2Ftb3VudCxcclxuICAgICAgICAgICAgICAgIHRyYW5zZmVyOiB0cmZlcixcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH0pO1xyXG4gICAgICAgIC8qY3JlYXRlVXNlciA9IGFzeW5jIChcclxuICAgICAgICAgIG5ld1VzZXI6IHN0cmluZyxcclxuICAgICAgICAgIHBheWVyOiBzdHJpbmcsXHJcbiAgICAgICAgICBwdWJsaWNfYWN0aXZlX2tleTogc3RyaW5nLFxyXG4gICAgICAgICAgcHVibGljX293bmVyX2tleTogc3RyaW5nXHJcbiAgICAgICAgKSA9PiB7XHJcbiAgICAgICAgXHJcbiAgICAgICAgICBsZXQgbmV3YWNjX2FjdGlvbiA9IHRoaXMuX25ld2FjY291bnQobmV3VXNlciwgcGF5ZXIsIHB1YmxpY19hY3RpdmVfa2V5LCBwdWJsaWNfb3duZXJfa2V5KTtcclxuICAgICAgICAgIGxldCBidXlyYW1fYWN0aW9uID0gdGhpcy5fYnV5cmFtYnl0ZXMobmV3VXNlciwgcGF5ZXIpO1xyXG4gICAgICAgICAgbGV0IGRlbGVnYXRlYndfYWN0aW9uID0gdGhpcy5fZGVsZWdhdGVCdyhuZXdVc2VyLCBwYXllcik7XHJcbiAgICAgICAgXHJcbiAgICAgICAgICByZXR1cm4gW25ld2FjY19hY3Rpb24sIGJ1eXJhbV9hY3Rpb24sIGRlbGVnYXRlYndfYWN0aW9uXVxyXG4gICAgICAgIH07XHJcbiAgICAgICAgXHJcbiAgICAgICAgY3JlYXRlQWNjb3VudChcclxuICAgICAgICAgIGF1dGhvcml6YXRpb246IEVvc2lvQXV0aG9yaXphdGlvbk9iamVjdFtdLFxyXG4gICAgICAgICAgb3duZXI6IHN0cmluZyxcclxuICAgICAgICAgIHN5bWJvbDogc3RyaW5nLFxyXG4gICAgICAgICAgcGF5ZXI6IHN0cmluZ1xyXG4gICAgICAgICkge1xyXG4gICAgICAgICAgcmV0dXJuIHRoaXMuX3BhY2sodGhpcy5jb250cmFjdCwgYXV0aG9yaXphdGlvbiwgXCJvcGVuXCIsIHtcclxuICAgICAgICAgICAgb3duZXIsXHJcbiAgICAgICAgICAgIHN5bWJvbCxcclxuICAgICAgICAgICAgcGF5ZXJcclxuICAgICAgICAgIH0pO1xyXG4gICAgICAgIH0qL1xyXG4gICAgICAgIHRoaXMuY3JlYXRlQ29sbGVjdGlvbiA9IChhdXRob3IsIGNvbGxlY3Rpb25fbmFtZSwgYXV0aG9yaXplZF9hY2NvdW50cywgbm90aWZ5X2FjY291bnRzID0gW10sIG1hcmtldF9mZWUsIGFsbG93X25vdGlmeSkgPT4ge1xyXG4gICAgICAgICAgICBjb25zdCBhY3Rpb24gPSB7XHJcbiAgICAgICAgICAgICAgICBhY2NvdW50OiAnYXRvbWljYXNzZXRzJyxcclxuICAgICAgICAgICAgICAgIG5hbWU6ICdjcmVhdGVjb2wnLFxyXG4gICAgICAgICAgICAgICAgZGF0YToge1xyXG4gICAgICAgICAgICAgICAgICAgIGF1dGhvcjogYXV0aG9yLFxyXG4gICAgICAgICAgICAgICAgICAgIGNvbGxlY3Rpb25fbmFtZTogY29sbGVjdGlvbl9uYW1lLFxyXG4gICAgICAgICAgICAgICAgICAgIGFsbG93X25vdGlmeTogYWxsb3dfbm90aWZ5LFxyXG4gICAgICAgICAgICAgICAgICAgIGF1dGhvcml6ZWRfYWNjb3VudHM6IGF1dGhvcml6ZWRfYWNjb3VudHMsXHJcbiAgICAgICAgICAgICAgICAgICAgbm90aWZ5X2FjY291bnRzOiBub3RpZnlfYWNjb3VudHMsXHJcbiAgICAgICAgICAgICAgICAgICAgbWFya2V0X2ZlZTogbWFya2V0X2ZlZSxcclxuICAgICAgICAgICAgICAgICAgICBkYXRhOiBbXVxyXG4gICAgICAgICAgICAgICAgfSxcclxuICAgICAgICAgICAgICAgIGF1dGhvcml6YXRpb246IFtcclxuICAgICAgICAgICAgICAgICAgICB7IGFjdG9yOiBhdXRob3IsIHBlcm1pc3Npb246ICdhY3RpdmUnIH1cclxuICAgICAgICAgICAgICAgIF1cclxuICAgICAgICAgICAgfTtcclxuICAgICAgICAgICAgcmV0dXJuIGFjdGlvbjtcclxuICAgICAgICB9O1xyXG4gICAgICAgIHRoaXMuY3JlYXRlU2NoZW1hID0gKGF1dGhvciwgcGF5ZXIsIGNvbGxlY3Rpb25fbmFtZSwgc2NoZW1hX25hbWUsIHNjaCkgPT4ge1xyXG4gICAgICAgICAgICBjb25zdCBhY3Rpb24gPSB7XHJcbiAgICAgICAgICAgICAgICBhY2NvdW50OiAnYXRvbWljYXNzZXRzJyxcclxuICAgICAgICAgICAgICAgIG5hbWU6ICdjcmVhdGVzY2hlbWEnLFxyXG4gICAgICAgICAgICAgICAgZGF0YToge1xyXG4gICAgICAgICAgICAgICAgICAgIGF1dGhvcml6ZWRfY3JlYXRvcjogYXV0aG9yLFxyXG4gICAgICAgICAgICAgICAgICAgIGNvbGxlY3Rpb25fbmFtZTogY29sbGVjdGlvbl9uYW1lLFxyXG4gICAgICAgICAgICAgICAgICAgIHNjaGVtYV9uYW1lOiBzY2hlbWFfbmFtZSxcclxuICAgICAgICAgICAgICAgICAgICBzY2hlbWFfZm9ybWF0OiBzY2hcclxuICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgICAgICBhdXRob3JpemF0aW9uOiBbXHJcbiAgICAgICAgICAgICAgICAgICAgeyBhY3RvcjogYXV0aG9yLCBwZXJtaXNzaW9uOiAnYWN0aXZlJyB9XHJcbiAgICAgICAgICAgICAgICBdXHJcbiAgICAgICAgICAgIH07XHJcbiAgICAgICAgICAgIHJldHVybiBhY3Rpb247XHJcbiAgICAgICAgfTtcclxuICAgICAgICB0aGlzLmNyZWF0ZVRlbXBsYXRlID0gKGF1dGhvciwgY29sbGVjdGlvbl9uYW1lLCBzY2hlbWFfbmFtZSwgeGZlcmFibGUsIGJ1cm5hYmxlLCBtYXhfc3VwcGx5LCB0ZW1wbGF0ZV9maWVsZHMpID0+IHtcclxuICAgICAgICAgICAgY29uc3QgYWN0aW9uID0ge1xyXG4gICAgICAgICAgICAgICAgYWNjb3VudDogJ2F0b21pY2Fzc2V0cycsXHJcbiAgICAgICAgICAgICAgICBuYW1lOiAnY3JlYXRldGVtcGwnLFxyXG4gICAgICAgICAgICAgICAgZGF0YToge1xyXG4gICAgICAgICAgICAgICAgICAgIGF1dGhvcml6ZWRfY3JlYXRvcjogYXV0aG9yLFxyXG4gICAgICAgICAgICAgICAgICAgIGNvbGxlY3Rpb25fbmFtZTogY29sbGVjdGlvbl9uYW1lLFxyXG4gICAgICAgICAgICAgICAgICAgIHNjaGVtYV9uYW1lOiBzY2hlbWFfbmFtZSxcclxuICAgICAgICAgICAgICAgICAgICB0cmFuc2ZlcmFibGU6IHhmZXJhYmxlLFxyXG4gICAgICAgICAgICAgICAgICAgIGJ1cm5hYmxlOiBidXJuYWJsZSxcclxuICAgICAgICAgICAgICAgICAgICBtYXhfc3VwcGx5OiAweGZmZmZmZixcclxuICAgICAgICAgICAgICAgICAgICBpbW11dGFibGVfZGF0YTogdGVtcGxhdGVfZmllbGRzIC8ve2tleTogJ25hbWUnLCB2YWx1ZTogWydzdHJpbmcnLCAnZGVmYXVsdCddIH0gXVxyXG4gICAgICAgICAgICAgICAgfSxcclxuICAgICAgICAgICAgICAgIGF1dGhvcml6YXRpb246IFtcclxuICAgICAgICAgICAgICAgICAgICB7IGFjdG9yOiBhdXRob3IsIHBlcm1pc3Npb246ICdhY3RpdmUnIH1cclxuICAgICAgICAgICAgICAgIF1cclxuICAgICAgICAgICAgfTtcclxuICAgICAgICAgICAgcmV0dXJuIGFjdGlvbjtcclxuICAgICAgICB9O1xyXG4gICAgICAgIHRoaXMuY3JlYXRlUGVybWlzc2lvbiA9IChhdXRob3IsIHBlcm1fbmFtZSwgcGVybV9rZXkpID0+IHtcclxuICAgICAgICAgICAgY29uc3QgYXV0aG9yaXphdGlvbl9vYmplY3QgPSB7XHJcbiAgICAgICAgICAgICAgICB0aHJlc2hvbGQ6IDEsXHJcbiAgICAgICAgICAgICAgICBhY2NvdW50czogW3sgcGVybWlzc2lvbjogeyBhY3RvcjogYXV0aG9yLCBwZXJtaXNzaW9uOiAnYWN0aXZlJyB9LCB3ZWlnaHQ6IDEgfV0sXHJcbiAgICAgICAgICAgICAgICBrZXlzOiBbeyBrZXk6IHBlcm1fa2V5LCB3ZWlnaHQ6IDEgfV0sXHJcbiAgICAgICAgICAgICAgICB3YWl0czogW11cclxuICAgICAgICAgICAgfTtcclxuICAgICAgICAgICAgY29uc3QgdXBkYXRlYXV0aF9pbnB1dCA9IHtcclxuICAgICAgICAgICAgICAgIGFjY291bnQ6IGF1dGhvcixcclxuICAgICAgICAgICAgICAgIHBlcm1pc3Npb246IHBlcm1fbmFtZSxcclxuICAgICAgICAgICAgICAgIHBhcmVudDogJ2FjdGl2ZScsXHJcbiAgICAgICAgICAgICAgICBhdXRoOiBhdXRob3JpemF0aW9uX29iamVjdFxyXG4gICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICBjb25zdCBhY3Rpb24gPSB7XHJcbiAgICAgICAgICAgICAgICBhY2NvdW50OiAnZW9zaW8nLFxyXG4gICAgICAgICAgICAgICAgbmFtZTogJ3VwZGF0ZWF1dGgnLFxyXG4gICAgICAgICAgICAgICAgZGF0YTogdXBkYXRlYXV0aF9pbnB1dCxcclxuICAgICAgICAgICAgICAgIGF1dGhvcml6YXRpb246IFtcclxuICAgICAgICAgICAgICAgICAgICB7IGFjdG9yOiBhdXRob3IsIHBlcm1pc3Npb246ICdhY3RpdmUnIH1cclxuICAgICAgICAgICAgICAgIF1cclxuICAgICAgICAgICAgfTtcclxuICAgICAgICAgICAgcmV0dXJuIGFjdGlvbjtcclxuICAgICAgICB9O1xyXG4gICAgICAgIHRoaXMubWludEFzc2V0ID0gKGF1dGhvciwgcGF5ZXIsIGNvbF9uYW1lLCBzY2hfbmFtZSwgdG1wbF9pZCwgaW1tdXRhYmxlX2RhdGEsIG11dGFibGVfZGF0YSkgPT4ge1xyXG4gICAgICAgICAgICBjb25zdCBhY3Rpb24gPSB7XHJcbiAgICAgICAgICAgICAgICBhY2NvdW50OiAnYXRvbWljYXNzZXRzJyxcclxuICAgICAgICAgICAgICAgIG5hbWU6ICdtaW50YXNzZXQnLFxyXG4gICAgICAgICAgICAgICAgZGF0YToge1xyXG4gICAgICAgICAgICAgICAgICAgIGF1dGhvcml6ZWRfbWludGVyOiBhdXRob3IsXHJcbiAgICAgICAgICAgICAgICAgICAgY29sbGVjdGlvbl9uYW1lOiBjb2xfbmFtZSxcclxuICAgICAgICAgICAgICAgICAgICBzY2hlbWFfbmFtZTogc2NoX25hbWUsXHJcbiAgICAgICAgICAgICAgICAgICAgdGVtcGxhdGVfaWQ6IHRtcGxfaWQsXHJcbiAgICAgICAgICAgICAgICAgICAgbmV3X2Fzc2V0X293bmVyOiBhdXRob3IsXHJcbiAgICAgICAgICAgICAgICAgICAgaW1tdXRhYmxlX2RhdGE6IGltbXV0YWJsZV9kYXRhLFxyXG4gICAgICAgICAgICAgICAgICAgIG11dGFibGVfZGF0YTogbXV0YWJsZV9kYXRhLFxyXG4gICAgICAgICAgICAgICAgICAgIHRva2Vuc190b19iYWNrOiBbXSAvL3Rva2VucyB0byBiYWNrIFxyXG4gICAgICAgICAgICAgICAgfSxcclxuICAgICAgICAgICAgICAgIGF1dGhvcml6YXRpb246IFtcclxuICAgICAgICAgICAgICAgICAgICB7IGFjdG9yOiBhdXRob3IsIHBlcm1pc3Npb246ICdhY3RpdmUnIH1cclxuICAgICAgICAgICAgICAgIF1cclxuICAgICAgICAgICAgfTtcclxuICAgICAgICAgICAgcmV0dXJuIGFjdGlvbjtcclxuICAgICAgICB9O1xyXG4gICAgICAgIHRoaXMuY3JlYXRlUG9vbCA9IChjcmVhdG9yLCB0aWNrZXIsIGlzX2luZmxhdGFibGUsIGlzX2RlZmxhdGFibGUsIGlzX3RyZWFzdXJ5LCBkZXNjcikgPT4ge1xyXG4gICAgICAgICAgICBjb25zdCBhY3Rpb24gPSB7XHJcbiAgICAgICAgICAgICAgICBhY2NvdW50OiAncG9vbHMyLm5jbycsXHJcbiAgICAgICAgICAgICAgICBuYW1lOiAnY3JlYXRlcG9vbCcsXHJcbiAgICAgICAgICAgICAgICBkYXRhOiB7XHJcbiAgICAgICAgICAgICAgICAgICAgb3duZXI6IGNyZWF0b3IsXHJcbiAgICAgICAgICAgICAgICAgICAgdGlja2VyOiB0aWNrZXIsXHJcbiAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb246IGRlc2NyLFxyXG4gICAgICAgICAgICAgICAgICAgIGlzX2luZmxhdGFibGU6IGlzX2luZmxhdGFibGUsXHJcbiAgICAgICAgICAgICAgICAgICAgaXNfZGVmbGF0YWJsZTogaXNfZGVmbGF0YWJsZSxcclxuICAgICAgICAgICAgICAgICAgICBpc190cmVhc3VyeTogaXNfdHJlYXN1cnlcclxuICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgICAgICBhdXRob3JpemF0aW9uOiBbXHJcbiAgICAgICAgICAgICAgICAgICAgeyBhY3RvcjogY3JlYXRvciwgcGVybWlzc2lvbjogJ2FjdGl2ZScgfVxyXG4gICAgICAgICAgICAgICAgXVxyXG4gICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICByZXR1cm4gYWN0aW9uO1xyXG4gICAgICAgIH07XHJcbiAgICAgICAgdGhpcy50eE5jb0JhbGFuY2UgPSAoZnJvbSwgdG8sIGFtdCwgbWVtbykgPT4ge1xyXG4gICAgICAgICAgICBjb25zdCBhY3Rpb24gPSB7XHJcbiAgICAgICAgICAgICAgICBhY2NvdW50OiAnZW9zaW8udG9rZW4nLFxyXG4gICAgICAgICAgICAgICAgbmFtZTogJ3RyYW5zZmVyJyxcclxuICAgICAgICAgICAgICAgIGRhdGE6IHtcclxuICAgICAgICAgICAgICAgICAgICBmcm9tOiBmcm9tLFxyXG4gICAgICAgICAgICAgICAgICAgIHRvOiB0byxcclxuICAgICAgICAgICAgICAgICAgICBxdWFudGl0eTogYW10LFxyXG4gICAgICAgICAgICAgICAgICAgIG1lbW86IG1lbW8gLy8nJ1xyXG4gICAgICAgICAgICAgICAgfSxcclxuICAgICAgICAgICAgICAgIGF1dGhvcml6YXRpb246IFtcclxuICAgICAgICAgICAgICAgICAgICB7ICdhY3Rvcic6IGZyb20sICdwZXJtaXNzaW9uJzogJ2FjdGl2ZScgfVxyXG4gICAgICAgICAgICAgICAgXVxyXG4gICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICByZXR1cm4gYWN0aW9uO1xyXG4gICAgICAgIH07XHJcbiAgICAgICAgdGhpcy50eEJhbGFuY2UgPSAoY29udHJhY3QsIGZyb20sIHRvLCBhbXQsIG1lbW8pID0+IHtcclxuICAgICAgICAgICAgY29uc3QgYWN0aW9uID0ge1xyXG4gICAgICAgICAgICAgICAgYWNjb3VudDogY29udHJhY3QsXHJcbiAgICAgICAgICAgICAgICBuYW1lOiAndHJhbnNmZXInLFxyXG4gICAgICAgICAgICAgICAgZGF0YToge1xyXG4gICAgICAgICAgICAgICAgICAgIGZyb206IGZyb20sXHJcbiAgICAgICAgICAgICAgICAgICAgdG86IHRvLFxyXG4gICAgICAgICAgICAgICAgICAgIHF1YW50aXR5OiBhbXQsXHJcbiAgICAgICAgICAgICAgICAgICAgbWVtbzogbWVtbyAvLycnXHJcbiAgICAgICAgICAgICAgICB9LFxyXG4gICAgICAgICAgICAgICAgYXV0aG9yaXphdGlvbjogW1xyXG4gICAgICAgICAgICAgICAgICAgIHsgJ2FjdG9yJzogZnJvbSwgJ3Blcm1pc3Npb24nOiAnYWN0aXZlJyB9XHJcbiAgICAgICAgICAgICAgICBdXHJcbiAgICAgICAgICAgIH07XHJcbiAgICAgICAgICAgIHJldHVybiBhY3Rpb247XHJcbiAgICAgICAgfTtcclxuICAgIH1cclxuICAgIF9wYWNrKGFjY291bnQsIGF1dGhvcml6YXRpb24sIG5hbWUsIGRhdGEpIHtcclxuICAgICAgICByZXR1cm4gW3sgYWNjb3VudCwgbmFtZSwgYXV0aG9yaXphdGlvbiwgZGF0YSB9XTtcclxuICAgIH1cclxufVxyXG5leHBvcnRzLkFjdGlvbkdlbmVyYXRvciA9IEFjdGlvbkdlbmVyYXRvcjtcclxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/actions.ts\n");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ActionGenerator = void 0;
+class ActionGenerator {
+    constructor(contract, token_contract) {
+        this.contract = contract;
+        this.token_contract = token_contract;
+        this.newaccount = (new_name, payer, newacc_public_active_key, newacc_public_owner_key) => ({
+            account: 'eosio',
+            name: 'newaccount',
+            authorization: [{
+                    actor: payer,
+                    permission: 'active',
+                }],
+            data: {
+                creator: payer,
+                name: new_name,
+                owner: {
+                    threshold: 1,
+                    keys: [{
+                            key: newacc_public_owner_key,
+                            weight: 1
+                        }],
+                    accounts: [],
+                    waits: []
+                },
+                active: {
+                    threshold: 1,
+                    keys: [{
+                            key: newacc_public_active_key,
+                            weight: 1
+                        }],
+                    accounts: [],
+                    waits: []
+                },
+            }
+        });
+        this.buyrambytes = (receiver, payer = 'io', amt = 8192) => ({
+            account: 'eosio',
+            name: 'buyrambytes',
+            authorization: [{ actor: payer, permission: 'active' }],
+            data: {
+                payer: payer,
+                receiver: receiver,
+                bytes: amt,
+            },
+        });
+        this.delegateBw = (receiver, payer = 'io', net_amount = '100.0000 NCO', cpu_amount = '100.0000 NCO', trfer = true) => ({
+            account: 'eosio',
+            name: 'delegatebw',
+            authorization: [{
+                    actor: payer,
+                    permission: 'active',
+                }],
+            data: {
+                from: payer,
+                receiver: receiver,
+                stake_net_quantity: net_amount,
+                stake_cpu_quantity: cpu_amount,
+                transfer: trfer,
+            }
+        });
+        /*createUser = async (
+          newUser: string,
+          payer: string,
+          public_active_key: string,
+          public_owner_key: string
+        ) => {
+        
+          let newacc_action = this._newaccount(newUser, payer, public_active_key, public_owner_key);
+          let buyram_action = this._buyrambytes(newUser, payer);
+          let delegatebw_action = this._delegateBw(newUser, payer);
+        
+          return [newacc_action, buyram_action, delegatebw_action]
+        };
+        
+        createAccount(
+          authorization: EosioAuthorizationObject[],
+          owner: string,
+          symbol: string,
+          payer: string
+        ) {
+          return this._pack(this.contract, authorization, "open", {
+            owner,
+            symbol,
+            payer
+          });
+        }*/
+        this.createCollection = (author, collection_name, authorized_accounts, notify_accounts = [], market_fee, allow_notify) => {
+            const action = {
+                account: 'atomicassets',
+                name: 'createcol',
+                data: {
+                    author: author,
+                    collection_name: collection_name,
+                    allow_notify: allow_notify,
+                    authorized_accounts: authorized_accounts,
+                    notify_accounts: notify_accounts,
+                    market_fee: market_fee,
+                    data: []
+                },
+                authorization: [
+                    { actor: author, permission: 'active' }
+                ]
+            };
+            return action;
+        };
+        this.createSchema = (author, payer, collection_name, schema_name, sch) => {
+            const action = {
+                account: 'atomicassets',
+                name: 'createschema',
+                data: {
+                    authorized_creator: author,
+                    collection_name: collection_name,
+                    schema_name: schema_name,
+                    schema_format: sch
+                },
+                authorization: [
+                    { actor: author, permission: 'active' }
+                ]
+            };
+            return action;
+        };
+        this.createTemplate = (author, collection_name, schema_name, xferable, burnable, max_supply, template_fields) => {
+            const action = {
+                account: 'atomicassets',
+                name: 'createtempl',
+                data: {
+                    authorized_creator: author,
+                    collection_name: collection_name,
+                    schema_name: schema_name,
+                    transferable: xferable,
+                    burnable: burnable,
+                    max_supply: 0xffffff,
+                    immutable_data: template_fields //{key: 'name', value: ['string', 'default'] } ]
+                },
+                authorization: [
+                    { actor: author, permission: 'active' }
+                ]
+            };
+            return action;
+        };
+        this.createPermission = (author, perm_name, perm_key) => {
+            const authorization_object = {
+                threshold: 1,
+                accounts: [{ permission: { actor: author, permission: 'active' }, weight: 1 }],
+                keys: [{ key: perm_key, weight: 1 }],
+                waits: []
+            };
+            const updateauth_input = {
+                account: author,
+                permission: perm_name,
+                parent: 'active',
+                auth: authorization_object
+            };
+            const action = {
+                account: 'eosio',
+                name: 'updateauth',
+                data: updateauth_input,
+                authorization: [
+                    { actor: author, permission: 'active' }
+                ]
+            };
+            return action;
+        };
+        this.mintAsset = (author, payer, col_name, sch_name, tmpl_id, immutable_data, mutable_data) => {
+            const action = {
+                account: 'atomicassets',
+                name: 'mintasset',
+                data: {
+                    authorized_minter: author,
+                    collection_name: col_name,
+                    schema_name: sch_name,
+                    template_id: tmpl_id,
+                    new_asset_owner: author,
+                    immutable_data: immutable_data,
+                    mutable_data: mutable_data,
+                    tokens_to_back: [] //tokens to back 
+                },
+                authorization: [
+                    { actor: author, permission: 'active' }
+                ]
+            };
+            return action;
+        };
+        this.createPool = (creator, ticker, is_inflatable, is_deflatable, is_treasury, descr) => {
+            const action = {
+                account: 'pools2.nco',
+                name: 'createpool',
+                data: {
+                    owner: creator,
+                    ticker: ticker,
+                    description: descr,
+                    is_inflatable: is_inflatable,
+                    is_deflatable: is_deflatable,
+                    is_treasury: is_treasury
+                },
+                authorization: [
+                    { actor: creator, permission: 'active' }
+                ]
+            };
+            return action;
+        };
+        this.txNcoBalance = (from, to, amt, memo) => {
+            const action = {
+                account: 'eosio.token',
+                name: 'transfer',
+                data: {
+                    from: from,
+                    to: to,
+                    quantity: amt,
+                    memo: memo //''
+                },
+                authorization: [
+                    { 'actor': from, 'permission': 'active' }
+                ]
+            };
+            return action;
+        };
+        this.txBalance = (contract, from, to, amt, memo) => {
+            const action = {
+                account: contract,
+                name: 'transfer',
+                data: {
+                    from: from,
+                    to: to,
+                    quantity: amt,
+                    memo: memo //''
+                },
+                authorization: [
+                    { 'actor': from, 'permission': 'active' }
+                ]
+            };
+            return action;
+        };
+    }
+    _pack(account, authorization, name, data) {
+        return [{ account, name, authorization, data }];
+    }
+}
+exports.ActionGenerator = ActionGenerator;
+
 
 /***/ }),
 
@@ -26,7 +259,615 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\n
   \**********************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-eval("\r\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\r\n    if (k2 === undefined) k2 = k;\r\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\r\n}) : (function(o, m, k, k2) {\r\n    if (k2 === undefined) k2 = k;\r\n    o[k2] = m[k];\r\n}));\r\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\r\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\r\n}) : function(o, v) {\r\n    o[\"default\"] = v;\r\n});\r\nvar __importStar = (this && this.__importStar) || function (mod) {\r\n    if (mod && mod.__esModule) return mod;\r\n    var result = {};\r\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\r\n    __setModuleDefault(result, mod);\r\n    return result;\r\n};\r\nvar __exportStar = (this && this.__exportStar) || function(m, exports) {\r\n    for (var p in m) if (p !== \"default\" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);\r\n};\r\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.NCO_BlockchainAPI = exports.devnet_services = exports.devnet_urls = void 0;\r\n// EOS imports\r\nconst eosjs_1 = __webpack_require__(/*! eosjs */ \"eosjs\");\r\nconst eosjs_jssig_1 = __webpack_require__(/*! eosjs/dist/eosjs-jssig */ \"eosjs/dist/eosjs-jssig\"); // development only\r\n// @ts-ignore\r\nconst eosjs_ecc_priveos_1 = __importDefault(__webpack_require__(/*! eosjs-ecc-priveos */ \"eosjs-ecc-priveos\"));\r\n// Extra backend services\r\nconst hyperion_1 = __webpack_require__(/*! @eoscafe/hyperion */ \"@eoscafe/hyperion\");\r\nconst atomicassets_1 = __webpack_require__(/*! atomicassets */ \"atomicassets\");\r\n// Newcoin services  \r\nconst newcoin_pools_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.pools-js/ */ \"@newcoin-foundation/newcoin.pools-js/\");\r\nconst newcoin_pool_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.pool-js */ \"@newcoin-foundation/newcoin.pool-js\");\r\nconst newcoin_pool_js_2 = __webpack_require__(/*! @newcoin-foundation/newcoin.pool-js */ \"@newcoin-foundation/newcoin.pool-js\");\r\nconst newcoin_daos_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.daos-js */ \"@newcoin-foundation/newcoin.daos-js\");\r\nconst actions_1 = __webpack_require__(/*! ./actions */ \"./src/actions.ts\");\r\n// @ts-ignore\r\nconst node_fetch = __importStar(__webpack_require__(/*! node-fetch */ \"node-fetch\"));\r\nconst cross_fetch_1 = __importDefault(__webpack_require__(/*! cross-fetch */ \"cross-fetch\"));\r\n//import * as types from \"./types\";\r\nconst types_1 = __webpack_require__(/*! ./types */ \"./src/types.ts\");\r\n__exportStar(__webpack_require__(/*! ./types */ \"./src/types.ts\"), exports);\r\nconst utils_1 = __webpack_require__(/*! ./utils */ \"./src/utils.ts\");\r\nconst CREATE_ACCOUNT_DEFAULTS = {\r\n    ram_amt: 8192,\r\n    cpu_amount: '100.0000 NCO',\r\n    net_amount: '100.0000 NCO',\r\n    xfer: false,\r\n};\r\n/**\r\n * The primary tool to interact with [https://newcoin.org](newcoin.org).\r\n *\r\n * This is an early alpha.\r\n *\r\n * See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.\r\n */\r\nexports.devnet_urls = {\r\n    nodeos_url: \"https://nodeos-dev.newcoin.org\",\r\n    hyperion_url: \"https://hyperion-dev.newcoin.org\",\r\n    atomicassets_url: \"https://atomic-dev.newcoin.org/\"\r\n};\r\nexports.devnet_services = {\r\n    eosio_contract: \"eosio\",\r\n    token_contract: \"eosio.token\",\r\n    maindao_contract: \"pool.nco\",\r\n    staking_contract: \"pools2.nco\",\r\n    daos_contract: \"daos.nco\"\r\n};\r\nclass NCO_BlockchainAPI {\r\n    /**\r\n     * Init the api\r\n     * @name newcoin-api\r\n     * @param urls\r\n     * @param services\r\n     * @returns a Newcoin API instance\r\n     */\r\n    constructor(urls, services) {\r\n        this.dao_id = \"0\";\r\n        this.pool_id = \"0\";\r\n        this.pool_code = \"\";\r\n        this._url = urls.nodeos_url;\r\n        this._h_url = urls.hyperion_url;\r\n        this._aa_url = urls.atomicassets_url;\r\n        this.aa_api = new atomicassets_1.ExplorerApi(this._aa_url, \"atomicassets\", { fetch: node_fetch });\r\n        this.nodeos_rpc = new eosjs_1.JsonRpc(this._url, { fetch: cross_fetch_1.default });\r\n        this.hrpc = new hyperion_1.JsonRpc(this._h_url, { fetch: cross_fetch_1.default });\r\n        this.cApi = new newcoin_daos_js_1.ChainApi(this._url, services.daos_contract, cross_fetch_1.default);\r\n        this.poolsRpcApi = new newcoin_pools_js_1.RpcApi(this._url, services.staking_contract, cross_fetch_1.default);\r\n        this.poolRpcApi = new newcoin_pool_js_2.RpcApi(this._url, services.maindao_contract, cross_fetch_1.default);\r\n        this.aGen = new newcoin_daos_js_1.ActionGenerator(services.daos_contract, services.token_contract);\r\n        this.mGen = new newcoin_pool_js_1.ActionGenerator(services.maindao_contract, services.token_contract);\r\n        this.pGen = new newcoin_pools_js_1.ActionGenerator(services.staking_contract, services.maindao_contract);\r\n        this.sdkGen = new actions_1.ActionGenerator(services.eosio_contract, services.token_contract);\r\n        this._services = services;\r\n    }\r\n    /**\r\n     * Create a key pair assuming a secure environment (not frontend)\r\n     * @returns A key pair\r\n     */\r\n    createKeyPair() {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            yield eosjs_ecc_priveos_1.default.initialize();\r\n            let opts = { secureEnv: true };\r\n            let p = yield eosjs_ecc_priveos_1.default.randomKey(0, opts);\r\n            //let x = ecc.isValidPrivate(p);\r\n            let t = { prv_key: p, pub_key: eosjs_ecc_priveos_1.default.privateToPublic(p) };\r\n            return t;\r\n        });\r\n    }\r\n    /**\r\n     * Create a user\r\n     * @returns Create User transaction id\r\n     */\r\n    createUser(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const { newUser, newacc_pub_active_key, newacc_pub_owner_key, payer, payer_prv_key, ram_amt, net_amount, cpu_amount, xfer } = Object.assign(Object.assign({}, CREATE_ACCOUNT_DEFAULTS), inpt);\r\n            let t;\r\n            let res = {};\r\n            let tres;\r\n            let newacc_action = this.sdkGen.newaccount(newUser, payer, newacc_pub_active_key, newacc_pub_owner_key);\r\n            let buyram_action = this.sdkGen.buyrambytes(newUser, payer, ram_amt);\r\n            let delegatebw_action = this.sdkGen.delegateBw(newUser, payer, net_amount, cpu_amount, xfer);\r\n            let payer_pub_key = eosjs_ecc_priveos_1.default.privateToPublic(payer_prv_key);\r\n            console.log(\"before create account transaction\");\r\n            tres = (yield this.SubmitTx([newacc_action, buyram_action, delegatebw_action], [payer_pub_key], [payer_prv_key])); // [] contained      \r\n            res.TxID_createAcc = tres.transaction_id;\r\n            console.log(\"createuser transaction complete\");\r\n            return res;\r\n        });\r\n    }\r\n    /**\r\n     * Create collection\r\n     * @returns Create Collection and template transactions' ids\r\n     */\r\n    createCollection(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let t;\r\n            let res = {};\r\n            let tres;\r\n            let d = 12 - inpt.user.length;\r\n            if (inpt.collection_name == undefined)\r\n                inpt.collection_name = (0, utils_1.normalizeUsername)(inpt.user, \"z\"); //(inpt.creator).replace('.', 'z' + 'z'.repeat(d));\r\n            if (inpt.schema_name == undefined)\r\n                inpt.schema_name = (0, utils_1.normalizeUsername)(inpt.user, \"w\"); // (inpt.creator).replace('.', 'w' + 'w'.repeat(d));\r\n            let user_public_active_key = eosjs_ecc_priveos_1.default.privateToPublic(inpt.user_prv_active_key);\r\n            let mkt_fee = inpt.mkt_fee ? inpt.mkt_fee : 0.05;\r\n            let allow_notify = inpt.allow_notify ? inpt.allow_notify : true;\r\n            t = this.sdkGen.createCollection(inpt.user, inpt.collection_name, [inpt.user], [inpt.user], mkt_fee, allow_notify);\r\n            console.log(t);\r\n            console.log(\"createcol transaction\");\r\n            tres = (yield this.SubmitTx([t], [user_public_active_key], [inpt.user_prv_active_key]));\r\n            res.TxID_createCol = tres.transaction_id;\r\n            console.log(\"creating schema\");\r\n            let schema_fields = inpt.schema_fields ? inpt.schema_fields : types_1.default_schema;\r\n            t = this.sdkGen.createSchema(inpt.user, inpt.user, inpt.collection_name, inpt.schema_name, schema_fields);\r\n            console.log(t);\r\n            console.log(\"createsch transaction\");\r\n            tres = (yield this.SubmitTx([t], [user_public_active_key], [inpt.user_prv_active_key]));\r\n            res.TxID_createSch = tres.transaction_id;\r\n            console.log(\"creating template\");\r\n            let template = inpt.template_fields ? inpt.template_fields : [];\r\n            let xferable = inpt.xferable ? inpt.xferable : true;\r\n            let burnable = inpt.burnable ? inpt.burnable : true;\r\n            let max_supply = inpt.max_supply ? inpt.max_supply : 0xffffff;\r\n            t = this.sdkGen.createTemplate(inpt.user, inpt.collection_name, inpt.schema_name, xferable, burnable, max_supply, template);\r\n            console.log(t);\r\n            console.log(\"creating template transaction\");\r\n            tres = (yield this.SubmitTx([t], [user_public_active_key], [inpt.user_prv_active_key]));\r\n            res.TxID_createTpl = res.TxID_createTpl;\r\n            return res;\r\n        });\r\n    }\r\n    /**\r\n     * Create a new permission subject to Active permission.\r\n     * @returns Create permission transaction id\r\n     */\r\n    createPermission(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let t = this.sdkGen.createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);\r\n            let res = yield this.SubmitTx([t], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.author_prv_active_key)], [inpt.author_prv_active_key]);\r\n            let r = {};\r\n            r.TxID_createPerm = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n     * Link a permission to a specific action of a specific contract.\r\n     * @returns Link permission transaction id\r\n     */\r\n    linkPermission(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const linkauth_input = {\r\n                account: inpt.author,\r\n                code: inpt.action_owner,\r\n                type: inpt.action_to_link,\r\n                requirement: inpt.perm_to_link, // 'active', 'owner' ... \r\n            };\r\n            // the action which will make the linking \r\n            let action = {\r\n                account: 'eosio',\r\n                name: 'linkauth',\r\n                data: linkauth_input,\r\n                authorization: [{\r\n                        actor: inpt.author,\r\n                        permission: 'active'\r\n                    }]\r\n            };\r\n            let res = yield this.SubmitTx([action], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.author_prv_active_key)], [inpt.author_prv_active_key]);\r\n            let r = {};\r\n            r.TxID_linkPerm = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n     * Create a staking pool for an account\r\n     * @returns Create Pool transaction id\r\n     */\r\n    createPool(inpt) {\r\n        var _a, _b, _c;\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            inpt.ticker = (inpt.ticker || inpt.owner.substring(0, 3)).toUpperCase();\r\n            (_a = inpt.is_inflatable) !== null && _a !== void 0 ? _a : (inpt.is_inflatable = true);\r\n            (_b = inpt.is_deflatable) !== null && _b !== void 0 ? _b : (inpt.is_deflatable = true);\r\n            (_c = inpt.is_treasury) !== null && _c !== void 0 ? _c : (inpt.is_treasury = false);\r\n            console.log(\"Creating pool: \" + JSON.stringify(inpt));\r\n            let t = this.sdkGen.createPool(inpt.owner, inpt.ticker, inpt.is_inflatable, inpt.is_deflatable, inpt.is_treasury, \"test pool for \" + inpt.owner);\r\n            let res = yield this.SubmitTx([t], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.owner_prv_active_key)], [inpt.owner_prv_active_key]);\r\n            let r = {};\r\n            r.TxID_createPool = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n     * Stake mainDAO\r\n     * @param inpt\r\n     * @returns\r\n     */\r\n    stakeMainDAO(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let r = {};\r\n            const stakeTx = yield this.mGen.stake([{ actor: inpt.payer, permission: \"active\" }], inpt.payer, inpt.amt);\r\n            console.log(\"action: \" + JSON.stringify(stakeTx));\r\n            const res = yield this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            r.TxID_stakeMainDAO = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n    * inst UnStake mainDAO\r\n    * @param inpt\r\n    * @returns\r\n    */\r\n    instUnstakeMainDAO(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let r = {};\r\n            const stakeTx = yield this.mGen.instunstake([{ actor: inpt.payer, permission: \"active\" }], inpt.payer, inpt.amt);\r\n            console.log(\"action: \" + JSON.stringify(stakeTx));\r\n            const res = yield this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            r.TxID_unstakeMainDAO = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n     * delayed UnStake mainDAO\r\n     * @param inpt\r\n     * @returns\r\n     */\r\n    dldUnstakeMainDAO(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let r = {};\r\n            const stakeTx = yield this.mGen.dldunstake([{ actor: inpt.payer, permission: \"active\" }], inpt.payer, inpt.amt);\r\n            console.log(\"action: \" + JSON.stringify(stakeTx));\r\n            const res = yield this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            r.TxID_unstakeMainDAO = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n     * Stake to pool\r\n     * @returns Create Pool transaction id\r\n     */\r\n    stakePool(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let p = { owner: inpt.owner };\r\n            let r = {};\r\n            console.log(\"Get poolbyowner: \", JSON.stringify(p));\r\n            let q = yield this.poolsRpcApi.getPoolByOwner(p);\r\n            let t = yield q.json();\r\n            this.pool_id = t.rows[0].id;\r\n            this.pool_code = t.rows[0].code;\r\n            console.log(\"pool:\" + JSON.stringify(t));\r\n            const stakeTx = yield this.pGen.stakeToPool([{ actor: inpt.payer, permission: \"active\" },\r\n                { actor: \"io\", permission: \"active\" }], inpt.payer, inpt.amt, this.pool_id);\r\n            console.log(\"action: \" + JSON.stringify(stakeTx));\r\n            const res = yield this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            r.TxID_stakePool = res.transaction_id;\r\n            r.pool_id = this.pool_id;\r\n            r.pool_code = this.pool_code;\r\n            return r;\r\n        });\r\n    }\r\n    unstakePool(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const t = yield this.pGen.withdrawFromPool([{ actor: inpt.payer, permission: \"active\" }], //{ actor: \"io\", permission: \"active\"}\r\n            inpt.payer, inpt.amt);\r\n            console.log(\"action: \" + JSON.stringify(t));\r\n            const res = yield this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            let r = {};\r\n            r.TxID_unstakePool = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    addToWhiteList(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            //const aGen = new PoolsActionGenerator(\"pools2.nco\", \"eosio.token\");\r\n            /*const t = await this.aGen.createWhiteListProposal(\r\n              [{ actor: inpt.owner, permission: \"active\" }],\r\n              ~~inpt.dao_id,\r\n              inpt.account);\r\n        \r\n            const res = await this.SubmitTx(t,\r\n              [ecc.privateToPublic(inpt.owner_prv_key)], [inpt.owner_prv_key]) as TransactResult;\r\n          */\r\n            let r = {};\r\n            r.TxID_addToWhiteList = \"0\"; //res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    removeFromWhiteList(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            //const aGen = new PoolsActionGenerator(\"pools2.nco\", \"eosio.token\");\r\n            //const t = await pGen.removeFromWhiteList(\r\n            //  [{ actor: inpt.owner, permission: \"active\"}],\r\n            //  inpt.pool_id,\r\n            //  inpt.owner);\r\n            //const res = await SubmitTx(t, \r\n            //  [ecc.privateToPublic(inpt.owner_prv_key)], [inpt.owner_prv_key], \r\n            //  this._url) as TransactResult;\r\n            let r = {};\r\n            //r.TxID_removeFromWhiteList = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    createDao(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const t = yield this.aGen.createDao([{ actor: inpt.author, permission: \"active\" }], inpt.author, inpt.descr);\r\n            const res = yield this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.authpr_prv_key)], [inpt.authpr_prv_key]);\r\n            let p = { owner: inpt.author };\r\n            console.log(\"Get dao by owner: \", JSON.stringify(p));\r\n            let q = yield this.cApi.getDAOByOwner(p);\r\n            let w = yield q.json();\r\n            console.log(\"received from getDaoByOwner\" + JSON.stringify(w));\r\n            let r = {};\r\n            r.TxID_createDao = res.transaction_id;\r\n            r.dao_id = w.rows[0].id;\r\n            this.dao_id = r.dao_id.toString();\r\n            return r;\r\n        });\r\n    }\r\n    createDaoProposal(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            if (inpt.dao_id == undefined) {\r\n                if (inpt.dao_owner == undefined)\r\n                    throw (\"DAO undefined\");\r\n                let p = { owner: inpt.dao_owner };\r\n                console.log(\"Get dao by owner: \", JSON.stringify(p));\r\n                let q = yield this.cApi.getDAOByOwner(p);\r\n                let w = yield q.json();\r\n                console.log(\"received from getDaoByOwner\" + JSON.stringify(w));\r\n                inpt.dao_id = w.rows[0].id;\r\n            }\r\n            const t = yield this.aGen.createProposal([{ actor: inpt.proposer, permission: \"active\" }], inpt.proposer, inpt.dao_id, inpt.title, inpt.summary, inpt.url, inpt.vote_start, inpt.vote_end);\r\n            const res = yield this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.proposer_prv_key)], [inpt.proposer_prv_key]);\r\n            let r = {};\r\n            r.TxID_createDaoProposal = res.transaction_id;\r\n            r.dao_id = inpt.dao_id;\r\n            return r;\r\n        });\r\n    }\r\n    approveDaoProposal(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            if (inpt.dao_id == undefined) {\r\n                if (inpt.dao_owner == undefined)\r\n                    throw (\"DAO undefined\");\r\n                let p = { owner: inpt.dao_owner };\r\n                console.log(\"Get dao by owner: \", JSON.stringify(p));\r\n                let q = yield this.cApi.getDAOByOwner(p);\r\n                let w = yield q.json();\r\n                console.log(\"received from getDaoByOwner\" + JSON.stringify(w));\r\n                inpt.dao_id = w.rows[0].id;\r\n            }\r\n            if (inpt.proposal_id == undefined) {\r\n                if (inpt.proposal_author == undefined)\r\n                    throw (\"Proposal undefined neither ID nor name\");\r\n                let p = {\r\n                    daoID: inpt.dao_id.toString(),\r\n                    proposer: inpt.proposal_author\r\n                };\r\n                console.log(\"Get proposal by author: \", JSON.stringify(p));\r\n                let q = yield this.cApi.getProposalByProposer(p);\r\n                let w = yield q.json();\r\n                console.log(\"received from getProposalByOwner\" + JSON.stringify(w));\r\n                inpt.proposal_id = w.rows[0].id;\r\n            }\r\n            const t = yield this.aGen.approveProposal([{ actor: inpt.approver, permission: \"active\" }], inpt.dao_id, inpt.proposal_id);\r\n            const res = yield this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]);\r\n            let r = {};\r\n            r.TxID_approveDaoProposal = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    executeDaoProposal(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            if (inpt.dao_id == undefined) {\r\n                if (inpt.dao_owner == undefined)\r\n                    throw (\"DAO undefined\");\r\n                let q = yield this.cApi.getDAOByOwner({ owner: inpt.dao_owner });\r\n                let w = yield q.json();\r\n                console.log(\"received from getDaoByOwner\" + JSON.stringify(w));\r\n                inpt.dao_id = w.rows[0].id;\r\n            }\r\n            if (inpt.proposal_id == undefined) {\r\n                if (inpt.proposal_author == undefined)\r\n                    throw (\"Proposal undefined neither ID nor name\");\r\n                let p = {\r\n                    daoID: inpt.dao_id.toString(),\r\n                    proposer: inpt.proposal_author\r\n                };\r\n                console.log(\"Get proposal by author: \", JSON.stringify(p));\r\n                let q = yield this.cApi.getProposalByProposer(p);\r\n                let w = yield q.json();\r\n                console.log(\"received from getProposalByOwner\" + JSON.stringify(w));\r\n                inpt.proposal_id = w.rows[0].id;\r\n            }\r\n            const t = yield this.aGen.executeProposal([{ actor: inpt.exec, permission: \"active\" }], inpt.dao_id, inpt.proposal_id);\r\n            const res = yield this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.exec_prv_key)], [inpt.exec_prv_key]);\r\n            let r = {};\r\n            r.TxID_executeDaoProposal = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    getDaoProposals(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            if (inpt.dao_id == undefined) {\r\n                if (inpt.dao_owner == undefined)\r\n                    return {};\r\n                let q = yield this.cApi.getDAOByOwner({ owner: inpt.dao_owner });\r\n                let w = yield q.json();\r\n                console.log(\"received from getDaoByOwner\" + JSON.stringify(w));\r\n                inpt.dao_id = (w.rows[0].id).toString();\r\n            }\r\n            if (inpt.proposal_id == undefined) {\r\n                const opt = { daoID: inpt.dao_id, proposer: inpt.proposal_author };\r\n                let q = yield this.cApi.getProposalByProposer(opt);\r\n                let w = yield q.json();\r\n                console.log(\"received from getProposalbyProposer\" + JSON.stringify(w));\r\n                inpt.proposal_id = (w.rows[0].id).toString();\r\n            }\r\n            console.log(\"Get proposals for dao \", JSON.stringify(inpt.dao_id));\r\n            let q = yield this.cApi.getProposalByID({ daoID: inpt.dao_id, id: inpt.proposal_id });\r\n            let w = yield q.json();\r\n            console.log(\"received from getProposalByID\" + JSON.stringify(w.rows));\r\n            return w.rows;\r\n        });\r\n    }\r\n    voteOnDaoProposal(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            console.log(\"Vote for DAO proposal\", JSON.stringify(inpt.dao_id));\r\n            const t = yield this.aGen.vote([{ actor: inpt.voter, permission: \"active\" }], inpt.voter, inpt.quantity, inpt.proposal_type || \"standart\", inpt.dao_id, inpt.proposal_id, inpt.option);\r\n            // let w = await q.json();\r\n            const res = yield this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]);\r\n            console.log(\"received from VoteForDaoProposal\" + JSON.stringify(res));\r\n            return { TxID_voteForDaoProposal: res.transaction_id };\r\n        });\r\n    }\r\n    /**\r\n     * Mint an asset\r\n     * @returns Create Pool transaction id\r\n     */\r\n    mintAsset(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let d = 12 - inpt.creator.length;\r\n            if (inpt.col_name == undefined)\r\n                inpt.col_name = (0, utils_1.normalizeUsername)(inpt.creator, \"z\");\r\n            if (inpt.sch_name == undefined)\r\n                inpt.sch_name = (0, utils_1.normalizeUsername)(inpt.creator, \"w\");\r\n            if (inpt.tmpl_id == undefined)\r\n                inpt.tmpl_id = -1;\r\n            if (inpt.immutable_data == undefined)\r\n                inpt.immutable_data = [\r\n                    { key: 'name', value: ['string', inpt.creator + '_' + (new Date()).getTime()] }\r\n                ];\r\n            if (inpt.mutable_data == undefined)\r\n                inpt.mutable_data = [];\r\n            const t = this.sdkGen.mintAsset(inpt.creator, inpt.payer, inpt.col_name, inpt.sch_name, inpt.tmpl_id, inpt.immutable_data, inpt.mutable_data);\r\n            let res = yield this.SubmitTx([t], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            let r = {};\r\n            r.TxID_mintAsset = res.transaction_id;\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n     * Get trasaction data\r\n     * @returns Tx data\r\n     */\r\n    getTxData(txid) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let txi = yield this.hrpc.get_transaction(txid);\r\n            console.log(txi); // get template number  txi.actions[1].act.data.template_id\r\n            return txi;\r\n        });\r\n    }\r\n    /**\r\n     * Get account balance\r\n     * @returns Tx data\r\n     */\r\n    getAccountBalance(acc) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            if (acc.contract == undefined)\r\n                acc.contract = 'eosio.token';\r\n            let rc = { acc_balances: [] };\r\n            try {\r\n                let t = yield (0, cross_fetch_1.default)(`https://nodeos-dev.newcoin.org/v1/chain/get_currency_balance`, {\r\n                    method: \"POST\",\r\n                    headers: { \"Content-Type\": \"application/json\" },\r\n                    body: JSON.stringify({\r\n                        account: acc.owner,\r\n                        code: acc.contract\r\n                    }),\r\n                });\r\n                rc.acc_balances = yield t.json();\r\n                //console.log(rc);\r\n                return rc;\r\n            }\r\n            catch (e) {\r\n                console.log('\\nCaught exception: ' + e);\r\n                if (e instanceof eosjs_1.RpcError)\r\n                    console.log(JSON.stringify(e.json, null, 2));\r\n            }\r\n        });\r\n    }\r\n    /**\r\n     * Transfer NCO between accounts\r\n     * @returns Transfer transaction id\r\n     */\r\n    _txBalance(contract, inpt, memo = \"\") {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let r = {};\r\n            let tx = this.sdkGen.txBalance(contract, inpt.payer, inpt.to, inpt.amt, memo);\r\n            let res = yield this.SubmitTx([tx], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            r.TxID = res.transaction_id;\r\n            //console.log(res);\r\n            return r;\r\n        });\r\n    }\r\n    txGNCOBalance(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const r = yield this._txBalance(this._services.maindao_contract, inpt);\r\n            return r.TxID;\r\n        });\r\n    }\r\n    txNCOBalance(inpt) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const r = yield this._txBalance(this._services.token_contract, inpt);\r\n            return r.TxID;\r\n        });\r\n    }\r\n    /**\r\n     * Transfer NCO between accounts\r\n     * @returns Transfer transaction id\r\n     */\r\n    txNcoBalance(inpt) {\r\n        var _a;\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let r = {};\r\n            let tx = this.sdkGen.txNcoBalance(inpt.payer, inpt.to, inpt.amt, (_a = inpt.memo) !== null && _a !== void 0 ? _a : (inpt.memo = \"\"));\r\n            let res = yield this.SubmitTx([tx], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);\r\n            r.TxID_txNcoBalance = res.transaction_id;\r\n            //console.log(res);\r\n            return r;\r\n        });\r\n    }\r\n    /**\r\n   * Get pool info\r\n   * @returns Tx data\r\n   */\r\n    getPoolInfo(payload) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const api = new newcoin_pools_js_1.RpcApi(\"https://nodeos-dev.newcoin.org\", \"pools2.nco\", cross_fetch_1.default);\r\n            try {\r\n                const fn = payload.code ? \"getPoolByCode\" : \"getPoolByOwner\";\r\n                let q = yield api[fn](payload);\r\n                let t = yield q.json();\r\n                //console.log(t.rows[0]);\r\n                //console.log(t.rows[0].total);\r\n                return t;\r\n            }\r\n            catch (e) {\r\n                console.log('\\nCaught exception: ' + e);\r\n                if (e instanceof eosjs_1.RpcError)\r\n                    console.log(JSON.stringify(e.json, null, 2));\r\n            }\r\n            return {};\r\n            ``;\r\n        });\r\n    }\r\n    SubmitTx(actions, public_keys, // testnet [\"EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT\"]\r\n    private_keys // testnet [\"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV\"]\r\n    ) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            const signatureProvider = new eosjs_jssig_1.JsSignatureProvider(private_keys);\r\n            signatureProvider.availableKeys = public_keys;\r\n            //@ts-ignore\r\n            const rpc = this.nodeos_rpc;\r\n            const api = new eosjs_1.Api({ rpc, signatureProvider }); //required to submit transactions\r\n            const info = yield rpc.get_info();\r\n            const lastBlockInfo = yield rpc.get_block(info.last_irreversible_block_num);\r\n            const tzOff = new Date(info.head_block_time).getTimezoneOffset();\r\n            var t = new Date((new Date(info.head_block_time)).getTime() + 10 * 60 * 1000 - tzOff * 1000 * 60).toISOString().slice(0, -1); //+10m\r\n            const transactionObj = {\r\n                actions: actions,\r\n                expiration: t,\r\n                ref_block_prefix: lastBlockInfo.ref_block_prefix,\r\n                ref_block_num: lastBlockInfo.block_num & 0xffff, // 22774\r\n            };\r\n            const a = yield api.serializeActions(transactionObj.actions);\r\n            const transaction = Object.assign(Object.assign({}, transactionObj), { actions: a });\r\n            const serializedTransaction = api.serializeTransaction(transaction);\r\n            const availableKeys = yield api.signatureProvider.getAvailableKeys();\r\n            const requiredKeys = yield api.authorityProvider.getRequiredKeys({ transaction, availableKeys });\r\n            const abis = yield api.getTransactionAbis(transaction);\r\n            // const pushTransactionArgs: PushTransactionArgs = { serializedTransaction, signatures };\r\n            const pushTransactionArgs = yield api.signatureProvider.sign({\r\n                chainId: info.chain_id,\r\n                requiredKeys: requiredKeys,\r\n                serializedTransaction: serializedTransaction,\r\n                serializedContextFreeData: undefined,\r\n                abis: abis\r\n            });\r\n            //console.log(\"signed transaction: \" + JSON.stringify(pushTransactionArgs));\r\n            /*\r\n            let tr  = serializedTransaction.buffer.toString();\r\n            let eccst = ecc.sign(serializedTransaction, private_keys[0]);\r\n            let pub_from_prv = ecc.privateToPublic(private_keys[0]);\r\n            let sig = pushTransactionArgs.signatures[0];\r\n            let key = ecc.recover(sig, tr);\r\n            let c = ecc.verify(sig, tr, public_keys[0]);\r\n            console.log(\"signature verification: return %d\", c)*/\r\n            return api.pushSignedTransaction(pushTransactionArgs);\r\n        });\r\n    }\r\n    ;\r\n}\r\nexports.NCO_BlockchainAPI = NCO_BlockchainAPI;\r\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvaW5kZXgudHMuanMiLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vTkNPX0Jsb2NrY2hhaW5BUEkvLi9zcmMvaW5kZXgudHM/NTJmOCJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcclxudmFyIF9fY3JlYXRlQmluZGluZyA9ICh0aGlzICYmIHRoaXMuX19jcmVhdGVCaW5kaW5nKSB8fCAoT2JqZWN0LmNyZWF0ZSA/IChmdW5jdGlvbihvLCBtLCBrLCBrMikge1xyXG4gICAgaWYgKGsyID09PSB1bmRlZmluZWQpIGsyID0gaztcclxuICAgIE9iamVjdC5kZWZpbmVQcm9wZXJ0eShvLCBrMiwgeyBlbnVtZXJhYmxlOiB0cnVlLCBnZXQ6IGZ1bmN0aW9uKCkgeyByZXR1cm4gbVtrXTsgfSB9KTtcclxufSkgOiAoZnVuY3Rpb24obywgbSwgaywgazIpIHtcclxuICAgIGlmIChrMiA9PT0gdW5kZWZpbmVkKSBrMiA9IGs7XHJcbiAgICBvW2syXSA9IG1ba107XHJcbn0pKTtcclxudmFyIF9fc2V0TW9kdWxlRGVmYXVsdCA9ICh0aGlzICYmIHRoaXMuX19zZXRNb2R1bGVEZWZhdWx0KSB8fCAoT2JqZWN0LmNyZWF0ZSA/IChmdW5jdGlvbihvLCB2KSB7XHJcbiAgICBPYmplY3QuZGVmaW5lUHJvcGVydHkobywgXCJkZWZhdWx0XCIsIHsgZW51bWVyYWJsZTogdHJ1ZSwgdmFsdWU6IHYgfSk7XHJcbn0pIDogZnVuY3Rpb24obywgdikge1xyXG4gICAgb1tcImRlZmF1bHRcIl0gPSB2O1xyXG59KTtcclxudmFyIF9faW1wb3J0U3RhciA9ICh0aGlzICYmIHRoaXMuX19pbXBvcnRTdGFyKSB8fCBmdW5jdGlvbiAobW9kKSB7XHJcbiAgICBpZiAobW9kICYmIG1vZC5fX2VzTW9kdWxlKSByZXR1cm4gbW9kO1xyXG4gICAgdmFyIHJlc3VsdCA9IHt9O1xyXG4gICAgaWYgKG1vZCAhPSBudWxsKSBmb3IgKHZhciBrIGluIG1vZCkgaWYgKGsgIT09IFwiZGVmYXVsdFwiICYmIE9iamVjdC5wcm90b3R5cGUuaGFzT3duUHJvcGVydHkuY2FsbChtb2QsIGspKSBfX2NyZWF0ZUJpbmRpbmcocmVzdWx0LCBtb2QsIGspO1xyXG4gICAgX19zZXRNb2R1bGVEZWZhdWx0KHJlc3VsdCwgbW9kKTtcclxuICAgIHJldHVybiByZXN1bHQ7XHJcbn07XHJcbnZhciBfX2V4cG9ydFN0YXIgPSAodGhpcyAmJiB0aGlzLl9fZXhwb3J0U3RhcikgfHwgZnVuY3Rpb24obSwgZXhwb3J0cykge1xyXG4gICAgZm9yICh2YXIgcCBpbiBtKSBpZiAocCAhPT0gXCJkZWZhdWx0XCIgJiYgIU9iamVjdC5wcm90b3R5cGUuaGFzT3duUHJvcGVydHkuY2FsbChleHBvcnRzLCBwKSkgX19jcmVhdGVCaW5kaW5nKGV4cG9ydHMsIG0sIHApO1xyXG59O1xyXG52YXIgX19hd2FpdGVyID0gKHRoaXMgJiYgdGhpcy5fX2F3YWl0ZXIpIHx8IGZ1bmN0aW9uICh0aGlzQXJnLCBfYXJndW1lbnRzLCBQLCBnZW5lcmF0b3IpIHtcclxuICAgIGZ1bmN0aW9uIGFkb3B0KHZhbHVlKSB7IHJldHVybiB2YWx1ZSBpbnN0YW5jZW9mIFAgPyB2YWx1ZSA6IG5ldyBQKGZ1bmN0aW9uIChyZXNvbHZlKSB7IHJlc29sdmUodmFsdWUpOyB9KTsgfVxyXG4gICAgcmV0dXJuIG5ldyAoUCB8fCAoUCA9IFByb21pc2UpKShmdW5jdGlvbiAocmVzb2x2ZSwgcmVqZWN0KSB7XHJcbiAgICAgICAgZnVuY3Rpb24gZnVsZmlsbGVkKHZhbHVlKSB7IHRyeSB7IHN0ZXAoZ2VuZXJhdG9yLm5leHQodmFsdWUpKTsgfSBjYXRjaCAoZSkgeyByZWplY3QoZSk7IH0gfVxyXG4gICAgICAgIGZ1bmN0aW9uIHJlamVjdGVkKHZhbHVlKSB7IHRyeSB7IHN0ZXAoZ2VuZXJhdG9yW1widGhyb3dcIl0odmFsdWUpKTsgfSBjYXRjaCAoZSkgeyByZWplY3QoZSk7IH0gfVxyXG4gICAgICAgIGZ1bmN0aW9uIHN0ZXAocmVzdWx0KSB7IHJlc3VsdC5kb25lID8gcmVzb2x2ZShyZXN1bHQudmFsdWUpIDogYWRvcHQocmVzdWx0LnZhbHVlKS50aGVuKGZ1bGZpbGxlZCwgcmVqZWN0ZWQpOyB9XHJcbiAgICAgICAgc3RlcCgoZ2VuZXJhdG9yID0gZ2VuZXJhdG9yLmFwcGx5KHRoaXNBcmcsIF9hcmd1bWVudHMgfHwgW10pKS5uZXh0KCkpO1xyXG4gICAgfSk7XHJcbn07XHJcbnZhciBfX2ltcG9ydERlZmF1bHQgPSAodGhpcyAmJiB0aGlzLl9faW1wb3J0RGVmYXVsdCkgfHwgZnVuY3Rpb24gKG1vZCkge1xyXG4gICAgcmV0dXJuIChtb2QgJiYgbW9kLl9fZXNNb2R1bGUpID8gbW9kIDogeyBcImRlZmF1bHRcIjogbW9kIH07XHJcbn07XHJcbk9iamVjdC5kZWZpbmVQcm9wZXJ0eShleHBvcnRzLCBcIl9fZXNNb2R1bGVcIiwgeyB2YWx1ZTogdHJ1ZSB9KTtcclxuZXhwb3J0cy5OQ09fQmxvY2tjaGFpbkFQSSA9IGV4cG9ydHMuZGV2bmV0X3NlcnZpY2VzID0gZXhwb3J0cy5kZXZuZXRfdXJscyA9IHZvaWQgMDtcclxuLy8gRU9TIGltcG9ydHNcclxuY29uc3QgZW9zanNfMSA9IHJlcXVpcmUoXCJlb3Nqc1wiKTtcclxuY29uc3QgZW9zanNfanNzaWdfMSA9IHJlcXVpcmUoXCJlb3Nqcy9kaXN0L2Vvc2pzLWpzc2lnXCIpOyAvLyBkZXZlbG9wbWVudCBvbmx5XHJcbi8vIEB0cy1pZ25vcmVcclxuY29uc3QgZW9zanNfZWNjX3ByaXZlb3NfMSA9IF9faW1wb3J0RGVmYXVsdChyZXF1aXJlKFwiZW9zanMtZWNjLXByaXZlb3NcIikpO1xyXG4vLyBFeHRyYSBiYWNrZW5kIHNlcnZpY2VzXHJcbmNvbnN0IGh5cGVyaW9uXzEgPSByZXF1aXJlKFwiQGVvc2NhZmUvaHlwZXJpb25cIik7XHJcbmNvbnN0IGF0b21pY2Fzc2V0c18xID0gcmVxdWlyZShcImF0b21pY2Fzc2V0c1wiKTtcclxuLy8gTmV3Y29pbiBzZXJ2aWNlcyAgXHJcbmNvbnN0IG5ld2NvaW5fcG9vbHNfanNfMSA9IHJlcXVpcmUoXCJAbmV3Y29pbi1mb3VuZGF0aW9uL25ld2NvaW4ucG9vbHMtanMvXCIpO1xyXG5jb25zdCBuZXdjb2luX3Bvb2xfanNfMSA9IHJlcXVpcmUoXCJAbmV3Y29pbi1mb3VuZGF0aW9uL25ld2NvaW4ucG9vbC1qc1wiKTtcclxuY29uc3QgbmV3Y29pbl9wb29sX2pzXzIgPSByZXF1aXJlKFwiQG5ld2NvaW4tZm91bmRhdGlvbi9uZXdjb2luLnBvb2wtanNcIik7XHJcbmNvbnN0IG5ld2NvaW5fZGFvc19qc18xID0gcmVxdWlyZShcIkBuZXdjb2luLWZvdW5kYXRpb24vbmV3Y29pbi5kYW9zLWpzXCIpO1xyXG5jb25zdCBhY3Rpb25zXzEgPSByZXF1aXJlKFwiLi9hY3Rpb25zXCIpO1xyXG4vLyBAdHMtaWdub3JlXHJcbmNvbnN0IG5vZGVfZmV0Y2ggPSBfX2ltcG9ydFN0YXIocmVxdWlyZShcIm5vZGUtZmV0Y2hcIikpO1xyXG5jb25zdCBjcm9zc19mZXRjaF8xID0gX19pbXBvcnREZWZhdWx0KHJlcXVpcmUoXCJjcm9zcy1mZXRjaFwiKSk7XHJcbi8vaW1wb3J0ICogYXMgdHlwZXMgZnJvbSBcIi4vdHlwZXNcIjtcclxuY29uc3QgdHlwZXNfMSA9IHJlcXVpcmUoXCIuL3R5cGVzXCIpO1xyXG5fX2V4cG9ydFN0YXIocmVxdWlyZShcIi4vdHlwZXNcIiksIGV4cG9ydHMpO1xyXG5jb25zdCB1dGlsc18xID0gcmVxdWlyZShcIi4vdXRpbHNcIik7XHJcbmNvbnN0IENSRUFURV9BQ0NPVU5UX0RFRkFVTFRTID0ge1xyXG4gICAgcmFtX2FtdDogODE5MixcclxuICAgIGNwdV9hbW91bnQ6ICcxMDAuMDAwMCBOQ08nLFxyXG4gICAgbmV0X2Ftb3VudDogJzEwMC4wMDAwIE5DTycsXHJcbiAgICB4ZmVyOiBmYWxzZSxcclxufTtcclxuLyoqXHJcbiAqIFRoZSBwcmltYXJ5IHRvb2wgdG8gaW50ZXJhY3Qgd2l0aCBbaHR0cHM6Ly9uZXdjb2luLm9yZ10obmV3Y29pbi5vcmcpLlxyXG4gKlxyXG4gKiBUaGlzIGlzIGFuIGVhcmx5IGFscGhhLlxyXG4gKlxyXG4gKiBTZWUgW2h0dHBzOi8vZG9jcy5uZXdjb2luLm9yZy9dKGh0dHBzOi8vZG9jcy5uZXdjb2luLm9yZy8pIGZvciBhbiBvdmVydmlldyBvZiB0aGUgbmV3Y29pbiBlY29zeXN0ZW0uXHJcbiAqL1xyXG5leHBvcnRzLmRldm5ldF91cmxzID0ge1xyXG4gICAgbm9kZW9zX3VybDogXCJodHRwczovL25vZGVvcy1kZXYubmV3Y29pbi5vcmdcIixcclxuICAgIGh5cGVyaW9uX3VybDogXCJodHRwczovL2h5cGVyaW9uLWRldi5uZXdjb2luLm9yZ1wiLFxyXG4gICAgYXRvbWljYXNzZXRzX3VybDogXCJodHRwczovL2F0b21pYy1kZXYubmV3Y29pbi5vcmcvXCJcclxufTtcclxuZXhwb3J0cy5kZXZuZXRfc2VydmljZXMgPSB7XHJcbiAgICBlb3Npb19jb250cmFjdDogXCJlb3Npb1wiLFxyXG4gICAgdG9rZW5fY29udHJhY3Q6IFwiZW9zaW8udG9rZW5cIixcclxuICAgIG1haW5kYW9fY29udHJhY3Q6IFwicG9vbC5uY29cIixcclxuICAgIHN0YWtpbmdfY29udHJhY3Q6IFwicG9vbHMyLm5jb1wiLFxyXG4gICAgZGFvc19jb250cmFjdDogXCJkYW9zLm5jb1wiXHJcbn07XHJcbmNsYXNzIE5DT19CbG9ja2NoYWluQVBJIHtcclxuICAgIC8qKlxyXG4gICAgICogSW5pdCB0aGUgYXBpXHJcbiAgICAgKiBAbmFtZSBuZXdjb2luLWFwaVxyXG4gICAgICogQHBhcmFtIHVybHNcclxuICAgICAqIEBwYXJhbSBzZXJ2aWNlc1xyXG4gICAgICogQHJldHVybnMgYSBOZXdjb2luIEFQSSBpbnN0YW5jZVxyXG4gICAgICovXHJcbiAgICBjb25zdHJ1Y3Rvcih1cmxzLCBzZXJ2aWNlcykge1xyXG4gICAgICAgIHRoaXMuZGFvX2lkID0gXCIwXCI7XHJcbiAgICAgICAgdGhpcy5wb29sX2lkID0gXCIwXCI7XHJcbiAgICAgICAgdGhpcy5wb29sX2NvZGUgPSBcIlwiO1xyXG4gICAgICAgIHRoaXMuX3VybCA9IHVybHMubm9kZW9zX3VybDtcclxuICAgICAgICB0aGlzLl9oX3VybCA9IHVybHMuaHlwZXJpb25fdXJsO1xyXG4gICAgICAgIHRoaXMuX2FhX3VybCA9IHVybHMuYXRvbWljYXNzZXRzX3VybDtcclxuICAgICAgICB0aGlzLmFhX2FwaSA9IG5ldyBhdG9taWNhc3NldHNfMS5FeHBsb3JlckFwaSh0aGlzLl9hYV91cmwsIFwiYXRvbWljYXNzZXRzXCIsIHsgZmV0Y2g6IG5vZGVfZmV0Y2ggfSk7XHJcbiAgICAgICAgdGhpcy5ub2Rlb3NfcnBjID0gbmV3IGVvc2pzXzEuSnNvblJwYyh0aGlzLl91cmwsIHsgZmV0Y2g6IGNyb3NzX2ZldGNoXzEuZGVmYXVsdCB9KTtcclxuICAgICAgICB0aGlzLmhycGMgPSBuZXcgaHlwZXJpb25fMS5Kc29uUnBjKHRoaXMuX2hfdXJsLCB7IGZldGNoOiBjcm9zc19mZXRjaF8xLmRlZmF1bHQgfSk7XHJcbiAgICAgICAgdGhpcy5jQXBpID0gbmV3IG5ld2NvaW5fZGFvc19qc18xLkNoYWluQXBpKHRoaXMuX3VybCwgc2VydmljZXMuZGFvc19jb250cmFjdCwgY3Jvc3NfZmV0Y2hfMS5kZWZhdWx0KTtcclxuICAgICAgICB0aGlzLnBvb2xzUnBjQXBpID0gbmV3IG5ld2NvaW5fcG9vbHNfanNfMS5ScGNBcGkodGhpcy5fdXJsLCBzZXJ2aWNlcy5zdGFraW5nX2NvbnRyYWN0LCBjcm9zc19mZXRjaF8xLmRlZmF1bHQpO1xyXG4gICAgICAgIHRoaXMucG9vbFJwY0FwaSA9IG5ldyBuZXdjb2luX3Bvb2xfanNfMi5ScGNBcGkodGhpcy5fdXJsLCBzZXJ2aWNlcy5tYWluZGFvX2NvbnRyYWN0LCBjcm9zc19mZXRjaF8xLmRlZmF1bHQpO1xyXG4gICAgICAgIHRoaXMuYUdlbiA9IG5ldyBuZXdjb2luX2Rhb3NfanNfMS5BY3Rpb25HZW5lcmF0b3Ioc2VydmljZXMuZGFvc19jb250cmFjdCwgc2VydmljZXMudG9rZW5fY29udHJhY3QpO1xyXG4gICAgICAgIHRoaXMubUdlbiA9IG5ldyBuZXdjb2luX3Bvb2xfanNfMS5BY3Rpb25HZW5lcmF0b3Ioc2VydmljZXMubWFpbmRhb19jb250cmFjdCwgc2VydmljZXMudG9rZW5fY29udHJhY3QpO1xyXG4gICAgICAgIHRoaXMucEdlbiA9IG5ldyBuZXdjb2luX3Bvb2xzX2pzXzEuQWN0aW9uR2VuZXJhdG9yKHNlcnZpY2VzLnN0YWtpbmdfY29udHJhY3QsIHNlcnZpY2VzLm1haW5kYW9fY29udHJhY3QpO1xyXG4gICAgICAgIHRoaXMuc2RrR2VuID0gbmV3IGFjdGlvbnNfMS5BY3Rpb25HZW5lcmF0b3Ioc2VydmljZXMuZW9zaW9fY29udHJhY3QsIHNlcnZpY2VzLnRva2VuX2NvbnRyYWN0KTtcclxuICAgICAgICB0aGlzLl9zZXJ2aWNlcyA9IHNlcnZpY2VzO1xyXG4gICAgfVxyXG4gICAgLyoqXHJcbiAgICAgKiBDcmVhdGUgYSBrZXkgcGFpciBhc3N1bWluZyBhIHNlY3VyZSBlbnZpcm9ubWVudCAobm90IGZyb250ZW5kKVxyXG4gICAgICogQHJldHVybnMgQSBrZXkgcGFpclxyXG4gICAgICovXHJcbiAgICBjcmVhdGVLZXlQYWlyKCkge1xyXG4gICAgICAgIHJldHVybiBfX2F3YWl0ZXIodGhpcywgdm9pZCAwLCB2b2lkIDAsIGZ1bmN0aW9uKiAoKSB7XHJcbiAgICAgICAgICAgIHlpZWxkIGVvc2pzX2VjY19wcml2ZW9zXzEuZGVmYXVsdC5pbml0aWFsaXplKCk7XHJcbiAgICAgICAgICAgIGxldCBvcHRzID0geyBzZWN1cmVFbnY6IHRydWUgfTtcclxuICAgICAgICAgICAgbGV0IHAgPSB5aWVsZCBlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucmFuZG9tS2V5KDAsIG9wdHMpO1xyXG4gICAgICAgICAgICAvL2xldCB4ID0gZWNjLmlzVmFsaWRQcml2YXRlKHApO1xyXG4gICAgICAgICAgICBsZXQgdCA9IHsgcHJ2X2tleTogcCwgcHViX2tleTogZW9zanNfZWNjX3ByaXZlb3NfMS5kZWZhdWx0LnByaXZhdGVUb1B1YmxpYyhwKSB9O1xyXG4gICAgICAgICAgICByZXR1cm4gdDtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIC8qKlxyXG4gICAgICogQ3JlYXRlIGEgdXNlclxyXG4gICAgICogQHJldHVybnMgQ3JlYXRlIFVzZXIgdHJhbnNhY3Rpb24gaWRcclxuICAgICAqL1xyXG4gICAgY3JlYXRlVXNlcihpbnB0KSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgY29uc3QgeyBuZXdVc2VyLCBuZXdhY2NfcHViX2FjdGl2ZV9rZXksIG5ld2FjY19wdWJfb3duZXJfa2V5LCBwYXllciwgcGF5ZXJfcHJ2X2tleSwgcmFtX2FtdCwgbmV0X2Ftb3VudCwgY3B1X2Ftb3VudCwgeGZlciB9ID0gT2JqZWN0LmFzc2lnbihPYmplY3QuYXNzaWduKHt9LCBDUkVBVEVfQUNDT1VOVF9ERUZBVUxUUyksIGlucHQpO1xyXG4gICAgICAgICAgICBsZXQgdDtcclxuICAgICAgICAgICAgbGV0IHJlcyA9IHt9O1xyXG4gICAgICAgICAgICBsZXQgdHJlcztcclxuICAgICAgICAgICAgbGV0IG5ld2FjY19hY3Rpb24gPSB0aGlzLnNka0dlbi5uZXdhY2NvdW50KG5ld1VzZXIsIHBheWVyLCBuZXdhY2NfcHViX2FjdGl2ZV9rZXksIG5ld2FjY19wdWJfb3duZXJfa2V5KTtcclxuICAgICAgICAgICAgbGV0IGJ1eXJhbV9hY3Rpb24gPSB0aGlzLnNka0dlbi5idXlyYW1ieXRlcyhuZXdVc2VyLCBwYXllciwgcmFtX2FtdCk7XHJcbiAgICAgICAgICAgIGxldCBkZWxlZ2F0ZWJ3X2FjdGlvbiA9IHRoaXMuc2RrR2VuLmRlbGVnYXRlQncobmV3VXNlciwgcGF5ZXIsIG5ldF9hbW91bnQsIGNwdV9hbW91bnQsIHhmZXIpO1xyXG4gICAgICAgICAgICBsZXQgcGF5ZXJfcHViX2tleSA9IGVvc2pzX2VjY19wcml2ZW9zXzEuZGVmYXVsdC5wcml2YXRlVG9QdWJsaWMocGF5ZXJfcHJ2X2tleSk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwiYmVmb3JlIGNyZWF0ZSBhY2NvdW50IHRyYW5zYWN0aW9uXCIpO1xyXG4gICAgICAgICAgICB0cmVzID0gKHlpZWxkIHRoaXMuU3VibWl0VHgoW25ld2FjY19hY3Rpb24sIGJ1eXJhbV9hY3Rpb24sIGRlbGVnYXRlYndfYWN0aW9uXSwgW3BheWVyX3B1Yl9rZXldLCBbcGF5ZXJfcHJ2X2tleV0pKTsgLy8gW10gY29udGFpbmVkICAgICAgXHJcbiAgICAgICAgICAgIHJlcy5UeElEX2NyZWF0ZUFjYyA9IHRyZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwiY3JlYXRldXNlciB0cmFuc2FjdGlvbiBjb21wbGV0ZVwiKTtcclxuICAgICAgICAgICAgcmV0dXJuIHJlcztcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIC8qKlxyXG4gICAgICogQ3JlYXRlIGNvbGxlY3Rpb25cclxuICAgICAqIEByZXR1cm5zIENyZWF0ZSBDb2xsZWN0aW9uIGFuZCB0ZW1wbGF0ZSB0cmFuc2FjdGlvbnMnIGlkc1xyXG4gICAgICovXHJcbiAgICBjcmVhdGVDb2xsZWN0aW9uKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBsZXQgdDtcclxuICAgICAgICAgICAgbGV0IHJlcyA9IHt9O1xyXG4gICAgICAgICAgICBsZXQgdHJlcztcclxuICAgICAgICAgICAgbGV0IGQgPSAxMiAtIGlucHQudXNlci5sZW5ndGg7XHJcbiAgICAgICAgICAgIGlmIChpbnB0LmNvbGxlY3Rpb25fbmFtZSA9PSB1bmRlZmluZWQpXHJcbiAgICAgICAgICAgICAgICBpbnB0LmNvbGxlY3Rpb25fbmFtZSA9ICgwLCB1dGlsc18xLm5vcm1hbGl6ZVVzZXJuYW1lKShpbnB0LnVzZXIsIFwielwiKTsgLy8oaW5wdC5jcmVhdG9yKS5yZXBsYWNlKCcuJywgJ3onICsgJ3onLnJlcGVhdChkKSk7XHJcbiAgICAgICAgICAgIGlmIChpbnB0LnNjaGVtYV9uYW1lID09IHVuZGVmaW5lZClcclxuICAgICAgICAgICAgICAgIGlucHQuc2NoZW1hX25hbWUgPSAoMCwgdXRpbHNfMS5ub3JtYWxpemVVc2VybmFtZSkoaW5wdC51c2VyLCBcIndcIik7IC8vIChpbnB0LmNyZWF0b3IpLnJlcGxhY2UoJy4nLCAndycgKyAndycucmVwZWF0KGQpKTtcclxuICAgICAgICAgICAgbGV0IHVzZXJfcHVibGljX2FjdGl2ZV9rZXkgPSBlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucHJpdmF0ZVRvUHVibGljKGlucHQudXNlcl9wcnZfYWN0aXZlX2tleSk7XHJcbiAgICAgICAgICAgIGxldCBta3RfZmVlID0gaW5wdC5ta3RfZmVlID8gaW5wdC5ta3RfZmVlIDogMC4wNTtcclxuICAgICAgICAgICAgbGV0IGFsbG93X25vdGlmeSA9IGlucHQuYWxsb3dfbm90aWZ5ID8gaW5wdC5hbGxvd19ub3RpZnkgOiB0cnVlO1xyXG4gICAgICAgICAgICB0ID0gdGhpcy5zZGtHZW4uY3JlYXRlQ29sbGVjdGlvbihpbnB0LnVzZXIsIGlucHQuY29sbGVjdGlvbl9uYW1lLCBbaW5wdC51c2VyXSwgW2lucHQudXNlcl0sIG1rdF9mZWUsIGFsbG93X25vdGlmeSk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKHQpO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcImNyZWF0ZWNvbCB0cmFuc2FjdGlvblwiKTtcclxuICAgICAgICAgICAgdHJlcyA9ICh5aWVsZCB0aGlzLlN1Ym1pdFR4KFt0XSwgW3VzZXJfcHVibGljX2FjdGl2ZV9rZXldLCBbaW5wdC51c2VyX3Bydl9hY3RpdmVfa2V5XSkpO1xyXG4gICAgICAgICAgICByZXMuVHhJRF9jcmVhdGVDb2wgPSB0cmVzLnRyYW5zYWN0aW9uX2lkO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcImNyZWF0aW5nIHNjaGVtYVwiKTtcclxuICAgICAgICAgICAgbGV0IHNjaGVtYV9maWVsZHMgPSBpbnB0LnNjaGVtYV9maWVsZHMgPyBpbnB0LnNjaGVtYV9maWVsZHMgOiB0eXBlc18xLmRlZmF1bHRfc2NoZW1hO1xyXG4gICAgICAgICAgICB0ID0gdGhpcy5zZGtHZW4uY3JlYXRlU2NoZW1hKGlucHQudXNlciwgaW5wdC51c2VyLCBpbnB0LmNvbGxlY3Rpb25fbmFtZSwgaW5wdC5zY2hlbWFfbmFtZSwgc2NoZW1hX2ZpZWxkcyk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKHQpO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcImNyZWF0ZXNjaCB0cmFuc2FjdGlvblwiKTtcclxuICAgICAgICAgICAgdHJlcyA9ICh5aWVsZCB0aGlzLlN1Ym1pdFR4KFt0XSwgW3VzZXJfcHVibGljX2FjdGl2ZV9rZXldLCBbaW5wdC51c2VyX3Bydl9hY3RpdmVfa2V5XSkpO1xyXG4gICAgICAgICAgICByZXMuVHhJRF9jcmVhdGVTY2ggPSB0cmVzLnRyYW5zYWN0aW9uX2lkO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcImNyZWF0aW5nIHRlbXBsYXRlXCIpO1xyXG4gICAgICAgICAgICBsZXQgdGVtcGxhdGUgPSBpbnB0LnRlbXBsYXRlX2ZpZWxkcyA/IGlucHQudGVtcGxhdGVfZmllbGRzIDogW107XHJcbiAgICAgICAgICAgIGxldCB4ZmVyYWJsZSA9IGlucHQueGZlcmFibGUgPyBpbnB0LnhmZXJhYmxlIDogdHJ1ZTtcclxuICAgICAgICAgICAgbGV0IGJ1cm5hYmxlID0gaW5wdC5idXJuYWJsZSA/IGlucHQuYnVybmFibGUgOiB0cnVlO1xyXG4gICAgICAgICAgICBsZXQgbWF4X3N1cHBseSA9IGlucHQubWF4X3N1cHBseSA/IGlucHQubWF4X3N1cHBseSA6IDB4ZmZmZmZmO1xyXG4gICAgICAgICAgICB0ID0gdGhpcy5zZGtHZW4uY3JlYXRlVGVtcGxhdGUoaW5wdC51c2VyLCBpbnB0LmNvbGxlY3Rpb25fbmFtZSwgaW5wdC5zY2hlbWFfbmFtZSwgeGZlcmFibGUsIGJ1cm5hYmxlLCBtYXhfc3VwcGx5LCB0ZW1wbGF0ZSk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKHQpO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcImNyZWF0aW5nIHRlbXBsYXRlIHRyYW5zYWN0aW9uXCIpO1xyXG4gICAgICAgICAgICB0cmVzID0gKHlpZWxkIHRoaXMuU3VibWl0VHgoW3RdLCBbdXNlcl9wdWJsaWNfYWN0aXZlX2tleV0sIFtpbnB0LnVzZXJfcHJ2X2FjdGl2ZV9rZXldKSk7XHJcbiAgICAgICAgICAgIHJlcy5UeElEX2NyZWF0ZVRwbCA9IHJlcy5UeElEX2NyZWF0ZVRwbDtcclxuICAgICAgICAgICAgcmV0dXJuIHJlcztcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIC8qKlxyXG4gICAgICogQ3JlYXRlIGEgbmV3IHBlcm1pc3Npb24gc3ViamVjdCB0byBBY3RpdmUgcGVybWlzc2lvbi5cclxuICAgICAqIEByZXR1cm5zIENyZWF0ZSBwZXJtaXNzaW9uIHRyYW5zYWN0aW9uIGlkXHJcbiAgICAgKi9cclxuICAgIGNyZWF0ZVBlcm1pc3Npb24oaW5wdCkge1xyXG4gICAgICAgIHJldHVybiBfX2F3YWl0ZXIodGhpcywgdm9pZCAwLCB2b2lkIDAsIGZ1bmN0aW9uKiAoKSB7XHJcbiAgICAgICAgICAgIGxldCB0ID0gdGhpcy5zZGtHZW4uY3JlYXRlUGVybWlzc2lvbihpbnB0LmF1dGhvciwgaW5wdC5wZXJtX25hbWUsIGlucHQucGVybV9wdWJfa2V5KTtcclxuICAgICAgICAgICAgbGV0IHJlcyA9IHlpZWxkIHRoaXMuU3VibWl0VHgoW3RdLCBbZW9zanNfZWNjX3ByaXZlb3NfMS5kZWZhdWx0LnByaXZhdGVUb1B1YmxpYyhpbnB0LmF1dGhvcl9wcnZfYWN0aXZlX2tleSldLCBbaW5wdC5hdXRob3JfcHJ2X2FjdGl2ZV9rZXldKTtcclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgci5UeElEX2NyZWF0ZVBlcm0gPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgLyoqXHJcbiAgICAgKiBMaW5rIGEgcGVybWlzc2lvbiB0byBhIHNwZWNpZmljIGFjdGlvbiBvZiBhIHNwZWNpZmljIGNvbnRyYWN0LlxyXG4gICAgICogQHJldHVybnMgTGluayBwZXJtaXNzaW9uIHRyYW5zYWN0aW9uIGlkXHJcbiAgICAgKi9cclxuICAgIGxpbmtQZXJtaXNzaW9uKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBjb25zdCBsaW5rYXV0aF9pbnB1dCA9IHtcclxuICAgICAgICAgICAgICAgIGFjY291bnQ6IGlucHQuYXV0aG9yLFxyXG4gICAgICAgICAgICAgICAgY29kZTogaW5wdC5hY3Rpb25fb3duZXIsXHJcbiAgICAgICAgICAgICAgICB0eXBlOiBpbnB0LmFjdGlvbl90b19saW5rLFxyXG4gICAgICAgICAgICAgICAgcmVxdWlyZW1lbnQ6IGlucHQucGVybV90b19saW5rLCAvLyAnYWN0aXZlJywgJ293bmVyJyAuLi4gXHJcbiAgICAgICAgICAgIH07XHJcbiAgICAgICAgICAgIC8vIHRoZSBhY3Rpb24gd2hpY2ggd2lsbCBtYWtlIHRoZSBsaW5raW5nIFxyXG4gICAgICAgICAgICBsZXQgYWN0aW9uID0ge1xyXG4gICAgICAgICAgICAgICAgYWNjb3VudDogJ2Vvc2lvJyxcclxuICAgICAgICAgICAgICAgIG5hbWU6ICdsaW5rYXV0aCcsXHJcbiAgICAgICAgICAgICAgICBkYXRhOiBsaW5rYXV0aF9pbnB1dCxcclxuICAgICAgICAgICAgICAgIGF1dGhvcml6YXRpb246IFt7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGFjdG9yOiBpbnB0LmF1dGhvcixcclxuICAgICAgICAgICAgICAgICAgICAgICAgcGVybWlzc2lvbjogJ2FjdGl2ZSdcclxuICAgICAgICAgICAgICAgICAgICB9XVxyXG4gICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICBsZXQgcmVzID0geWllbGQgdGhpcy5TdWJtaXRUeChbYWN0aW9uXSwgW2Vvc2pzX2VjY19wcml2ZW9zXzEuZGVmYXVsdC5wcml2YXRlVG9QdWJsaWMoaW5wdC5hdXRob3JfcHJ2X2FjdGl2ZV9rZXkpXSwgW2lucHQuYXV0aG9yX3Bydl9hY3RpdmVfa2V5XSk7XHJcbiAgICAgICAgICAgIGxldCByID0ge307XHJcbiAgICAgICAgICAgIHIuVHhJRF9saW5rUGVybSA9IHJlcy50cmFuc2FjdGlvbl9pZDtcclxuICAgICAgICAgICAgcmV0dXJuIHI7XHJcbiAgICAgICAgfSk7XHJcbiAgICB9XHJcbiAgICAvKipcclxuICAgICAqIENyZWF0ZSBhIHN0YWtpbmcgcG9vbCBmb3IgYW4gYWNjb3VudFxyXG4gICAgICogQHJldHVybnMgQ3JlYXRlIFBvb2wgdHJhbnNhY3Rpb24gaWRcclxuICAgICAqL1xyXG4gICAgY3JlYXRlUG9vbChpbnB0KSB7XHJcbiAgICAgICAgdmFyIF9hLCBfYiwgX2M7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgaW5wdC50aWNrZXIgPSAoaW5wdC50aWNrZXIgfHwgaW5wdC5vd25lci5zdWJzdHJpbmcoMCwgMykpLnRvVXBwZXJDYXNlKCk7XHJcbiAgICAgICAgICAgIChfYSA9IGlucHQuaXNfaW5mbGF0YWJsZSkgIT09IG51bGwgJiYgX2EgIT09IHZvaWQgMCA/IF9hIDogKGlucHQuaXNfaW5mbGF0YWJsZSA9IHRydWUpO1xyXG4gICAgICAgICAgICAoX2IgPSBpbnB0LmlzX2RlZmxhdGFibGUpICE9PSBudWxsICYmIF9iICE9PSB2b2lkIDAgPyBfYiA6IChpbnB0LmlzX2RlZmxhdGFibGUgPSB0cnVlKTtcclxuICAgICAgICAgICAgKF9jID0gaW5wdC5pc190cmVhc3VyeSkgIT09IG51bGwgJiYgX2MgIT09IHZvaWQgMCA/IF9jIDogKGlucHQuaXNfdHJlYXN1cnkgPSBmYWxzZSk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwiQ3JlYXRpbmcgcG9vbDogXCIgKyBKU09OLnN0cmluZ2lmeShpbnB0KSk7XHJcbiAgICAgICAgICAgIGxldCB0ID0gdGhpcy5zZGtHZW4uY3JlYXRlUG9vbChpbnB0Lm93bmVyLCBpbnB0LnRpY2tlciwgaW5wdC5pc19pbmZsYXRhYmxlLCBpbnB0LmlzX2RlZmxhdGFibGUsIGlucHQuaXNfdHJlYXN1cnksIFwidGVzdCBwb29sIGZvciBcIiArIGlucHQub3duZXIpO1xyXG4gICAgICAgICAgICBsZXQgcmVzID0geWllbGQgdGhpcy5TdWJtaXRUeChbdF0sIFtlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucHJpdmF0ZVRvUHVibGljKGlucHQub3duZXJfcHJ2X2FjdGl2ZV9rZXkpXSwgW2lucHQub3duZXJfcHJ2X2FjdGl2ZV9rZXldKTtcclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgci5UeElEX2NyZWF0ZVBvb2wgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgLyoqXHJcbiAgICAgKiBTdGFrZSBtYWluREFPXHJcbiAgICAgKiBAcGFyYW0gaW5wdFxyXG4gICAgICogQHJldHVybnNcclxuICAgICAqL1xyXG4gICAgc3Rha2VNYWluREFPKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBsZXQgciA9IHt9O1xyXG4gICAgICAgICAgICBjb25zdCBzdGFrZVR4ID0geWllbGQgdGhpcy5tR2VuLnN0YWtlKFt7IGFjdG9yOiBpbnB0LnBheWVyLCBwZXJtaXNzaW9uOiBcImFjdGl2ZVwiIH1dLCBpbnB0LnBheWVyLCBpbnB0LmFtdCk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwiYWN0aW9uOiBcIiArIEpTT04uc3RyaW5naWZ5KHN0YWtlVHgpKTtcclxuICAgICAgICAgICAgY29uc3QgcmVzID0geWllbGQgdGhpcy5TdWJtaXRUeChzdGFrZVR4LCBbZW9zanNfZWNjX3ByaXZlb3NfMS5kZWZhdWx0LnByaXZhdGVUb1B1YmxpYyhpbnB0LnBheWVyX3Bydl9rZXkpXSwgW2lucHQucGF5ZXJfcHJ2X2tleV0pO1xyXG4gICAgICAgICAgICByLlR4SURfc3Rha2VNYWluREFPID0gcmVzLnRyYW5zYWN0aW9uX2lkO1xyXG4gICAgICAgICAgICByZXR1cm4gcjtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIC8qKlxyXG4gICAgKiBpbnN0IFVuU3Rha2UgbWFpbkRBT1xyXG4gICAgKiBAcGFyYW0gaW5wdFxyXG4gICAgKiBAcmV0dXJuc1xyXG4gICAgKi9cclxuICAgIGluc3RVbnN0YWtlTWFpbkRBTyhpbnB0KSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgY29uc3Qgc3Rha2VUeCA9IHlpZWxkIHRoaXMubUdlbi5pbnN0dW5zdGFrZShbeyBhY3RvcjogaW5wdC5wYXllciwgcGVybWlzc2lvbjogXCJhY3RpdmVcIiB9XSwgaW5wdC5wYXllciwgaW5wdC5hbXQpO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcImFjdGlvbjogXCIgKyBKU09OLnN0cmluZ2lmeShzdGFrZVR4KSk7XHJcbiAgICAgICAgICAgIGNvbnN0IHJlcyA9IHlpZWxkIHRoaXMuU3VibWl0VHgoc3Rha2VUeCwgW2Vvc2pzX2VjY19wcml2ZW9zXzEuZGVmYXVsdC5wcml2YXRlVG9QdWJsaWMoaW5wdC5wYXllcl9wcnZfa2V5KV0sIFtpbnB0LnBheWVyX3Bydl9rZXldKTtcclxuICAgICAgICAgICAgci5UeElEX3Vuc3Rha2VNYWluREFPID0gcmVzLnRyYW5zYWN0aW9uX2lkO1xyXG4gICAgICAgICAgICByZXR1cm4gcjtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIC8qKlxyXG4gICAgICogZGVsYXllZCBVblN0YWtlIG1haW5EQU9cclxuICAgICAqIEBwYXJhbSBpbnB0XHJcbiAgICAgKiBAcmV0dXJuc1xyXG4gICAgICovXHJcbiAgICBkbGRVbnN0YWtlTWFpbkRBTyhpbnB0KSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgY29uc3Qgc3Rha2VUeCA9IHlpZWxkIHRoaXMubUdlbi5kbGR1bnN0YWtlKFt7IGFjdG9yOiBpbnB0LnBheWVyLCBwZXJtaXNzaW9uOiBcImFjdGl2ZVwiIH1dLCBpbnB0LnBheWVyLCBpbnB0LmFtdCk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwiYWN0aW9uOiBcIiArIEpTT04uc3RyaW5naWZ5KHN0YWtlVHgpKTtcclxuICAgICAgICAgICAgY29uc3QgcmVzID0geWllbGQgdGhpcy5TdWJtaXRUeChzdGFrZVR4LCBbZW9zanNfZWNjX3ByaXZlb3NfMS5kZWZhdWx0LnByaXZhdGVUb1B1YmxpYyhpbnB0LnBheWVyX3Bydl9rZXkpXSwgW2lucHQucGF5ZXJfcHJ2X2tleV0pO1xyXG4gICAgICAgICAgICByLlR4SURfdW5zdGFrZU1haW5EQU8gPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgLyoqXHJcbiAgICAgKiBTdGFrZSB0byBwb29sXHJcbiAgICAgKiBAcmV0dXJucyBDcmVhdGUgUG9vbCB0cmFuc2FjdGlvbiBpZFxyXG4gICAgICovXHJcbiAgICBzdGFrZVBvb2woaW5wdCkge1xyXG4gICAgICAgIHJldHVybiBfX2F3YWl0ZXIodGhpcywgdm9pZCAwLCB2b2lkIDAsIGZ1bmN0aW9uKiAoKSB7XHJcbiAgICAgICAgICAgIGxldCBwID0geyBvd25lcjogaW5wdC5vd25lciB9O1xyXG4gICAgICAgICAgICBsZXQgciA9IHt9O1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcIkdldCBwb29sYnlvd25lcjogXCIsIEpTT04uc3RyaW5naWZ5KHApKTtcclxuICAgICAgICAgICAgbGV0IHEgPSB5aWVsZCB0aGlzLnBvb2xzUnBjQXBpLmdldFBvb2xCeU93bmVyKHApO1xyXG4gICAgICAgICAgICBsZXQgdCA9IHlpZWxkIHEuanNvbigpO1xyXG4gICAgICAgICAgICB0aGlzLnBvb2xfaWQgPSB0LnJvd3NbMF0uaWQ7XHJcbiAgICAgICAgICAgIHRoaXMucG9vbF9jb2RlID0gdC5yb3dzWzBdLmNvZGU7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwicG9vbDpcIiArIEpTT04uc3RyaW5naWZ5KHQpKTtcclxuICAgICAgICAgICAgY29uc3Qgc3Rha2VUeCA9IHlpZWxkIHRoaXMucEdlbi5zdGFrZVRvUG9vbChbeyBhY3RvcjogaW5wdC5wYXllciwgcGVybWlzc2lvbjogXCJhY3RpdmVcIiB9LFxyXG4gICAgICAgICAgICAgICAgeyBhY3RvcjogXCJpb1wiLCBwZXJtaXNzaW9uOiBcImFjdGl2ZVwiIH1dLCBpbnB0LnBheWVyLCBpbnB0LmFtdCwgdGhpcy5wb29sX2lkKTtcclxuICAgICAgICAgICAgY29uc29sZS5sb2coXCJhY3Rpb246IFwiICsgSlNPTi5zdHJpbmdpZnkoc3Rha2VUeCkpO1xyXG4gICAgICAgICAgICBjb25zdCByZXMgPSB5aWVsZCB0aGlzLlN1Ym1pdFR4KHN0YWtlVHgsIFtlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucHJpdmF0ZVRvUHVibGljKGlucHQucGF5ZXJfcHJ2X2tleSldLCBbaW5wdC5wYXllcl9wcnZfa2V5XSk7XHJcbiAgICAgICAgICAgIHIuVHhJRF9zdGFrZVBvb2wgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHIucG9vbF9pZCA9IHRoaXMucG9vbF9pZDtcclxuICAgICAgICAgICAgci5wb29sX2NvZGUgPSB0aGlzLnBvb2xfY29kZTtcclxuICAgICAgICAgICAgcmV0dXJuIHI7XHJcbiAgICAgICAgfSk7XHJcbiAgICB9XHJcbiAgICB1bnN0YWtlUG9vbChpbnB0KSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgY29uc3QgdCA9IHlpZWxkIHRoaXMucEdlbi53aXRoZHJhd0Zyb21Qb29sKFt7IGFjdG9yOiBpbnB0LnBheWVyLCBwZXJtaXNzaW9uOiBcImFjdGl2ZVwiIH1dLCAvL3sgYWN0b3I6IFwiaW9cIiwgcGVybWlzc2lvbjogXCJhY3RpdmVcIn1cclxuICAgICAgICAgICAgaW5wdC5wYXllciwgaW5wdC5hbXQpO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcImFjdGlvbjogXCIgKyBKU09OLnN0cmluZ2lmeSh0KSk7XHJcbiAgICAgICAgICAgIGNvbnN0IHJlcyA9IHlpZWxkIHRoaXMuU3VibWl0VHgodCwgW2Vvc2pzX2VjY19wcml2ZW9zXzEuZGVmYXVsdC5wcml2YXRlVG9QdWJsaWMoaW5wdC5wYXllcl9wcnZfa2V5KV0sIFtpbnB0LnBheWVyX3Bydl9rZXldKTtcclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgci5UeElEX3Vuc3Rha2VQb29sID0gcmVzLnRyYW5zYWN0aW9uX2lkO1xyXG4gICAgICAgICAgICByZXR1cm4gcjtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIGFkZFRvV2hpdGVMaXN0KGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICAvL2NvbnN0IGFHZW4gPSBuZXcgUG9vbHNBY3Rpb25HZW5lcmF0b3IoXCJwb29sczIubmNvXCIsIFwiZW9zaW8udG9rZW5cIik7XHJcbiAgICAgICAgICAgIC8qY29uc3QgdCA9IGF3YWl0IHRoaXMuYUdlbi5jcmVhdGVXaGl0ZUxpc3RQcm9wb3NhbChcclxuICAgICAgICAgICAgICBbeyBhY3RvcjogaW5wdC5vd25lciwgcGVybWlzc2lvbjogXCJhY3RpdmVcIiB9XSxcclxuICAgICAgICAgICAgICB+fmlucHQuZGFvX2lkLFxyXG4gICAgICAgICAgICAgIGlucHQuYWNjb3VudCk7XHJcbiAgICAgICAgXHJcbiAgICAgICAgICAgIGNvbnN0IHJlcyA9IGF3YWl0IHRoaXMuU3VibWl0VHgodCxcclxuICAgICAgICAgICAgICBbZWNjLnByaXZhdGVUb1B1YmxpYyhpbnB0Lm93bmVyX3Bydl9rZXkpXSwgW2lucHQub3duZXJfcHJ2X2tleV0pIGFzIFRyYW5zYWN0UmVzdWx0O1xyXG4gICAgICAgICAgKi9cclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgci5UeElEX2FkZFRvV2hpdGVMaXN0ID0gXCIwXCI7IC8vcmVzLnRyYW5zYWN0aW9uX2lkO1xyXG4gICAgICAgICAgICByZXR1cm4gcjtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIHJlbW92ZUZyb21XaGl0ZUxpc3QoaW5wdCkge1xyXG4gICAgICAgIHJldHVybiBfX2F3YWl0ZXIodGhpcywgdm9pZCAwLCB2b2lkIDAsIGZ1bmN0aW9uKiAoKSB7XHJcbiAgICAgICAgICAgIC8vY29uc3QgYUdlbiA9IG5ldyBQb29sc0FjdGlvbkdlbmVyYXRvcihcInBvb2xzMi5uY29cIiwgXCJlb3Npby50b2tlblwiKTtcclxuICAgICAgICAgICAgLy9jb25zdCB0ID0gYXdhaXQgcEdlbi5yZW1vdmVGcm9tV2hpdGVMaXN0KFxyXG4gICAgICAgICAgICAvLyAgW3sgYWN0b3I6IGlucHQub3duZXIsIHBlcm1pc3Npb246IFwiYWN0aXZlXCJ9XSxcclxuICAgICAgICAgICAgLy8gIGlucHQucG9vbF9pZCxcclxuICAgICAgICAgICAgLy8gIGlucHQub3duZXIpO1xyXG4gICAgICAgICAgICAvL2NvbnN0IHJlcyA9IGF3YWl0IFN1Ym1pdFR4KHQsIFxyXG4gICAgICAgICAgICAvLyAgW2VjYy5wcml2YXRlVG9QdWJsaWMoaW5wdC5vd25lcl9wcnZfa2V5KV0sIFtpbnB0Lm93bmVyX3Bydl9rZXldLCBcclxuICAgICAgICAgICAgLy8gIHRoaXMuX3VybCkgYXMgVHJhbnNhY3RSZXN1bHQ7XHJcbiAgICAgICAgICAgIGxldCByID0ge307XHJcbiAgICAgICAgICAgIC8vci5UeElEX3JlbW92ZUZyb21XaGl0ZUxpc3QgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgY3JlYXRlRGFvKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBjb25zdCB0ID0geWllbGQgdGhpcy5hR2VuLmNyZWF0ZURhbyhbeyBhY3RvcjogaW5wdC5hdXRob3IsIHBlcm1pc3Npb246IFwiYWN0aXZlXCIgfV0sIGlucHQuYXV0aG9yLCBpbnB0LmRlc2NyKTtcclxuICAgICAgICAgICAgY29uc3QgcmVzID0geWllbGQgdGhpcy5TdWJtaXRUeCh0LCBbZW9zanNfZWNjX3ByaXZlb3NfMS5kZWZhdWx0LnByaXZhdGVUb1B1YmxpYyhpbnB0LmF1dGhwcl9wcnZfa2V5KV0sIFtpbnB0LmF1dGhwcl9wcnZfa2V5XSk7XHJcbiAgICAgICAgICAgIGxldCBwID0geyBvd25lcjogaW5wdC5hdXRob3IgfTtcclxuICAgICAgICAgICAgY29uc29sZS5sb2coXCJHZXQgZGFvIGJ5IG93bmVyOiBcIiwgSlNPTi5zdHJpbmdpZnkocCkpO1xyXG4gICAgICAgICAgICBsZXQgcSA9IHlpZWxkIHRoaXMuY0FwaS5nZXREQU9CeU93bmVyKHApO1xyXG4gICAgICAgICAgICBsZXQgdyA9IHlpZWxkIHEuanNvbigpO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcInJlY2VpdmVkIGZyb20gZ2V0RGFvQnlPd25lclwiICsgSlNPTi5zdHJpbmdpZnkodykpO1xyXG4gICAgICAgICAgICBsZXQgciA9IHt9O1xyXG4gICAgICAgICAgICByLlR4SURfY3JlYXRlRGFvID0gcmVzLnRyYW5zYWN0aW9uX2lkO1xyXG4gICAgICAgICAgICByLmRhb19pZCA9IHcucm93c1swXS5pZDtcclxuICAgICAgICAgICAgdGhpcy5kYW9faWQgPSByLmRhb19pZC50b1N0cmluZygpO1xyXG4gICAgICAgICAgICByZXR1cm4gcjtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIGNyZWF0ZURhb1Byb3Bvc2FsKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBpZiAoaW5wdC5kYW9faWQgPT0gdW5kZWZpbmVkKSB7XHJcbiAgICAgICAgICAgICAgICBpZiAoaW5wdC5kYW9fb3duZXIgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgICAgIHRocm93IChcIkRBTyB1bmRlZmluZWRcIik7XHJcbiAgICAgICAgICAgICAgICBsZXQgcCA9IHsgb3duZXI6IGlucHQuZGFvX293bmVyIH07XHJcbiAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyhcIkdldCBkYW8gYnkgb3duZXI6IFwiLCBKU09OLnN0cmluZ2lmeShwKSk7XHJcbiAgICAgICAgICAgICAgICBsZXQgcSA9IHlpZWxkIHRoaXMuY0FwaS5nZXREQU9CeU93bmVyKHApO1xyXG4gICAgICAgICAgICAgICAgbGV0IHcgPSB5aWVsZCBxLmpzb24oKTtcclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKFwicmVjZWl2ZWQgZnJvbSBnZXREYW9CeU93bmVyXCIgKyBKU09OLnN0cmluZ2lmeSh3KSk7XHJcbiAgICAgICAgICAgICAgICBpbnB0LmRhb19pZCA9IHcucm93c1swXS5pZDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBjb25zdCB0ID0geWllbGQgdGhpcy5hR2VuLmNyZWF0ZVByb3Bvc2FsKFt7IGFjdG9yOiBpbnB0LnByb3Bvc2VyLCBwZXJtaXNzaW9uOiBcImFjdGl2ZVwiIH1dLCBpbnB0LnByb3Bvc2VyLCBpbnB0LmRhb19pZCwgaW5wdC50aXRsZSwgaW5wdC5zdW1tYXJ5LCBpbnB0LnVybCwgaW5wdC52b3RlX3N0YXJ0LCBpbnB0LnZvdGVfZW5kKTtcclxuICAgICAgICAgICAgY29uc3QgcmVzID0geWllbGQgdGhpcy5TdWJtaXRUeCh0LCBbZW9zanNfZWNjX3ByaXZlb3NfMS5kZWZhdWx0LnByaXZhdGVUb1B1YmxpYyhpbnB0LnByb3Bvc2VyX3Bydl9rZXkpXSwgW2lucHQucHJvcG9zZXJfcHJ2X2tleV0pO1xyXG4gICAgICAgICAgICBsZXQgciA9IHt9O1xyXG4gICAgICAgICAgICByLlR4SURfY3JlYXRlRGFvUHJvcG9zYWwgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHIuZGFvX2lkID0gaW5wdC5kYW9faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgYXBwcm92ZURhb1Byb3Bvc2FsKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBpZiAoaW5wdC5kYW9faWQgPT0gdW5kZWZpbmVkKSB7XHJcbiAgICAgICAgICAgICAgICBpZiAoaW5wdC5kYW9fb3duZXIgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgICAgIHRocm93IChcIkRBTyB1bmRlZmluZWRcIik7XHJcbiAgICAgICAgICAgICAgICBsZXQgcCA9IHsgb3duZXI6IGlucHQuZGFvX293bmVyIH07XHJcbiAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyhcIkdldCBkYW8gYnkgb3duZXI6IFwiLCBKU09OLnN0cmluZ2lmeShwKSk7XHJcbiAgICAgICAgICAgICAgICBsZXQgcSA9IHlpZWxkIHRoaXMuY0FwaS5nZXREQU9CeU93bmVyKHApO1xyXG4gICAgICAgICAgICAgICAgbGV0IHcgPSB5aWVsZCBxLmpzb24oKTtcclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKFwicmVjZWl2ZWQgZnJvbSBnZXREYW9CeU93bmVyXCIgKyBKU09OLnN0cmluZ2lmeSh3KSk7XHJcbiAgICAgICAgICAgICAgICBpbnB0LmRhb19pZCA9IHcucm93c1swXS5pZDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBpZiAoaW5wdC5wcm9wb3NhbF9pZCA9PSB1bmRlZmluZWQpIHtcclxuICAgICAgICAgICAgICAgIGlmIChpbnB0LnByb3Bvc2FsX2F1dGhvciA9PSB1bmRlZmluZWQpXHJcbiAgICAgICAgICAgICAgICAgICAgdGhyb3cgKFwiUHJvcG9zYWwgdW5kZWZpbmVkIG5laXRoZXIgSUQgbm9yIG5hbWVcIik7XHJcbiAgICAgICAgICAgICAgICBsZXQgcCA9IHtcclxuICAgICAgICAgICAgICAgICAgICBkYW9JRDogaW5wdC5kYW9faWQudG9TdHJpbmcoKSxcclxuICAgICAgICAgICAgICAgICAgICBwcm9wb3NlcjogaW5wdC5wcm9wb3NhbF9hdXRob3JcclxuICAgICAgICAgICAgICAgIH07XHJcbiAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyhcIkdldCBwcm9wb3NhbCBieSBhdXRob3I6IFwiLCBKU09OLnN0cmluZ2lmeShwKSk7XHJcbiAgICAgICAgICAgICAgICBsZXQgcSA9IHlpZWxkIHRoaXMuY0FwaS5nZXRQcm9wb3NhbEJ5UHJvcG9zZXIocCk7XHJcbiAgICAgICAgICAgICAgICBsZXQgdyA9IHlpZWxkIHEuanNvbigpO1xyXG4gICAgICAgICAgICAgICAgY29uc29sZS5sb2coXCJyZWNlaXZlZCBmcm9tIGdldFByb3Bvc2FsQnlPd25lclwiICsgSlNPTi5zdHJpbmdpZnkodykpO1xyXG4gICAgICAgICAgICAgICAgaW5wdC5wcm9wb3NhbF9pZCA9IHcucm93c1swXS5pZDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBjb25zdCB0ID0geWllbGQgdGhpcy5hR2VuLmFwcHJvdmVQcm9wb3NhbChbeyBhY3RvcjogaW5wdC5hcHByb3ZlciwgcGVybWlzc2lvbjogXCJhY3RpdmVcIiB9XSwgaW5wdC5kYW9faWQsIGlucHQucHJvcG9zYWxfaWQpO1xyXG4gICAgICAgICAgICBjb25zdCByZXMgPSB5aWVsZCB0aGlzLlN1Ym1pdFR4KHQsIFtlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucHJpdmF0ZVRvUHVibGljKGlucHQuYXBwcm92ZXJfcHJ2X2tleSldLCBbaW5wdC5hcHByb3Zlcl9wcnZfa2V5XSk7XHJcbiAgICAgICAgICAgIGxldCByID0ge307XHJcbiAgICAgICAgICAgIHIuVHhJRF9hcHByb3ZlRGFvUHJvcG9zYWwgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgZXhlY3V0ZURhb1Byb3Bvc2FsKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBpZiAoaW5wdC5kYW9faWQgPT0gdW5kZWZpbmVkKSB7XHJcbiAgICAgICAgICAgICAgICBpZiAoaW5wdC5kYW9fb3duZXIgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgICAgIHRocm93IChcIkRBTyB1bmRlZmluZWRcIik7XHJcbiAgICAgICAgICAgICAgICBsZXQgcSA9IHlpZWxkIHRoaXMuY0FwaS5nZXREQU9CeU93bmVyKHsgb3duZXI6IGlucHQuZGFvX293bmVyIH0pO1xyXG4gICAgICAgICAgICAgICAgbGV0IHcgPSB5aWVsZCBxLmpzb24oKTtcclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKFwicmVjZWl2ZWQgZnJvbSBnZXREYW9CeU93bmVyXCIgKyBKU09OLnN0cmluZ2lmeSh3KSk7XHJcbiAgICAgICAgICAgICAgICBpbnB0LmRhb19pZCA9IHcucm93c1swXS5pZDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBpZiAoaW5wdC5wcm9wb3NhbF9pZCA9PSB1bmRlZmluZWQpIHtcclxuICAgICAgICAgICAgICAgIGlmIChpbnB0LnByb3Bvc2FsX2F1dGhvciA9PSB1bmRlZmluZWQpXHJcbiAgICAgICAgICAgICAgICAgICAgdGhyb3cgKFwiUHJvcG9zYWwgdW5kZWZpbmVkIG5laXRoZXIgSUQgbm9yIG5hbWVcIik7XHJcbiAgICAgICAgICAgICAgICBsZXQgcCA9IHtcclxuICAgICAgICAgICAgICAgICAgICBkYW9JRDogaW5wdC5kYW9faWQudG9TdHJpbmcoKSxcclxuICAgICAgICAgICAgICAgICAgICBwcm9wb3NlcjogaW5wdC5wcm9wb3NhbF9hdXRob3JcclxuICAgICAgICAgICAgICAgIH07XHJcbiAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyhcIkdldCBwcm9wb3NhbCBieSBhdXRob3I6IFwiLCBKU09OLnN0cmluZ2lmeShwKSk7XHJcbiAgICAgICAgICAgICAgICBsZXQgcSA9IHlpZWxkIHRoaXMuY0FwaS5nZXRQcm9wb3NhbEJ5UHJvcG9zZXIocCk7XHJcbiAgICAgICAgICAgICAgICBsZXQgdyA9IHlpZWxkIHEuanNvbigpO1xyXG4gICAgICAgICAgICAgICAgY29uc29sZS5sb2coXCJyZWNlaXZlZCBmcm9tIGdldFByb3Bvc2FsQnlPd25lclwiICsgSlNPTi5zdHJpbmdpZnkodykpO1xyXG4gICAgICAgICAgICAgICAgaW5wdC5wcm9wb3NhbF9pZCA9IHcucm93c1swXS5pZDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBjb25zdCB0ID0geWllbGQgdGhpcy5hR2VuLmV4ZWN1dGVQcm9wb3NhbChbeyBhY3RvcjogaW5wdC5leGVjLCBwZXJtaXNzaW9uOiBcImFjdGl2ZVwiIH1dLCBpbnB0LmRhb19pZCwgaW5wdC5wcm9wb3NhbF9pZCk7XHJcbiAgICAgICAgICAgIGNvbnN0IHJlcyA9IHlpZWxkIHRoaXMuU3VibWl0VHgodCwgW2Vvc2pzX2VjY19wcml2ZW9zXzEuZGVmYXVsdC5wcml2YXRlVG9QdWJsaWMoaW5wdC5leGVjX3Bydl9rZXkpXSwgW2lucHQuZXhlY19wcnZfa2V5XSk7XHJcbiAgICAgICAgICAgIGxldCByID0ge307XHJcbiAgICAgICAgICAgIHIuVHhJRF9leGVjdXRlRGFvUHJvcG9zYWwgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgZ2V0RGFvUHJvcG9zYWxzKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBpZiAoaW5wdC5kYW9faWQgPT0gdW5kZWZpbmVkKSB7XHJcbiAgICAgICAgICAgICAgICBpZiAoaW5wdC5kYW9fb3duZXIgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB7fTtcclxuICAgICAgICAgICAgICAgIGxldCBxID0geWllbGQgdGhpcy5jQXBpLmdldERBT0J5T3duZXIoeyBvd25lcjogaW5wdC5kYW9fb3duZXIgfSk7XHJcbiAgICAgICAgICAgICAgICBsZXQgdyA9IHlpZWxkIHEuanNvbigpO1xyXG4gICAgICAgICAgICAgICAgY29uc29sZS5sb2coXCJyZWNlaXZlZCBmcm9tIGdldERhb0J5T3duZXJcIiArIEpTT04uc3RyaW5naWZ5KHcpKTtcclxuICAgICAgICAgICAgICAgIGlucHQuZGFvX2lkID0gKHcucm93c1swXS5pZCkudG9TdHJpbmcoKTtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBpZiAoaW5wdC5wcm9wb3NhbF9pZCA9PSB1bmRlZmluZWQpIHtcclxuICAgICAgICAgICAgICAgIGNvbnN0IG9wdCA9IHsgZGFvSUQ6IGlucHQuZGFvX2lkLCBwcm9wb3NlcjogaW5wdC5wcm9wb3NhbF9hdXRob3IgfTtcclxuICAgICAgICAgICAgICAgIGxldCBxID0geWllbGQgdGhpcy5jQXBpLmdldFByb3Bvc2FsQnlQcm9wb3NlcihvcHQpO1xyXG4gICAgICAgICAgICAgICAgbGV0IHcgPSB5aWVsZCBxLmpzb24oKTtcclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKFwicmVjZWl2ZWQgZnJvbSBnZXRQcm9wb3NhbGJ5UHJvcG9zZXJcIiArIEpTT04uc3RyaW5naWZ5KHcpKTtcclxuICAgICAgICAgICAgICAgIGlucHQucHJvcG9zYWxfaWQgPSAody5yb3dzWzBdLmlkKS50b1N0cmluZygpO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwiR2V0IHByb3Bvc2FscyBmb3IgZGFvIFwiLCBKU09OLnN0cmluZ2lmeShpbnB0LmRhb19pZCkpO1xyXG4gICAgICAgICAgICBsZXQgcSA9IHlpZWxkIHRoaXMuY0FwaS5nZXRQcm9wb3NhbEJ5SUQoeyBkYW9JRDogaW5wdC5kYW9faWQsIGlkOiBpbnB0LnByb3Bvc2FsX2lkIH0pO1xyXG4gICAgICAgICAgICBsZXQgdyA9IHlpZWxkIHEuanNvbigpO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcInJlY2VpdmVkIGZyb20gZ2V0UHJvcG9zYWxCeUlEXCIgKyBKU09OLnN0cmluZ2lmeSh3LnJvd3MpKTtcclxuICAgICAgICAgICAgcmV0dXJuIHcucm93cztcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIHZvdGVPbkRhb1Byb3Bvc2FsKGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcIlZvdGUgZm9yIERBTyBwcm9wb3NhbFwiLCBKU09OLnN0cmluZ2lmeShpbnB0LmRhb19pZCkpO1xyXG4gICAgICAgICAgICBjb25zdCB0ID0geWllbGQgdGhpcy5hR2VuLnZvdGUoW3sgYWN0b3I6IGlucHQudm90ZXIsIHBlcm1pc3Npb246IFwiYWN0aXZlXCIgfV0sIGlucHQudm90ZXIsIGlucHQucXVhbnRpdHksIGlucHQucHJvcG9zYWxfdHlwZSB8fCBcInN0YW5kYXJ0XCIsIGlucHQuZGFvX2lkLCBpbnB0LnByb3Bvc2FsX2lkLCBpbnB0Lm9wdGlvbik7XHJcbiAgICAgICAgICAgIC8vIGxldCB3ID0gYXdhaXQgcS5qc29uKCk7XHJcbiAgICAgICAgICAgIGNvbnN0IHJlcyA9IHlpZWxkIHRoaXMuU3VibWl0VHgodCwgW2Vvc2pzX2VjY19wcml2ZW9zXzEuZGVmYXVsdC5wcml2YXRlVG9QdWJsaWMoaW5wdC52b3Rlcl9wcnZfa2V5KV0sIFtpbnB0LnZvdGVyX3Bydl9rZXldKTtcclxuICAgICAgICAgICAgY29uc29sZS5sb2coXCJyZWNlaXZlZCBmcm9tIFZvdGVGb3JEYW9Qcm9wb3NhbFwiICsgSlNPTi5zdHJpbmdpZnkocmVzKSk7XHJcbiAgICAgICAgICAgIHJldHVybiB7IFR4SURfdm90ZUZvckRhb1Byb3Bvc2FsOiByZXMudHJhbnNhY3Rpb25faWQgfTtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIC8qKlxyXG4gICAgICogTWludCBhbiBhc3NldFxyXG4gICAgICogQHJldHVybnMgQ3JlYXRlIFBvb2wgdHJhbnNhY3Rpb24gaWRcclxuICAgICAqL1xyXG4gICAgbWludEFzc2V0KGlucHQpIHtcclxuICAgICAgICByZXR1cm4gX19hd2FpdGVyKHRoaXMsIHZvaWQgMCwgdm9pZCAwLCBmdW5jdGlvbiogKCkge1xyXG4gICAgICAgICAgICBsZXQgZCA9IDEyIC0gaW5wdC5jcmVhdG9yLmxlbmd0aDtcclxuICAgICAgICAgICAgaWYgKGlucHQuY29sX25hbWUgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgaW5wdC5jb2xfbmFtZSA9ICgwLCB1dGlsc18xLm5vcm1hbGl6ZVVzZXJuYW1lKShpbnB0LmNyZWF0b3IsIFwielwiKTtcclxuICAgICAgICAgICAgaWYgKGlucHQuc2NoX25hbWUgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgaW5wdC5zY2hfbmFtZSA9ICgwLCB1dGlsc18xLm5vcm1hbGl6ZVVzZXJuYW1lKShpbnB0LmNyZWF0b3IsIFwid1wiKTtcclxuICAgICAgICAgICAgaWYgKGlucHQudG1wbF9pZCA9PSB1bmRlZmluZWQpXHJcbiAgICAgICAgICAgICAgICBpbnB0LnRtcGxfaWQgPSAtMTtcclxuICAgICAgICAgICAgaWYgKGlucHQuaW1tdXRhYmxlX2RhdGEgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgaW5wdC5pbW11dGFibGVfZGF0YSA9IFtcclxuICAgICAgICAgICAgICAgICAgICB7IGtleTogJ25hbWUnLCB2YWx1ZTogWydzdHJpbmcnLCBpbnB0LmNyZWF0b3IgKyAnXycgKyAobmV3IERhdGUoKSkuZ2V0VGltZSgpXSB9XHJcbiAgICAgICAgICAgICAgICBdO1xyXG4gICAgICAgICAgICBpZiAoaW5wdC5tdXRhYmxlX2RhdGEgPT0gdW5kZWZpbmVkKVxyXG4gICAgICAgICAgICAgICAgaW5wdC5tdXRhYmxlX2RhdGEgPSBbXTtcclxuICAgICAgICAgICAgY29uc3QgdCA9IHRoaXMuc2RrR2VuLm1pbnRBc3NldChpbnB0LmNyZWF0b3IsIGlucHQucGF5ZXIsIGlucHQuY29sX25hbWUsIGlucHQuc2NoX25hbWUsIGlucHQudG1wbF9pZCwgaW5wdC5pbW11dGFibGVfZGF0YSwgaW5wdC5tdXRhYmxlX2RhdGEpO1xyXG4gICAgICAgICAgICBsZXQgcmVzID0geWllbGQgdGhpcy5TdWJtaXRUeChbdF0sIFtlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucHJpdmF0ZVRvUHVibGljKGlucHQucGF5ZXJfcHJ2X2tleSldLCBbaW5wdC5wYXllcl9wcnZfa2V5XSk7XHJcbiAgICAgICAgICAgIGxldCByID0ge307XHJcbiAgICAgICAgICAgIHIuVHhJRF9taW50QXNzZXQgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIHJldHVybiByO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgLyoqXHJcbiAgICAgKiBHZXQgdHJhc2FjdGlvbiBkYXRhXHJcbiAgICAgKiBAcmV0dXJucyBUeCBkYXRhXHJcbiAgICAgKi9cclxuICAgIGdldFR4RGF0YSh0eGlkKSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgbGV0IHR4aSA9IHlpZWxkIHRoaXMuaHJwYy5nZXRfdHJhbnNhY3Rpb24odHhpZCk7XHJcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKHR4aSk7IC8vIGdldCB0ZW1wbGF0ZSBudW1iZXIgIHR4aS5hY3Rpb25zWzFdLmFjdC5kYXRhLnRlbXBsYXRlX2lkXHJcbiAgICAgICAgICAgIHJldHVybiB0eGk7XHJcbiAgICAgICAgfSk7XHJcbiAgICB9XHJcbiAgICAvKipcclxuICAgICAqIEdldCBhY2NvdW50IGJhbGFuY2VcclxuICAgICAqIEByZXR1cm5zIFR4IGRhdGFcclxuICAgICAqL1xyXG4gICAgZ2V0QWNjb3VudEJhbGFuY2UoYWNjKSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgaWYgKGFjYy5jb250cmFjdCA9PSB1bmRlZmluZWQpXHJcbiAgICAgICAgICAgICAgICBhY2MuY29udHJhY3QgPSAnZW9zaW8udG9rZW4nO1xyXG4gICAgICAgICAgICBsZXQgcmMgPSB7IGFjY19iYWxhbmNlczogW10gfTtcclxuICAgICAgICAgICAgdHJ5IHtcclxuICAgICAgICAgICAgICAgIGxldCB0ID0geWllbGQgKDAsIGNyb3NzX2ZldGNoXzEuZGVmYXVsdCkoYGh0dHBzOi8vbm9kZW9zLWRldi5uZXdjb2luLm9yZy92MS9jaGFpbi9nZXRfY3VycmVuY3lfYmFsYW5jZWAsIHtcclxuICAgICAgICAgICAgICAgICAgICBtZXRob2Q6IFwiUE9TVFwiLFxyXG4gICAgICAgICAgICAgICAgICAgIGhlYWRlcnM6IHsgXCJDb250ZW50LVR5cGVcIjogXCJhcHBsaWNhdGlvbi9qc29uXCIgfSxcclxuICAgICAgICAgICAgICAgICAgICBib2R5OiBKU09OLnN0cmluZ2lmeSh7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGFjY291bnQ6IGFjYy5vd25lcixcclxuICAgICAgICAgICAgICAgICAgICAgICAgY29kZTogYWNjLmNvbnRyYWN0XHJcbiAgICAgICAgICAgICAgICAgICAgfSksXHJcbiAgICAgICAgICAgICAgICB9KTtcclxuICAgICAgICAgICAgICAgIHJjLmFjY19iYWxhbmNlcyA9IHlpZWxkIHQuanNvbigpO1xyXG4gICAgICAgICAgICAgICAgLy9jb25zb2xlLmxvZyhyYyk7XHJcbiAgICAgICAgICAgICAgICByZXR1cm4gcmM7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgY2F0Y2ggKGUpIHtcclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKCdcXG5DYXVnaHQgZXhjZXB0aW9uOiAnICsgZSk7XHJcbiAgICAgICAgICAgICAgICBpZiAoZSBpbnN0YW5jZW9mIGVvc2pzXzEuUnBjRXJyb3IpXHJcbiAgICAgICAgICAgICAgICAgICAgY29uc29sZS5sb2coSlNPTi5zdHJpbmdpZnkoZS5qc29uLCBudWxsLCAyKSk7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIC8qKlxyXG4gICAgICogVHJhbnNmZXIgTkNPIGJldHdlZW4gYWNjb3VudHNcclxuICAgICAqIEByZXR1cm5zIFRyYW5zZmVyIHRyYW5zYWN0aW9uIGlkXHJcbiAgICAgKi9cclxuICAgIF90eEJhbGFuY2UoY29udHJhY3QsIGlucHQsIG1lbW8gPSBcIlwiKSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgbGV0IHR4ID0gdGhpcy5zZGtHZW4udHhCYWxhbmNlKGNvbnRyYWN0LCBpbnB0LnBheWVyLCBpbnB0LnRvLCBpbnB0LmFtdCwgbWVtbyk7XHJcbiAgICAgICAgICAgIGxldCByZXMgPSB5aWVsZCB0aGlzLlN1Ym1pdFR4KFt0eF0sIFtlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucHJpdmF0ZVRvUHVibGljKGlucHQucGF5ZXJfcHJ2X2tleSldLCBbaW5wdC5wYXllcl9wcnZfa2V5XSk7XHJcbiAgICAgICAgICAgIHIuVHhJRCA9IHJlcy50cmFuc2FjdGlvbl9pZDtcclxuICAgICAgICAgICAgLy9jb25zb2xlLmxvZyhyZXMpO1xyXG4gICAgICAgICAgICByZXR1cm4gcjtcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuICAgIHR4R05DT0JhbGFuY2UoaW5wdCkge1xyXG4gICAgICAgIHJldHVybiBfX2F3YWl0ZXIodGhpcywgdm9pZCAwLCB2b2lkIDAsIGZ1bmN0aW9uKiAoKSB7XHJcbiAgICAgICAgICAgIGNvbnN0IHIgPSB5aWVsZCB0aGlzLl90eEJhbGFuY2UodGhpcy5fc2VydmljZXMubWFpbmRhb19jb250cmFjdCwgaW5wdCk7XHJcbiAgICAgICAgICAgIHJldHVybiByLlR4SUQ7XHJcbiAgICAgICAgfSk7XHJcbiAgICB9XHJcbiAgICB0eE5DT0JhbGFuY2UoaW5wdCkge1xyXG4gICAgICAgIHJldHVybiBfX2F3YWl0ZXIodGhpcywgdm9pZCAwLCB2b2lkIDAsIGZ1bmN0aW9uKiAoKSB7XHJcbiAgICAgICAgICAgIGNvbnN0IHIgPSB5aWVsZCB0aGlzLl90eEJhbGFuY2UodGhpcy5fc2VydmljZXMudG9rZW5fY29udHJhY3QsIGlucHQpO1xyXG4gICAgICAgICAgICByZXR1cm4gci5UeElEO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgLyoqXHJcbiAgICAgKiBUcmFuc2ZlciBOQ08gYmV0d2VlbiBhY2NvdW50c1xyXG4gICAgICogQHJldHVybnMgVHJhbnNmZXIgdHJhbnNhY3Rpb24gaWRcclxuICAgICAqL1xyXG4gICAgdHhOY29CYWxhbmNlKGlucHQpIHtcclxuICAgICAgICB2YXIgX2E7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgbGV0IHIgPSB7fTtcclxuICAgICAgICAgICAgbGV0IHR4ID0gdGhpcy5zZGtHZW4udHhOY29CYWxhbmNlKGlucHQucGF5ZXIsIGlucHQudG8sIGlucHQuYW10LCAoX2EgPSBpbnB0Lm1lbW8pICE9PSBudWxsICYmIF9hICE9PSB2b2lkIDAgPyBfYSA6IChpbnB0Lm1lbW8gPSBcIlwiKSk7XHJcbiAgICAgICAgICAgIGxldCByZXMgPSB5aWVsZCB0aGlzLlN1Ym1pdFR4KFt0eF0sIFtlb3Nqc19lY2NfcHJpdmVvc18xLmRlZmF1bHQucHJpdmF0ZVRvUHVibGljKGlucHQucGF5ZXJfcHJ2X2tleSldLCBbaW5wdC5wYXllcl9wcnZfa2V5XSk7XHJcbiAgICAgICAgICAgIHIuVHhJRF90eE5jb0JhbGFuY2UgPSByZXMudHJhbnNhY3Rpb25faWQ7XHJcbiAgICAgICAgICAgIC8vY29uc29sZS5sb2cocmVzKTtcclxuICAgICAgICAgICAgcmV0dXJuIHI7XHJcbiAgICAgICAgfSk7XHJcbiAgICB9XHJcbiAgICAvKipcclxuICAgKiBHZXQgcG9vbCBpbmZvXHJcbiAgICogQHJldHVybnMgVHggZGF0YVxyXG4gICAqL1xyXG4gICAgZ2V0UG9vbEluZm8ocGF5bG9hZCkge1xyXG4gICAgICAgIHJldHVybiBfX2F3YWl0ZXIodGhpcywgdm9pZCAwLCB2b2lkIDAsIGZ1bmN0aW9uKiAoKSB7XHJcbiAgICAgICAgICAgIGNvbnN0IGFwaSA9IG5ldyBuZXdjb2luX3Bvb2xzX2pzXzEuUnBjQXBpKFwiaHR0cHM6Ly9ub2Rlb3MtZGV2Lm5ld2NvaW4ub3JnXCIsIFwicG9vbHMyLm5jb1wiLCBjcm9zc19mZXRjaF8xLmRlZmF1bHQpO1xyXG4gICAgICAgICAgICB0cnkge1xyXG4gICAgICAgICAgICAgICAgY29uc3QgZm4gPSBwYXlsb2FkLmNvZGUgPyBcImdldFBvb2xCeUNvZGVcIiA6IFwiZ2V0UG9vbEJ5T3duZXJcIjtcclxuICAgICAgICAgICAgICAgIGxldCBxID0geWllbGQgYXBpW2ZuXShwYXlsb2FkKTtcclxuICAgICAgICAgICAgICAgIGxldCB0ID0geWllbGQgcS5qc29uKCk7XHJcbiAgICAgICAgICAgICAgICAvL2NvbnNvbGUubG9nKHQucm93c1swXSk7XHJcbiAgICAgICAgICAgICAgICAvL2NvbnNvbGUubG9nKHQucm93c1swXS50b3RhbCk7XHJcbiAgICAgICAgICAgICAgICByZXR1cm4gdDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBjYXRjaCAoZSkge1xyXG4gICAgICAgICAgICAgICAgY29uc29sZS5sb2coJ1xcbkNhdWdodCBleGNlcHRpb246ICcgKyBlKTtcclxuICAgICAgICAgICAgICAgIGlmIChlIGluc3RhbmNlb2YgZW9zanNfMS5ScGNFcnJvcilcclxuICAgICAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyhKU09OLnN0cmluZ2lmeShlLmpzb24sIG51bGwsIDIpKTtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICByZXR1cm4ge307XHJcbiAgICAgICAgICAgIGBgO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgU3VibWl0VHgoYWN0aW9ucywgcHVibGljX2tleXMsIC8vIHRlc3RuZXQgW1wiRU9TNVBVOTJDdXB6eFdFdXZUTWNDTnIzRzY5cjRWY2gzYm1ZRHJjek5TSHg1TGJOUlk3TlRcIl1cclxuICAgIHByaXZhdGVfa2V5cyAvLyB0ZXN0bmV0IFtcIjVLZFJ3TVVya0Zzc0syblVYQVNuaHpqc04xck5OaXk4YlhBSm9IWWJCZ0pNTHpqaVhIVlwiXVxyXG4gICAgKSB7XHJcbiAgICAgICAgcmV0dXJuIF9fYXdhaXRlcih0aGlzLCB2b2lkIDAsIHZvaWQgMCwgZnVuY3Rpb24qICgpIHtcclxuICAgICAgICAgICAgY29uc3Qgc2lnbmF0dXJlUHJvdmlkZXIgPSBuZXcgZW9zanNfanNzaWdfMS5Kc1NpZ25hdHVyZVByb3ZpZGVyKHByaXZhdGVfa2V5cyk7XHJcbiAgICAgICAgICAgIHNpZ25hdHVyZVByb3ZpZGVyLmF2YWlsYWJsZUtleXMgPSBwdWJsaWNfa2V5cztcclxuICAgICAgICAgICAgLy9AdHMtaWdub3JlXHJcbiAgICAgICAgICAgIGNvbnN0IHJwYyA9IHRoaXMubm9kZW9zX3JwYztcclxuICAgICAgICAgICAgY29uc3QgYXBpID0gbmV3IGVvc2pzXzEuQXBpKHsgcnBjLCBzaWduYXR1cmVQcm92aWRlciB9KTsgLy9yZXF1aXJlZCB0byBzdWJtaXQgdHJhbnNhY3Rpb25zXHJcbiAgICAgICAgICAgIGNvbnN0IGluZm8gPSB5aWVsZCBycGMuZ2V0X2luZm8oKTtcclxuICAgICAgICAgICAgY29uc3QgbGFzdEJsb2NrSW5mbyA9IHlpZWxkIHJwYy5nZXRfYmxvY2soaW5mby5sYXN0X2lycmV2ZXJzaWJsZV9ibG9ja19udW0pO1xyXG4gICAgICAgICAgICBjb25zdCB0ek9mZiA9IG5ldyBEYXRlKGluZm8uaGVhZF9ibG9ja190aW1lKS5nZXRUaW1lem9uZU9mZnNldCgpO1xyXG4gICAgICAgICAgICB2YXIgdCA9IG5ldyBEYXRlKChuZXcgRGF0ZShpbmZvLmhlYWRfYmxvY2tfdGltZSkpLmdldFRpbWUoKSArIDEwICogNjAgKiAxMDAwIC0gdHpPZmYgKiAxMDAwICogNjApLnRvSVNPU3RyaW5nKCkuc2xpY2UoMCwgLTEpOyAvLysxMG1cclxuICAgICAgICAgICAgY29uc3QgdHJhbnNhY3Rpb25PYmogPSB7XHJcbiAgICAgICAgICAgICAgICBhY3Rpb25zOiBhY3Rpb25zLFxyXG4gICAgICAgICAgICAgICAgZXhwaXJhdGlvbjogdCxcclxuICAgICAgICAgICAgICAgIHJlZl9ibG9ja19wcmVmaXg6IGxhc3RCbG9ja0luZm8ucmVmX2Jsb2NrX3ByZWZpeCxcclxuICAgICAgICAgICAgICAgIHJlZl9ibG9ja19udW06IGxhc3RCbG9ja0luZm8uYmxvY2tfbnVtICYgMHhmZmZmLCAvLyAyMjc3NFxyXG4gICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICBjb25zdCBhID0geWllbGQgYXBpLnNlcmlhbGl6ZUFjdGlvbnModHJhbnNhY3Rpb25PYmouYWN0aW9ucyk7XHJcbiAgICAgICAgICAgIGNvbnN0IHRyYW5zYWN0aW9uID0gT2JqZWN0LmFzc2lnbihPYmplY3QuYXNzaWduKHt9LCB0cmFuc2FjdGlvbk9iaiksIHsgYWN0aW9uczogYSB9KTtcclxuICAgICAgICAgICAgY29uc3Qgc2VyaWFsaXplZFRyYW5zYWN0aW9uID0gYXBpLnNlcmlhbGl6ZVRyYW5zYWN0aW9uKHRyYW5zYWN0aW9uKTtcclxuICAgICAgICAgICAgY29uc3QgYXZhaWxhYmxlS2V5cyA9IHlpZWxkIGFwaS5zaWduYXR1cmVQcm92aWRlci5nZXRBdmFpbGFibGVLZXlzKCk7XHJcbiAgICAgICAgICAgIGNvbnN0IHJlcXVpcmVkS2V5cyA9IHlpZWxkIGFwaS5hdXRob3JpdHlQcm92aWRlci5nZXRSZXF1aXJlZEtleXMoeyB0cmFuc2FjdGlvbiwgYXZhaWxhYmxlS2V5cyB9KTtcclxuICAgICAgICAgICAgY29uc3QgYWJpcyA9IHlpZWxkIGFwaS5nZXRUcmFuc2FjdGlvbkFiaXModHJhbnNhY3Rpb24pO1xyXG4gICAgICAgICAgICAvLyBjb25zdCBwdXNoVHJhbnNhY3Rpb25BcmdzOiBQdXNoVHJhbnNhY3Rpb25BcmdzID0geyBzZXJpYWxpemVkVHJhbnNhY3Rpb24sIHNpZ25hdHVyZXMgfTtcclxuICAgICAgICAgICAgY29uc3QgcHVzaFRyYW5zYWN0aW9uQXJncyA9IHlpZWxkIGFwaS5zaWduYXR1cmVQcm92aWRlci5zaWduKHtcclxuICAgICAgICAgICAgICAgIGNoYWluSWQ6IGluZm8uY2hhaW5faWQsXHJcbiAgICAgICAgICAgICAgICByZXF1aXJlZEtleXM6IHJlcXVpcmVkS2V5cyxcclxuICAgICAgICAgICAgICAgIHNlcmlhbGl6ZWRUcmFuc2FjdGlvbjogc2VyaWFsaXplZFRyYW5zYWN0aW9uLFxyXG4gICAgICAgICAgICAgICAgc2VyaWFsaXplZENvbnRleHRGcmVlRGF0YTogdW5kZWZpbmVkLFxyXG4gICAgICAgICAgICAgICAgYWJpczogYWJpc1xyXG4gICAgICAgICAgICB9KTtcclxuICAgICAgICAgICAgLy9jb25zb2xlLmxvZyhcInNpZ25lZCB0cmFuc2FjdGlvbjogXCIgKyBKU09OLnN0cmluZ2lmeShwdXNoVHJhbnNhY3Rpb25BcmdzKSk7XHJcbiAgICAgICAgICAgIC8qXHJcbiAgICAgICAgICAgIGxldCB0ciAgPSBzZXJpYWxpemVkVHJhbnNhY3Rpb24uYnVmZmVyLnRvU3RyaW5nKCk7XHJcbiAgICAgICAgICAgIGxldCBlY2NzdCA9IGVjYy5zaWduKHNlcmlhbGl6ZWRUcmFuc2FjdGlvbiwgcHJpdmF0ZV9rZXlzWzBdKTtcclxuICAgICAgICAgICAgbGV0IHB1Yl9mcm9tX3BydiA9IGVjYy5wcml2YXRlVG9QdWJsaWMocHJpdmF0ZV9rZXlzWzBdKTtcclxuICAgICAgICAgICAgbGV0IHNpZyA9IHB1c2hUcmFuc2FjdGlvbkFyZ3Muc2lnbmF0dXJlc1swXTtcclxuICAgICAgICAgICAgbGV0IGtleSA9IGVjYy5yZWNvdmVyKHNpZywgdHIpO1xyXG4gICAgICAgICAgICBsZXQgYyA9IGVjYy52ZXJpZnkoc2lnLCB0ciwgcHVibGljX2tleXNbMF0pO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyhcInNpZ25hdHVyZSB2ZXJpZmljYXRpb246IHJldHVybiAlZFwiLCBjKSovXHJcbiAgICAgICAgICAgIHJldHVybiBhcGkucHVzaFNpZ25lZFRyYW5zYWN0aW9uKHB1c2hUcmFuc2FjdGlvbkFyZ3MpO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG4gICAgO1xyXG59XHJcbmV4cG9ydHMuTkNPX0Jsb2NrY2hhaW5BUEkgPSBOQ09fQmxvY2tjaGFpbkFQSTtcclxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/index.ts\n");
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.NCO_BlockchainAPI = exports.devnet_services = exports.devnet_urls = void 0;
+// EOS imports
+const eosjs_1 = __webpack_require__(/*! eosjs */ "eosjs");
+const eosjs_jssig_1 = __webpack_require__(/*! eosjs/dist/eosjs-jssig */ "eosjs/dist/eosjs-jssig"); // development only
+// @ts-ignore
+const eosjs_ecc_priveos_1 = __importDefault(__webpack_require__(/*! eosjs-ecc-priveos */ "eosjs-ecc-priveos"));
+// Extra backend services
+const hyperion_1 = __webpack_require__(/*! @eoscafe/hyperion */ "@eoscafe/hyperion");
+const atomicassets_1 = __webpack_require__(/*! atomicassets */ "atomicassets");
+// Newcoin services  
+const newcoin_pools_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.pools-js/ */ "@newcoin-foundation/newcoin.pools-js/");
+const newcoin_pool_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.pool-js */ "@newcoin-foundation/newcoin.pool-js");
+const newcoin_pool_js_2 = __webpack_require__(/*! @newcoin-foundation/newcoin.pool-js */ "@newcoin-foundation/newcoin.pool-js");
+const newcoin_daos_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.daos-js */ "@newcoin-foundation/newcoin.daos-js");
+const actions_1 = __webpack_require__(/*! ./actions */ "./src/actions.ts");
+// @ts-ignore
+const node_fetch = __importStar(__webpack_require__(/*! node-fetch */ "node-fetch"));
+const cross_fetch_1 = __importDefault(__webpack_require__(/*! cross-fetch */ "cross-fetch"));
+//import * as types from "./types";
+const types_1 = __webpack_require__(/*! ./types */ "./src/types.ts");
+__exportStar(__webpack_require__(/*! ./types */ "./src/types.ts"), exports);
+const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
+const CREATE_ACCOUNT_DEFAULTS = {
+    ram_amt: 8192,
+    cpu_amount: '100.0000 NCO',
+    net_amount: '100.0000 NCO',
+    xfer: false,
+};
+/**
+ * The primary tool to interact with [https://newcoin.org](newcoin.org).
+ *
+ * This is an early alpha.
+ *
+ * See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
+ */
+exports.devnet_urls = {
+    nodeos_url: "https://nodeos-dev.newcoin.org",
+    hyperion_url: "https://hyperion-dev.newcoin.org",
+    atomicassets_url: "https://atomic-dev.newcoin.org/"
+};
+exports.devnet_services = {
+    eosio_contract: "eosio",
+    token_contract: "eosio.token",
+    maindao_contract: "pool.nco",
+    staking_contract: "pools2.nco",
+    daos_contract: "daos.nco"
+};
+class NCO_BlockchainAPI {
+    /**
+     * Init the api
+     * @name newcoin-api
+     * @param urls
+     * @param services
+     * @returns a Newcoin API instance
+     */
+    constructor(urls, services) {
+        this.dao_id = "0";
+        this.pool_id = "0";
+        this.pool_code = "";
+        this._url = urls.nodeos_url;
+        this._h_url = urls.hyperion_url;
+        this._aa_url = urls.atomicassets_url;
+        this.aa_api = new atomicassets_1.ExplorerApi(this._aa_url, "atomicassets", { fetch: node_fetch });
+        this.nodeos_rpc = new eosjs_1.JsonRpc(this._url, { fetch: cross_fetch_1.default });
+        this.hrpc = new hyperion_1.JsonRpc(this._h_url, { fetch: cross_fetch_1.default });
+        this.cApi = new newcoin_daos_js_1.ChainApi(this._url, services.daos_contract, cross_fetch_1.default);
+        this.poolsRpcApi = new newcoin_pools_js_1.RpcApi(this._url, services.staking_contract, cross_fetch_1.default);
+        this.poolRpcApi = new newcoin_pool_js_2.RpcApi(this._url, services.maindao_contract, cross_fetch_1.default);
+        this.aGen = new newcoin_daos_js_1.ActionGenerator(services.daos_contract, services.token_contract);
+        this.mGen = new newcoin_pool_js_1.ActionGenerator(services.maindao_contract, services.token_contract);
+        this.pGen = new newcoin_pools_js_1.ActionGenerator(services.staking_contract, services.maindao_contract);
+        this.sdkGen = new actions_1.ActionGenerator(services.eosio_contract, services.token_contract);
+        this._services = services;
+    }
+    /**
+     * Create a key pair assuming a secure environment (not frontend)
+     * @returns A key pair
+     */
+    async createKeyPair() {
+        await eosjs_ecc_priveos_1.default.initialize();
+        let opts = { secureEnv: true };
+        let p = await eosjs_ecc_priveos_1.default.randomKey(0, opts);
+        //let x = ecc.isValidPrivate(p);
+        let t = { prv_key: p, pub_key: eosjs_ecc_priveos_1.default.privateToPublic(p) };
+        return t;
+    }
+    /**
+     * Create a user
+     * @returns Create User transaction id
+     */
+    async createUser(inpt) {
+        const { newUser, newacc_pub_active_key, newacc_pub_owner_key, payer, payer_prv_key, ram_amt, net_amount, cpu_amount, xfer } = Object.assign(Object.assign({}, CREATE_ACCOUNT_DEFAULTS), inpt);
+        let t;
+        let res = {};
+        let tres;
+        let newacc_action = this.sdkGen.newaccount(newUser, payer, newacc_pub_active_key, newacc_pub_owner_key);
+        let buyram_action = this.sdkGen.buyrambytes(newUser, payer, ram_amt);
+        let delegatebw_action = this.sdkGen.delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
+        let payer_pub_key = eosjs_ecc_priveos_1.default.privateToPublic(payer_prv_key);
+        console.log("before create account transaction");
+        tres = await this.SubmitTx([newacc_action, buyram_action, delegatebw_action], [payer_pub_key], [payer_prv_key]); // [] contained      
+        res.TxID_createAcc = tres.transaction_id;
+        console.log("createuser transaction complete");
+        return res;
+    }
+    /**
+     * Create collection
+     * @returns Create Collection and template transactions' ids
+     */
+    async createCollection(inpt) {
+        let t;
+        let res = {};
+        let tres;
+        let d = 12 - inpt.user.length;
+        if (inpt.collection_name == undefined)
+            inpt.collection_name = (0, utils_1.normalizeUsername)(inpt.user, "z"); //(inpt.creator).replace('.', 'z' + 'z'.repeat(d));
+        if (inpt.schema_name == undefined)
+            inpt.schema_name = (0, utils_1.normalizeUsername)(inpt.user, "w"); // (inpt.creator).replace('.', 'w' + 'w'.repeat(d));
+        let user_public_active_key = eosjs_ecc_priveos_1.default.privateToPublic(inpt.user_prv_active_key);
+        let mkt_fee = inpt.mkt_fee ? inpt.mkt_fee : 0.05;
+        let allow_notify = inpt.allow_notify ? inpt.allow_notify : true;
+        t = this.sdkGen.createCollection(inpt.user, inpt.collection_name, [inpt.user], [inpt.user], mkt_fee, allow_notify);
+        console.log(t);
+        console.log("createcol transaction");
+        tres = await this.SubmitTx([t], [user_public_active_key], [inpt.user_prv_active_key]);
+        res.TxID_createCol = tres.transaction_id;
+        console.log("creating schema");
+        let schema_fields = inpt.schema_fields ? inpt.schema_fields : types_1.default_schema;
+        t = this.sdkGen.createSchema(inpt.user, inpt.user, inpt.collection_name, inpt.schema_name, schema_fields);
+        console.log(t);
+        console.log("createsch transaction");
+        tres = await this.SubmitTx([t], [user_public_active_key], [inpt.user_prv_active_key]);
+        res.TxID_createSch = tres.transaction_id;
+        console.log("creating template");
+        let template = inpt.template_fields ? inpt.template_fields : [];
+        let xferable = inpt.xferable ? inpt.xferable : true;
+        let burnable = inpt.burnable ? inpt.burnable : true;
+        let max_supply = inpt.max_supply ? inpt.max_supply : 0xffffff;
+        t = this.sdkGen.createTemplate(inpt.user, inpt.collection_name, inpt.schema_name, xferable, burnable, max_supply, template);
+        console.log(t);
+        console.log("creating template transaction");
+        tres = await this.SubmitTx([t], [user_public_active_key], [inpt.user_prv_active_key]);
+        res.TxID_createTpl = res.TxID_createTpl;
+        return res;
+    }
+    /**
+     * Create a new permission subject to Active permission.
+     * @returns Create permission transaction id
+     */
+    async createPermission(inpt) {
+        let t = this.sdkGen.createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
+        let res = await this.SubmitTx([t], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.author_prv_active_key)], [inpt.author_prv_active_key]);
+        let r = {};
+        r.TxID_createPerm = res.transaction_id;
+        return r;
+    }
+    /**
+     * Link a permission to a specific action of a specific contract.
+     * @returns Link permission transaction id
+     */
+    async linkPermission(inpt) {
+        const linkauth_input = {
+            account: inpt.author,
+            code: inpt.action_owner,
+            type: inpt.action_to_link,
+            requirement: inpt.perm_to_link, // 'active', 'owner' ... 
+        };
+        // the action which will make the linking 
+        let action = {
+            account: 'eosio',
+            name: 'linkauth',
+            data: linkauth_input,
+            authorization: [{
+                    actor: inpt.author,
+                    permission: 'active'
+                }]
+        };
+        let res = await this.SubmitTx([action], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.author_prv_active_key)], [inpt.author_prv_active_key]);
+        let r = {};
+        r.TxID_linkPerm = res.transaction_id;
+        return r;
+    }
+    /**
+     * Create a staking pool for an account
+     * @returns Create Pool transaction id
+     */
+    async createPool(inpt) {
+        var _a, _b, _c;
+        inpt.ticker = (inpt.ticker || inpt.owner.substring(0, 3)).toUpperCase();
+        (_a = inpt.is_inflatable) !== null && _a !== void 0 ? _a : (inpt.is_inflatable = true);
+        (_b = inpt.is_deflatable) !== null && _b !== void 0 ? _b : (inpt.is_deflatable = true);
+        (_c = inpt.is_treasury) !== null && _c !== void 0 ? _c : (inpt.is_treasury = false);
+        console.log("Creating pool: " + JSON.stringify(inpt));
+        let t = this.sdkGen.createPool(inpt.owner, inpt.ticker, inpt.is_inflatable, inpt.is_deflatable, inpt.is_treasury, "test pool for " + inpt.owner);
+        let res = await this.SubmitTx([t], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.owner_prv_active_key)], [inpt.owner_prv_active_key]);
+        let r = {};
+        r.TxID_createPool = res.transaction_id;
+        return r;
+    }
+    /**
+     * Stake mainDAO
+     * @param inpt
+     * @returns
+     */
+    async stakeMainDAO(inpt) {
+        let r = {};
+        const stakeTx = await this.mGen.stake([{ actor: inpt.payer, permission: "active" }], inpt.payer, inpt.amt);
+        console.log("action: " + JSON.stringify(stakeTx));
+        const res = await this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        r.TxID_stakeMainDAO = res.transaction_id;
+        return r;
+    }
+    /**
+    * inst UnStake mainDAO
+    * @param inpt
+    * @returns
+    */
+    async instUnstakeMainDAO(inpt) {
+        let r = {};
+        const stakeTx = await this.mGen.instunstake([{ actor: inpt.payer, permission: "active" }], inpt.payer, inpt.amt);
+        console.log("action: " + JSON.stringify(stakeTx));
+        const res = await this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        r.TxID_unstakeMainDAO = res.transaction_id;
+        return r;
+    }
+    /**
+     * delayed UnStake mainDAO
+     * @param inpt
+     * @returns
+     */
+    async dldUnstakeMainDAO(inpt) {
+        let r = {};
+        const stakeTx = await this.mGen.dldunstake([{ actor: inpt.payer, permission: "active" }], inpt.payer, inpt.amt);
+        console.log("action: " + JSON.stringify(stakeTx));
+        const res = await this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        r.TxID_unstakeMainDAO = res.transaction_id;
+        return r;
+    }
+    /**
+     * Stake to pool
+     * @returns Create Pool transaction id
+     */
+    async stakePool(inpt) {
+        let p = { owner: inpt.owner };
+        let r = {};
+        console.log("Get poolbyowner: ", JSON.stringify(p));
+        let q = await this.poolsRpcApi.getPoolByOwner(p);
+        let t = await q.json();
+        this.pool_id = t.rows[0].id;
+        this.pool_code = t.rows[0].code;
+        console.log("pool:" + JSON.stringify(t));
+        const stakeTx = await this.pGen.stakeToPool([{ actor: inpt.payer, permission: "active" },
+            { actor: "io", permission: "active" }], inpt.payer, inpt.amt, this.pool_id);
+        console.log("action: " + JSON.stringify(stakeTx));
+        const res = await this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        r.TxID_stakePool = res.transaction_id;
+        r.pool_id = this.pool_id;
+        r.pool_code = this.pool_code;
+        return r;
+    }
+    async unstakePool(inpt) {
+        const t = await this.pGen.withdrawFromPool([{ actor: inpt.payer, permission: "active" }], //{ actor: "io", permission: "active"}
+        inpt.payer, inpt.amt);
+        console.log("action: " + JSON.stringify(t));
+        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        let r = {};
+        r.TxID_unstakePool = res.transaction_id;
+        return r;
+    }
+    async addToWhiteList(inpt) {
+        //const aGen = new PoolsActionGenerator("pools2.nco", "eosio.token");
+        /*const t = await this.aGen.createWhiteListProposal(
+          [{ actor: inpt.owner, permission: "active" }],
+          ~~inpt.dao_id,
+          inpt.account);
+    
+        const res = await this.SubmitTx(t,
+          [ecc.privateToPublic(inpt.owner_prv_key)], [inpt.owner_prv_key]) as TransactResult;
+      */
+        let r = {};
+        r.TxID_addToWhiteList = "0"; //res.transaction_id;
+        return r;
+    }
+    async removeFromWhiteList(inpt) {
+        //const aGen = new PoolsActionGenerator("pools2.nco", "eosio.token");
+        //const t = await pGen.removeFromWhiteList(
+        //  [{ actor: inpt.owner, permission: "active"}],
+        //  inpt.pool_id,
+        //  inpt.owner);
+        //const res = await SubmitTx(t, 
+        //  [ecc.privateToPublic(inpt.owner_prv_key)], [inpt.owner_prv_key], 
+        //  this._url) as TransactResult;
+        let r = {};
+        //r.TxID_removeFromWhiteList = res.transaction_id;
+        return r;
+    }
+    async createDao(inpt) {
+        const t = await this.aGen.createDao([{ actor: inpt.author, permission: "active" }], inpt.author, inpt.descr);
+        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.authpr_prv_key)], [inpt.authpr_prv_key]);
+        let p = { owner: inpt.author };
+        console.log("Get dao by owner: ", JSON.stringify(p));
+        let q = await this.cApi.getDAOByOwner(p);
+        let w = await q.json();
+        console.log("received from getDaoByOwner" + JSON.stringify(w));
+        let r = {};
+        r.TxID_createDao = res.transaction_id;
+        r.dao_id = w.rows[0].id;
+        this.dao_id = r.dao_id.toString();
+        return r;
+    }
+    async createDaoProposal(inpt) {
+        if (inpt.dao_id == undefined) {
+            if (inpt.dao_owner == undefined)
+                throw ("DAO undefined");
+            let p = { owner: inpt.dao_owner };
+            console.log("Get dao by owner: ", JSON.stringify(p));
+            let q = await this.cApi.getDAOByOwner(p);
+            let w = await q.json();
+            console.log("received from getDaoByOwner" + JSON.stringify(w));
+            inpt.dao_id = w.rows[0].id;
+        }
+        const t = await this.aGen.createProposal([{ actor: inpt.proposer, permission: "active" }], inpt.proposer, inpt.dao_id, inpt.title, inpt.summary, inpt.url, inpt.vote_start, inpt.vote_end);
+        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.proposer_prv_key)], [inpt.proposer_prv_key]);
+        let r = {};
+        r.TxID_createDaoProposal = res.transaction_id;
+        r.dao_id = inpt.dao_id;
+        return r;
+    }
+    async approveDaoProposal(inpt) {
+        if (inpt.dao_id == undefined) {
+            if (inpt.dao_owner == undefined)
+                throw ("DAO undefined");
+            let p = { owner: inpt.dao_owner };
+            console.log("Get dao by owner: ", JSON.stringify(p));
+            let q = await this.cApi.getDAOByOwner(p);
+            let w = await q.json();
+            console.log("received from getDaoByOwner" + JSON.stringify(w));
+            inpt.dao_id = w.rows[0].id;
+        }
+        if (inpt.proposal_id == undefined) {
+            if (inpt.proposal_author == undefined)
+                throw ("Proposal undefined neither ID nor name");
+            let p = {
+                daoID: inpt.dao_id.toString(),
+                proposer: inpt.proposal_author
+            };
+            console.log("Get proposal by author: ", JSON.stringify(p));
+            let q = await this.cApi.getProposalByProposer(p);
+            let w = await q.json();
+            console.log("received from getProposalByOwner" + JSON.stringify(w));
+            inpt.proposal_id = w.rows[0].id;
+        }
+        const t = await this.aGen.approveProposal([{ actor: inpt.approver, permission: "active" }], inpt.dao_id, inpt.proposal_id);
+        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]);
+        let r = {};
+        r.TxID_approveDaoProposal = res.transaction_id;
+        return r;
+    }
+    async executeDaoProposal(inpt) {
+        if (inpt.dao_id == undefined) {
+            if (inpt.dao_owner == undefined)
+                throw ("DAO undefined");
+            let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
+            let w = await q.json();
+            console.log("received from getDaoByOwner" + JSON.stringify(w));
+            inpt.dao_id = w.rows[0].id;
+        }
+        if (inpt.proposal_id == undefined) {
+            if (inpt.proposal_author == undefined)
+                throw ("Proposal undefined neither ID nor name");
+            let p = {
+                daoID: inpt.dao_id.toString(),
+                proposer: inpt.proposal_author
+            };
+            console.log("Get proposal by author: ", JSON.stringify(p));
+            let q = await this.cApi.getProposalByProposer(p);
+            let w = await q.json();
+            console.log("received from getProposalByOwner" + JSON.stringify(w));
+            inpt.proposal_id = w.rows[0].id;
+        }
+        const t = await this.aGen.executeProposal([{ actor: inpt.exec, permission: "active" }], inpt.dao_id, inpt.proposal_id);
+        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.exec_prv_key)], [inpt.exec_prv_key]);
+        let r = {};
+        r.TxID_executeDaoProposal = res.transaction_id;
+        return r;
+    }
+    async getDaoProposals(inpt) {
+        if (inpt.dao_id == undefined) {
+            if (inpt.dao_owner == undefined)
+                return {};
+            let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
+            let w = await q.json();
+            console.log("received from getDaoByOwner" + JSON.stringify(w));
+            inpt.dao_id = (w.rows[0].id).toString();
+        }
+        if (inpt.proposal_id == undefined) {
+            const opt = { daoID: inpt.dao_id, proposer: inpt.proposal_author };
+            let q = await this.cApi.getProposalByProposer(opt);
+            let w = await q.json();
+            console.log("received from getProposalbyProposer" + JSON.stringify(w));
+            inpt.proposal_id = (w.rows[0].id).toString();
+        }
+        console.log("Get proposals for dao ", JSON.stringify(inpt.dao_id));
+        let q = await this.cApi.getProposalByID({ daoID: inpt.dao_id, id: inpt.proposal_id });
+        let w = await q.json();
+        console.log("received from getProposalByID" + JSON.stringify(w.rows));
+        return w.rows;
+    }
+    async voteOnDaoProposal(inpt) {
+        console.log("Vote for DAO proposal", JSON.stringify(inpt.dao_id));
+        const t = await this.aGen.vote([{ actor: inpt.voter, permission: "active" }], inpt.voter, inpt.quantity, inpt.proposal_type || "standart", inpt.dao_id, inpt.proposal_id, inpt.option);
+        // let w = await q.json();
+        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]);
+        console.log("received from VoteForDaoProposal" + JSON.stringify(res));
+        return { TxID_voteForDaoProposal: res.transaction_id };
+    }
+    /**
+     * Mint an asset
+     * @returns Create Pool transaction id
+     */
+    async mintAsset(inpt) {
+        let d = 12 - inpt.creator.length;
+        if (inpt.col_name == undefined)
+            inpt.col_name = (0, utils_1.normalizeUsername)(inpt.creator, "z");
+        if (inpt.sch_name == undefined)
+            inpt.sch_name = (0, utils_1.normalizeUsername)(inpt.creator, "w");
+        if (inpt.tmpl_id == undefined)
+            inpt.tmpl_id = -1;
+        if (inpt.immutable_data == undefined)
+            inpt.immutable_data = [
+                { key: 'name', value: ['string', inpt.creator + '_' + (new Date()).getTime()] }
+            ];
+        if (inpt.mutable_data == undefined)
+            inpt.mutable_data = [];
+        const t = this.sdkGen.mintAsset(inpt.creator, inpt.payer, inpt.col_name, inpt.sch_name, inpt.tmpl_id, inpt.immutable_data, inpt.mutable_data);
+        let res = await this.SubmitTx([t], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        let r = {};
+        r.TxID_mintAsset = res.transaction_id;
+        return r;
+    }
+    /**
+     * Get trasaction data
+     * @returns Tx data
+     */
+    async getTxData(txid) {
+        let txi = await this.hrpc.get_transaction(txid);
+        console.log(txi); // get template number  txi.actions[1].act.data.template_id
+        return txi;
+    }
+    /**
+     * Get account balance
+     * @returns Tx data
+     */
+    async getAccountBalance(acc) {
+        if (acc.contract == undefined)
+            acc.contract = 'eosio.token';
+        let rc = { acc_balances: [] };
+        try {
+            let t = await (0, cross_fetch_1.default)(`https://nodeos-dev.newcoin.org/v1/chain/get_currency_balance`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    account: acc.owner,
+                    code: acc.contract
+                }),
+            });
+            rc.acc_balances = await t.json();
+            //console.log(rc);
+            return rc;
+        }
+        catch (e) {
+            console.log('\nCaught exception: ' + e);
+            if (e instanceof eosjs_1.RpcError)
+                console.log(JSON.stringify(e.json, null, 2));
+        }
+    }
+    /**
+     * Transfer NCO between accounts
+     * @returns Transfer transaction id
+     */
+    async _txBalance(contract, inpt, memo = "") {
+        let r = {};
+        let tx = this.sdkGen.txBalance(contract, inpt.payer, inpt.to, inpt.amt, memo);
+        let res = await this.SubmitTx([tx], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        r.TxID = res.transaction_id;
+        //console.log(res);
+        return r;
+    }
+    async txGNCOBalance(inpt) {
+        const r = await this._txBalance(this._services.maindao_contract, inpt);
+        return r.TxID;
+    }
+    async txNCOBalance(inpt) {
+        const r = await this._txBalance(this._services.token_contract, inpt);
+        return r.TxID;
+    }
+    /**
+     * Transfer NCO between accounts
+     * @returns Transfer transaction id
+     */
+    async txNcoBalance(inpt) {
+        var _a;
+        let r = {};
+        let tx = this.sdkGen.txNcoBalance(inpt.payer, inpt.to, inpt.amt, (_a = inpt.memo) !== null && _a !== void 0 ? _a : (inpt.memo = ""));
+        let res = await this.SubmitTx([tx], [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
+        r.TxID_txNcoBalance = res.transaction_id;
+        //console.log(res);
+        return r;
+    }
+    /**
+   * Get pool info
+   * @returns Tx data
+   */
+    async getPoolInfo(payload) {
+        const api = new newcoin_pools_js_1.RpcApi("https://nodeos-dev.newcoin.org", "pools2.nco", cross_fetch_1.default);
+        try {
+            const fn = payload.code ? "getPoolByCode" : "getPoolByOwner";
+            let q = await api[fn](payload);
+            let t = await q.json();
+            //console.log(t.rows[0]);
+            //console.log(t.rows[0].total);
+            return t;
+        }
+        catch (e) {
+            console.log('\nCaught exception: ' + e);
+            if (e instanceof eosjs_1.RpcError)
+                console.log(JSON.stringify(e.json, null, 2));
+        }
+        return {};
+        ``;
+    }
+    async SubmitTx(actions, public_keys, // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
+    private_keys // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
+    ) {
+        const signatureProvider = new eosjs_jssig_1.JsSignatureProvider(private_keys);
+        signatureProvider.availableKeys = public_keys;
+        //@ts-ignore
+        const rpc = this.nodeos_rpc;
+        const api = new eosjs_1.Api({ rpc, signatureProvider }); //required to submit transactions
+        const info = await rpc.get_info();
+        const lastBlockInfo = await rpc.get_block(info.last_irreversible_block_num);
+        const tzOff = new Date(info.head_block_time).getTimezoneOffset();
+        var t = new Date((new Date(info.head_block_time)).getTime() + 10 * 60 * 1000 - tzOff * 1000 * 60).toISOString().slice(0, -1); //+10m
+        const transactionObj = {
+            actions: actions,
+            expiration: t,
+            ref_block_prefix: lastBlockInfo.ref_block_prefix,
+            ref_block_num: lastBlockInfo.block_num & 0xffff, // 22774
+        };
+        const a = await api.serializeActions(transactionObj.actions);
+        const transaction = Object.assign(Object.assign({}, transactionObj), { actions: a });
+        const serializedTransaction = api.serializeTransaction(transaction);
+        const availableKeys = await api.signatureProvider.getAvailableKeys();
+        const requiredKeys = await api.authorityProvider.getRequiredKeys({ transaction, availableKeys });
+        const abis = await api.getTransactionAbis(transaction);
+        // const pushTransactionArgs: PushTransactionArgs = { serializedTransaction, signatures };
+        const pushTransactionArgs = await api.signatureProvider.sign({
+            chainId: info.chain_id,
+            requiredKeys: requiredKeys,
+            serializedTransaction: serializedTransaction,
+            serializedContextFreeData: undefined,
+            abis: abis
+        });
+        //console.log("signed transaction: " + JSON.stringify(pushTransactionArgs));
+        /*
+        let tr  = serializedTransaction.buffer.toString();
+        let eccst = ecc.sign(serializedTransaction, private_keys[0]);
+        let pub_from_prv = ecc.privateToPublic(private_keys[0]);
+        let sig = pushTransactionArgs.signatures[0];
+        let key = ecc.recover(sig, tr);
+        let c = ecc.verify(sig, tr, public_keys[0]);
+        console.log("signature verification: return %d", c)*/
+        return api.pushSignedTransaction(pushTransactionArgs);
+    }
+    ;
+}
+exports.NCO_BlockchainAPI = NCO_BlockchainAPI;
+NCO_BlockchainAPI.defaults = {
+    devnet_services: exports.devnet_services,
+    devnet_urls: exports.devnet_urls
+};
+
 
 /***/ }),
 
@@ -36,7 +877,28 @@ eval("\r\nvar __createBinding = (this && this.__createBinding) || (Object.create
   \**********************/
 /***/ ((__unused_webpack_module, exports) => {
 
-eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.ERC721_schema = exports.default_schema = void 0;\r\nexports.default_schema = [\r\n    { name: 'name', type: \"string\" },\r\n    { name: 'description', type: \"string\" },\r\n    { name: 'image', type: 'string' },\r\n    { name: 'external_url', type: 'string' },\r\n    { name: 'content_type', type: 'string' },\r\n    { name: 'content', type: 'string' },\r\n    { name: 'license', type: 'string' }\r\n];\r\n// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md\r\nexports.ERC721_schema = [\r\n    { name: 'name', type: \"string\" },\r\n    { name: 'description', type: \"string\" },\r\n    { name: 'image', type: 'string' },\r\n];\r\n// https://docs.opensea.io/docs/metadata-standards\r\n// export const OpenSea_schema = [\r\n//]\r\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvdHlwZXMudHMuanMiLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vTkNPX0Jsb2NrY2hhaW5BUEkvLi9zcmMvdHlwZXMudHM/MTFiOSJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcclxuT2JqZWN0LmRlZmluZVByb3BlcnR5KGV4cG9ydHMsIFwiX19lc01vZHVsZVwiLCB7IHZhbHVlOiB0cnVlIH0pO1xyXG5leHBvcnRzLkVSQzcyMV9zY2hlbWEgPSBleHBvcnRzLmRlZmF1bHRfc2NoZW1hID0gdm9pZCAwO1xyXG5leHBvcnRzLmRlZmF1bHRfc2NoZW1hID0gW1xyXG4gICAgeyBuYW1lOiAnbmFtZScsIHR5cGU6IFwic3RyaW5nXCIgfSxcclxuICAgIHsgbmFtZTogJ2Rlc2NyaXB0aW9uJywgdHlwZTogXCJzdHJpbmdcIiB9LFxyXG4gICAgeyBuYW1lOiAnaW1hZ2UnLCB0eXBlOiAnc3RyaW5nJyB9LFxyXG4gICAgeyBuYW1lOiAnZXh0ZXJuYWxfdXJsJywgdHlwZTogJ3N0cmluZycgfSxcclxuICAgIHsgbmFtZTogJ2NvbnRlbnRfdHlwZScsIHR5cGU6ICdzdHJpbmcnIH0sXHJcbiAgICB7IG5hbWU6ICdjb250ZW50JywgdHlwZTogJ3N0cmluZycgfSxcclxuICAgIHsgbmFtZTogJ2xpY2Vuc2UnLCB0eXBlOiAnc3RyaW5nJyB9XHJcbl07XHJcbi8vIGh0dHBzOi8vZ2l0aHViLmNvbS9ldGhlcmV1bS9FSVBzL2Jsb2IvbWFzdGVyL0VJUFMvZWlwLTcyMS5tZFxyXG5leHBvcnRzLkVSQzcyMV9zY2hlbWEgPSBbXHJcbiAgICB7IG5hbWU6ICduYW1lJywgdHlwZTogXCJzdHJpbmdcIiB9LFxyXG4gICAgeyBuYW1lOiAnZGVzY3JpcHRpb24nLCB0eXBlOiBcInN0cmluZ1wiIH0sXHJcbiAgICB7IG5hbWU6ICdpbWFnZScsIHR5cGU6ICdzdHJpbmcnIH0sXHJcbl07XHJcbi8vIGh0dHBzOi8vZG9jcy5vcGVuc2VhLmlvL2RvY3MvbWV0YWRhdGEtc3RhbmRhcmRzXHJcbi8vIGV4cG9ydCBjb25zdCBPcGVuU2VhX3NjaGVtYSA9IFtcclxuLy9dXHJcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/types.ts\n");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ERC721_schema = exports.default_schema = void 0;
+exports.default_schema = [
+    { name: 'name', type: "string" },
+    { name: 'description', type: "string" },
+    { name: 'image', type: 'string' },
+    { name: 'external_url', type: 'string' },
+    { name: 'content_type', type: 'string' },
+    { name: 'content', type: 'string' },
+    { name: 'license', type: 'string' }
+];
+// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+exports.ERC721_schema = [
+    { name: 'name', type: "string" },
+    { name: 'description', type: "string" },
+    { name: 'image', type: 'string' },
+];
+// https://docs.opensea.io/docs/metadata-standards
+// export const OpenSea_schema = [
+//]
+
 
 /***/ }),
 
@@ -46,7 +908,14 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\n
   \**********************/
 /***/ ((__unused_webpack_module, exports) => {
 
-eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.normalizeUsername = void 0;\r\nconst normalizeUsername = (username, r) => {\r\n    return username.replace(/\\./g, r + r.repeat(12 - username.length));\r\n};\r\nexports.normalizeUsername = normalizeUsername;\r\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvdXRpbHMudHMuanMiLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9OQ09fQmxvY2tjaGFpbkFQSS8uL3NyYy91dGlscy50cz9jNzExIl0sInNvdXJjZXNDb250ZW50IjpbIlwidXNlIHN0cmljdFwiO1xyXG5PYmplY3QuZGVmaW5lUHJvcGVydHkoZXhwb3J0cywgXCJfX2VzTW9kdWxlXCIsIHsgdmFsdWU6IHRydWUgfSk7XHJcbmV4cG9ydHMubm9ybWFsaXplVXNlcm5hbWUgPSB2b2lkIDA7XHJcbmNvbnN0IG5vcm1hbGl6ZVVzZXJuYW1lID0gKHVzZXJuYW1lLCByKSA9PiB7XHJcbiAgICByZXR1cm4gdXNlcm5hbWUucmVwbGFjZSgvXFwuL2csIHIgKyByLnJlcGVhdCgxMiAtIHVzZXJuYW1lLmxlbmd0aCkpO1xyXG59O1xyXG5leHBvcnRzLm5vcm1hbGl6ZVVzZXJuYW1lID0gbm9ybWFsaXplVXNlcm5hbWU7XHJcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/utils.ts\n");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.normalizeUsername = void 0;
+const normalizeUsername = (username, r) => {
+    return username.replace(/\./g, r + r.repeat(12 - username.length));
+};
+exports.normalizeUsername = normalizeUsername;
+
 
 /***/ }),
 
@@ -186,3 +1055,4 @@ module.exports = require("node-fetch");
 /******/ 	
 /******/ })()
 ;
+//# sourceMappingURL=index.js.map

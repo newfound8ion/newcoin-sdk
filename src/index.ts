@@ -87,6 +87,11 @@ export type NCInitServices = {
 }
 
 export class NCO_BlockchainAPI {
+  static defaults = {
+    devnet_services,
+    devnet_urls
+  }
+
   private _url: string;
   private _h_url: string;
   private _aa_url: string;
