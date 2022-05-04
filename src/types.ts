@@ -81,23 +81,27 @@ export type NCUnstakePool = {
 };
 
 export type NCAddToWhiteList = {
-  pool_id: number,
+  dao_id: string,
+  account: string,
   owner: string,
   owner_prv_key: string;
 }
 
 export type NCRemoveFromWhiteList = {
-  pool_id: number,
+  dao_id: string,
+  account: string,
   owner: string,
   owner_prv_key: string;
 }
+
+
+
 
 export type NCTxNcoBal = {
   to: string;
   amt: string;
   payer: string;
   memo: string;
-  payer_pub_key: string;
   payer_prv_key: string;
 };
 
@@ -149,6 +153,7 @@ export type NCCreateDaoProposal = {
   vote_end: string
 };
 
+
 export type NCApproveDaoProposal = {
   approver: string,
   approver_prv_key: string,
@@ -168,9 +173,11 @@ export type NCExecuteDaoProposal = {
 
 };
 
+
 export type NCGetDaoProposals = {
-  dao_id: string;
-  id?: string;
+  dao_id?: string,
+  dao_owner?: string,
+  proposal_id?: string,
   proposal_author?: string;
 }
 
@@ -183,7 +190,6 @@ export type NCDaoProposalVote = {
   voter_prv_key: string;
   quantity: string;
 }
-
 
 export type NCKeyValPair = {
   key: string,

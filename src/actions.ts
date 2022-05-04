@@ -259,8 +259,7 @@ export class ActionGenerator {
       is_inflatable: boolean,
       is_deflatable: boolean,
       is_treasury: boolean,
-      payer: string,
-      descr: string = creator + ' pool'
+      descr: string
     ) => {
       const action = {
         account: 'pools2.nco',
@@ -286,7 +285,7 @@ export class ActionGenerator {
       from: string,
       to: string,
       amt: string, 
-      memo: string = ''
+      memo: string
     ) => {
       const action = {
         account: 'eosio.token',
@@ -308,7 +307,7 @@ export class ActionGenerator {
       from: string,
       to: string,
       amt: string, 
-      memo: string = ''
+      memo: string
     ) => {
       const action = {
         account: contract, //'eosio.token',

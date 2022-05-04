@@ -103,7 +103,7 @@ export declare class ActionGenerator {
         }[];
     };
     mintAsset: (author: string, payer: string, col_name: string, sch_name: string, tmpl_id: number, immutable_data: any[], mutable_data: any[]) => any;
-    createPool: (creator: string, ticker: string, is_inflatable: boolean, is_deflatable: boolean, is_treasury: boolean, payer: string, descr?: string) => {
+    createPool: (creator: string, ticker: string, is_inflatable: boolean, is_deflatable: boolean, is_treasury: boolean, descr: string) => {
         account: string;
         name: string;
         data: {
@@ -119,7 +119,21 @@ export declare class ActionGenerator {
             permission: string;
         }[];
     };
-    txNcoBalance: (from: string, to: string, amt: string, memo?: string) => {
+    txNcoBalance: (from: string, to: string, amt: string, memo: string) => {
+        account: string;
+        name: string;
+        data: {
+            from: string;
+            to: string;
+            quantity: string;
+            memo: string;
+        };
+        authorization: {
+            actor: string;
+            permission: string;
+        }[];
+    };
+    txBalance: (contract: string, from: string, to: string, amt: string, memo: string) => {
         account: string;
         name: string;
         data: {

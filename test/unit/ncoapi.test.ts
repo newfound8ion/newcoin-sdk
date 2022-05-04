@@ -5,7 +5,7 @@ import {
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
     NCCreatePermission, NCLinkPerm, 
     NCStakeMainDao, 
-    NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCExecuteDaoProposal,
+    NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCExecuteDaoProposal, NCGetDaoProposals,
     NCStakePool, NCUnstakePool,
     NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
@@ -13,6 +13,8 @@ import {
     default_schema
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
+
+
 //import * as nco from 'newcoin';
 
 
@@ -152,6 +154,23 @@ describe("Basic blockchain operations", () => {
         }, 60000);
     });
 
+    describe("tx NCO transaction", () => {
+        it("tx nco balance", async () => {
+            let n: NCTxNcoBal = { 
+                to:   name, 
+                amt: '1000.0000 NCO', 
+                payer:'io',
+                memo: 'initial balance transfer', 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+            };
+            
+            let resp :NCReturnTxs = await api.txNcoBalance(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_txNcoBalance).toBe('string');
+
+        }, 60000)
+    });
+
     describe("'create pool' transaction", () => {
         it("create pool", async () => {
 
@@ -169,11 +188,12 @@ describe("Basic blockchain operations", () => {
 
     describe("stake to MainDAO pool transaction", () => {
         it("stake maindao pool", async () => {
+        
             let n: NCStakeMainDao = { 
-                amt: '100.0000 NCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
-        } ;
+                    amt: '1000.0000 NCO', 
+                    payer: name,
+                    payer_prv_key: prv_key_active
+            } ;
             
         let resp : NCReturnTxs = await api.stakeMainDAO(n) ;
         console.log(resp);
@@ -185,10 +205,10 @@ describe("Basic blockchain operations", () => {
         it("unstake maindao pool", async () => {
             let n: NCStakeMainDao = { 
                 amt: '100.0000 GNCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+                payer: name,
+                payer_prv_key: prv_key_active
         } ;
-            
+        // check balance?
         let resp : NCReturnTxs = await api.instUnstakeMainDAO(n) ;
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
@@ -199,8 +219,8 @@ describe("Basic blockchain operations", () => {
         it("delayed unstake maindao pool", async () => {
             let n: NCStakeMainDao = { 
                 amt: '100.0000 GNCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+                payer: name,
+                payer_prv_key: prv_key_active
         } ;
             
         let resp : NCReturnTxs = await api.dldUnstakeMainDAO(n) ;
@@ -211,11 +231,11 @@ describe("Basic blockchain operations", () => {
 
     describe("stake to pool transaction", () => {
         it("stake pool", async () => {
-            let n: NCStakePool = { 
-                owner: name, 
-                amt: '100.0000 GNCO', 
-                payer:'io',  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+        let n: NCStakePool = { 
+            owner: name, 
+            amt: '100.0000 GNCO', 
+            payer:'io',  
+            payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
         let resp : NCReturnTxs = await api.stakePool(n) ;
@@ -243,40 +263,6 @@ describe("Basic blockchain operations", () => {
         expect(typeof resp.TxID_unstakePool).toBe('string');
         }, 60000)
     });
-
-    describe("figure all pools transaction", () => {
-        it("find all pools pool", async () => {
-           
-           /*
-            const api = new PoolsRpcApi("http://testnet.newcoin.org", "pools.nco", fetch);
-            let p: PoolsPayload = { };
-            let r: NCReturnTxs = {};
-            type RetT = { rows: PoolsPayload[] };
-            let t;
-            for (let i = 0; i < 10; i++) 
-            {
-                 p.id = i;
-
-                console.log("Get poolbyid: ", JSON.stringify(p));
-                let q = await api.getPoolByOwner(p);
-                t = await q.json() as RetT;
-                let pool_id = t.rows[0].id as string;
-                let pool_code = t.rows[0].code as string;
-                console.log("pool:" + JSON.stringify(t));
-            }
-            */
-        const n: NCUnstakePool = { 
-                payer: "io",
-                amt: '5.0000 '+pool_code,  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
-        } ;
-        console.log("unstake action: "+ JSON.stringify(n));
-        let resp : NCReturnTxs = await api.unstakePool(n) ;
-        console.log(resp);
-        expect(typeof resp.TxID_unstakePool).toBe('string');
-        }, 60000)
-    });
-
     
     describe("'create dao' transaction", () => {
         it("create dao", async () => {
@@ -306,7 +292,7 @@ describe("Basic blockchain operations", () => {
                 
                 dao_owner:name,
                 title: "Latest news",
-                summary: "Slava Ukraini",
+                summary: "Don't panic",
                 url: "meduza.io",
                 vote_start: "2022-10-01T00:00:00", //now.toISOString(),
                 vote_end:   "2022-11-01T00:00:00"  //new Date(now.getTime()+ 8*24*60*60*1000).toISOString()
@@ -363,24 +349,19 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
     
-    describe.only("list daos", () => {
+    describe("list proposals", () => {
         it("list proposals for dao", async () => {
 
-            // const now = new Date();
-
-            // let n: NCListDaoProposals = { 
-            //     exec: name, 
-            //     exec_prv_key: prv_key_active,
-            //     dao_owner: name,
-            //     proposal_author: name,
-
-            // };              
+            let n: NCGetDaoProposals = { 
+                proposal_author: "rfyqcosju.io",//name,
+                dao_owner: "rfyqcosju.io"//name
+            };              
             
-            // console.log("Arguments for DAO proposal approval: " + JSON.stringify(n));
-            let resp = await api.getDaoProposals({ dao_id: "28" });
+            console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
+            let resp = await api.getDaoProposals(n);
             console.log(resp);
-            debugger;
-            // expect(typeof resp.TxID_executeDaoProposal).toBe('string');
+            // debugger;
+            expect(resp[0].id).toBe(0);
 
         }, 60000)
     });
@@ -413,10 +394,16 @@ describe("Basic blockchain operations", () => {
 
     describe("get account pools balances", () => {
         it("get pool balances", async () => {
+            
             let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;
             let resp:NCReturnInfo = { acc_balances: [] }
             resp = await api.getAccountBalance(n) as NCReturnInfo ;
-            console.log(resp);
+            console.log("NEW POOL COINS" + JSON.stringify(resp));
+            
+            n.contract = "pool.nco";
+            resp = await api.getAccountBalance(n) as NCReturnInfo ;
+            console.log("GNCO balance" + JSON.stringify(resp));
+            
             if(resp.acc_balances)
                 expect(typeof resp.acc_balances[0]).toBe('string'); 
             else 
@@ -424,22 +411,6 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe("tx NCO transaction", () => {
-        it("tx nco balance", async () => {
-            let n: NCTxNcoBal = { 
-                to: name, 
-                amt: '5000.0000 NCO', 
-                payer:'io',
-                memo: 'test transfer', 
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", 
-                payer_pub_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"
-            };
-            
-            let resp :NCReturnTxs = await api.txNcoBalance(n) ;
-            console.log(resp);
-            expect(typeof resp.TxID_txNcoBalance).toBe('string');
-
-        }, 60000)
-    });
+    
 
 });
