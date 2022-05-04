@@ -169,8 +169,9 @@ export type NCExecuteDaoProposal = {
 };
 
 export type NCGetDaoProposals = {
-  dao_id: string;
-  id?: string;
+  dao_id?: string,
+  dao_owner?: string,
+  proposal_id?: string,
   proposal_author?: string;
 }
 

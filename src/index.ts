@@ -13,7 +13,7 @@ import { ExplorerApi } from 'atomicassets';
 // Newcoin services  
 import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
-import { ActionGenerator as MainDAOActionGenerator } from '@newcoin-foundation/newcoin.pool-js';
+import { ActionGenerator as MainDAOActionGenerator } from '../../newcoin.pool-js/src';
 import { RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js'
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
 import { ActionGenerator as sdkActionGen } from "./actions";
@@ -332,7 +332,7 @@ export class NCO_BlockchainAPI {
    */
   async stakeMainDAO(inpt: NCStakeMainDao) {
     let r: NCReturnTxs = {};
-    debugger;
+    
     const stakeTx = await this.mGen.stake(
       [{ actor: inpt.payer, permission: "active" }],
       inpt.payer,
@@ -340,8 +340,7 @@ export class NCO_BlockchainAPI {
 
     console.log("action: " + JSON.stringify(stakeTx));
     const res = await this.SubmitTx(stakeTx,
-      [ecc.privateToPublic(inpt.payer_prv_key), ecc.privateToPublic("5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV")],
-      [inpt.payer_prv_key, "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]) as TransactResult;
+      [ecc.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]) as TransactResult;
 
     r.TxID_stakeMainDAO = res.transaction_id;
     return r;
@@ -477,7 +476,7 @@ export class NCO_BlockchainAPI {
   }
 
   async createDao(inpt: NCCreateDao) {
-    //const aGen = new DaosAG("daos.nco", "eosio.token");
+
     const t = await this.aGen.createDao(
       [{ actor: inpt.author, permission: "active" }],
       inpt.author,
@@ -571,20 +570,14 @@ export class NCO_BlockchainAPI {
     return r;
   }
 
-
   async executeDaoProposal(inpt: NCExecuteDaoProposal) {
 
     if (inpt.dao_id == undefined) {
       if (inpt.dao_owner == undefined)
         throw ("DAO undefined");
 
-
-      let p: DAOPayload = { owner: inpt.dao_owner };
-
-      console.log("Get dao by owner: ", JSON.stringify(p));
-      let q = await this.cApi.getDAOByOwner(p);
+      let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
       let w = await q.json();
-
       console.log("received from getDaoByOwner" + JSON.stringify(w));
       inpt.dao_id = w.rows[0].id as number;
     }
@@ -605,6 +598,7 @@ export class NCO_BlockchainAPI {
       console.log("received from getProposalByOwner" + JSON.stringify(w));
       inpt.proposal_id = w.rows[0].id as number;
     }
+
     const t = await this.aGen.executeProposal(
       [{ actor: inpt.exec, permission: "active" }],
       inpt.dao_id, inpt.proposal_id
@@ -617,13 +611,32 @@ export class NCO_BlockchainAPI {
     r.TxID_executeDaoProposal = res.transaction_id;
     return r;
   }
+
   async getDaoProposals(inpt: NCGetDaoProposals) {
+
+    if (inpt.dao_id == undefined) {
+      if (inpt.dao_owner == undefined) 
+        return {};
+      let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
+      let w = await q.json();
+      console.log("received from getDaoByOwner" + JSON.stringify(w));
+      inpt.dao_id = (w.rows[0].id).toString();
+    }
+  
+    if(inpt.proposal_id == undefined) {
+      const opt : DaoInterfaces.ProposalPayload = { daoID: inpt.dao_id as string, proposer: inpt.proposal_author}
+      let q = await this.cApi.getProposalByProposer(opt);
+      let w = await q.json();
+      console.log("received from getProposalbyProposer" + JSON.stringify(w));
+      inpt.proposal_id = (w.rows[0].id).toString();
+    }
+
     console.log("Get proposals for dao ", JSON.stringify(inpt.dao_id));
-    let q = await this.cApi.getProposalByID({ daoID: (inpt.dao_id ?? "").toString() });
+    let q = await this.cApi.getProposalByID({ daoID: inpt.dao_id as string, id: inpt.proposal_id });
     let w = await q.json();
 
-    console.log("received from getDaoProposals" + JSON.stringify(w));
-    return w;
+    console.log("received from getProposalByID" + JSON.stringify(w.rows));
+    return w.rows;
   }
 
   async voteOnDaoProposal(inpt: NCDaoProposalVote) {
