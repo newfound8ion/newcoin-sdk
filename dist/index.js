@@ -534,16 +534,18 @@ class NCO_BlockchainAPI {
         console.log("Get poolbyowner: ", JSON.stringify(p));
         let q = await this.poolsRpcApi.getPoolByOwner(p);
         let t = await q.json();
-        this.pool_id = t.rows[0].id;
-        this.pool_code = t.rows[0].code;
+        const pool_id = t.rows[0].id;
+        const pool_code = t.rows[0].code;
         console.log("pool:" + JSON.stringify(t));
-        const stakeTx = await this.pGen.stakeToPool([{ actor: inpt.payer, permission: "active" },
-            { actor: "io", permission: "active" }], inpt.payer, inpt.amt, this.pool_id);
+        const stakeTx = await this.pGen.stakeToPool([
+            { actor: inpt.payer, permission: "active" }
+            // { actor: "io", permission: "active" }
+        ], inpt.payer, inpt.amt, pool_id);
         console.log("action: " + JSON.stringify(stakeTx));
         const res = await this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
         r.TxID_stakePool = res.transaction_id;
-        r.pool_id = this.pool_id;
-        r.pool_code = this.pool_code;
+        r.pool_id = pool_id;
+        r.pool_code = pool_code;
         return r;
     }
     async unstakePool(inpt) {
@@ -681,7 +683,7 @@ class NCO_BlockchainAPI {
             console.log("received from getDaoByOwner" + JSON.stringify(w));
             inpt.dao_id = (w.rows[0].id).toString();
         }
-        if (inpt.proposal_id == undefined) {
+        if (inpt.proposal_author) {
             const opt = { daoID: inpt.dao_id, proposer: inpt.proposal_author };
             let q = await this.cApi.getProposalByProposer(opt);
             let w = await q.json();
