@@ -90,7 +90,7 @@ export class NCO_BlockchainAPI {
   private urls: NCInitUrls;
   private services: NCInitServices;
   
-  private aa_api: ExplorerApi;
+  //private aa_api: ExplorerApi;
   private nodeos_rpc: JsonRpc;
   private hrpc: HJsonRpc;
   private poolsRpcApi: PoolsRpcApi;
@@ -118,7 +118,7 @@ export class NCO_BlockchainAPI {
 
     this.urls = urls;
 
-    this.aa_api = new ExplorerApi(this.urls.atomicassets_url, "atomicassets", { fetch: node_fetch });
+    //this.aa_api = new ExplorerApi(this.urls.atomicassets_url, "atomicassets", { fetch: node_fetch });
     this.nodeos_rpc = new JsonRpc(this.urls.nodeos_url, { fetch });
     this.hrpc = new HJsonRpc(this.urls.hyperion_url, { fetch });
     this.cApi = new DaosChainApi(this.urls.nodeos_url, services.daos_contract, fetch);
@@ -306,7 +306,9 @@ export class NCO_BlockchainAPI {
     inpt.is_treasury   ??= false;
 
     console.log("Creating pool: " + JSON.stringify(inpt));
-    let t = this.sdkGen.createPool(inpt.owner, inpt.ticker,
+    let t = this.sdkGen.createPool(
+      inpt.owner, 
+      inpt.ticker,
       inpt.is_inflatable,
       inpt.is_deflatable,
       inpt.is_treasury,
@@ -400,6 +402,7 @@ export class NCO_BlockchainAPI {
     console.log("Get poolbyowner: ", JSON.stringify(p));
     let q = await this.poolsRpcApi.getPoolByOwner(p);
     let t = await q.json() as RetT;
+    
     const pool_id = t.rows[0].id as string;
     const pool_code = t.rows[0].code as string;
 
@@ -477,7 +480,7 @@ export class NCO_BlockchainAPI {
       inpt.descr
     );
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.authpr_prv_key)], [inpt.authpr_prv_key]) as TransactResult;
+      [ecc.privateToPublic(inpt.author_prv_key)], [inpt.author_prv_key]) as TransactResult;
 
     let p: DAOPayload = { owner: inpt.author };
     console.log("Get dao by owner: ", JSON.stringify(p));
@@ -487,7 +490,8 @@ export class NCO_BlockchainAPI {
       
     let r: NCReturnTxs = {};
     r.TxID_createDao = res.transaction_id;
-    r.dao_id = w.rows[0].id as number;
+    r.dao_id = w.rows[0].id.toString();
+    // r.dao_id = r.dao_id.toString() ; 
     return r;
   }  
   
@@ -503,6 +507,10 @@ export class NCO_BlockchainAPI {
       let w = await q.json();
 
       console.log("received from getDaoByOwner" + JSON.stringify(w));
+
+      if(!w.rows.length)
+        throw new Error('User has no dao');
+
       inpt.dao_id = w.rows[0].id as number;
     }
 
@@ -534,6 +542,7 @@ export class NCO_BlockchainAPI {
       let w = await q.json();
 
       console.log("received from getDaoByOwner" + JSON.stringify(w));
+
       inpt.dao_id = w.rows[0].id as number;
     }
 
@@ -617,6 +626,10 @@ export class NCO_BlockchainAPI {
       q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
       w = await q.json();
       console.log("received from getDaoByOwner" + JSON.stringify(w));
+
+      if(!w.rows.length)
+        return { dao_id: null, rows: [] }
+
       inpt.dao_id = (w.rows[0].id).toString();
     }
 
@@ -639,7 +652,10 @@ export class NCO_BlockchainAPI {
     }
 
     console.log("received from getProposalByID" + JSON.stringify(w.rows));
-    return w.rows;
+    return {
+      ...w,
+      dao_id: inpt.dao_id
+    };
   }
 
   async voteOnDaoProposal(inpt: NCDaoProposalVote) {

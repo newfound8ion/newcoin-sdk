@@ -25,6 +25,10 @@ export declare type NCInitServices = {
     daos_contract: string;
 };
 export declare class NCO_BlockchainAPI {
+    static defaults: {
+        devnet_services: NCInitServices;
+        devnet_urls: NCInitUrls;
+    };
     private _url;
     private _h_url;
     private _aa_url;

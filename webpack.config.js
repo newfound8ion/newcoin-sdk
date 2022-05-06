@@ -5,7 +5,7 @@ module.exports = {
     entry: './src/index.ts',
     mode: 'development',
     target: 'node',
-    devtool: "eval-cheap-source-map",
+    devtool: "source-map",
     module: {
         rules: [
             // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
@@ -29,6 +29,7 @@ module.exports = {
             name: "NCO_BlockchainAPI",
             // path: path.resolve(__dirname, 'dist'),
             export: "NCO_BlockchainAPI"
-        }
+        },
+        // libraryTarget: "umd"
     }
 };
