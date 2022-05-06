@@ -136,7 +136,7 @@ export type NCPoolsInfo = {
 
 export type NCCreateDao = {
   author: string,
-  authpr_prv_key: string,
+  author_prv_key: string,
   token?: string,
   descr: string
 }

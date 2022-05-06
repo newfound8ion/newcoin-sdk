@@ -96,7 +96,7 @@ export class NCO_BlockchainAPI {
   private _h_url: string;
   private _aa_url: string;
 
-  private aa_api: ExplorerApi;
+  // private aa_api: ExplorerApi;
   private nodeos_rpc: JsonRpc;
   private hrpc: HJsonRpc;
   private poolsRpcApi: PoolsRpcApi;
@@ -130,7 +130,7 @@ export class NCO_BlockchainAPI {
     this._h_url = urls.hyperion_url;
     this._aa_url = urls.atomicassets_url;
 
-    this.aa_api = new ExplorerApi(this._aa_url, "atomicassets", { fetch: node_fetch });
+    // this.aa_api = new ExplorerApi(this._aa_url, "atomicassets", { fetch: node_fetch });
     this.nodeos_rpc = new JsonRpc(this._url, { fetch });
     this.hrpc = new HJsonRpc(this._h_url, { fetch });
     this.cApi = new DaosChainApi(this._url, services.daos_contract, fetch);
@@ -496,7 +496,7 @@ export class NCO_BlockchainAPI {
       inpt.descr
     );
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.authpr_prv_key)], [inpt.authpr_prv_key]) as TransactResult;
+      [ecc.privateToPublic(inpt.author_prv_key)], [inpt.author_prv_key]) as TransactResult;
 
     let p: DAOPayload = { owner: inpt.author };
     console.log("Get dao by owner: ", JSON.stringify(p));
@@ -506,8 +506,8 @@ export class NCO_BlockchainAPI {
       
     let r: NCReturnTxs = {};
     r.TxID_createDao = res.transaction_id;
-    r.dao_id = w.rows[0].id as number;
-    this.dao_id = r.dao_id.toString() ; 
+    r.dao_id = w.rows[0].id.toString();
+    // r.dao_id = r.dao_id.toString() ; 
     return r;
   }  
   
@@ -523,6 +523,10 @@ export class NCO_BlockchainAPI {
       let w = await q.json();
 
       console.log("received from getDaoByOwner" + JSON.stringify(w));
+
+      if(!w.rows.length)
+        throw new Error('User has no dao');
+
       inpt.dao_id = w.rows[0].id as number;
     }
 
@@ -554,6 +558,7 @@ export class NCO_BlockchainAPI {
       let w = await q.json();
 
       console.log("received from getDaoByOwner" + JSON.stringify(w));
+
       inpt.dao_id = w.rows[0].id as number;
     }
 
@@ -637,6 +642,10 @@ export class NCO_BlockchainAPI {
       let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
       let w = await q.json();
       console.log("received from getDaoByOwner" + JSON.stringify(w));
+
+      if(!w.rows.length)
+        return { dao_id: null, rows: [] }
+
       inpt.dao_id = (w.rows[0].id).toString();
     }
   
