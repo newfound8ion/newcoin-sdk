@@ -594,8 +594,8 @@ class NCO_BlockchainAPI {
         return r;
     }
     async approveDaoProposal(inpt) {
-        if (inpt.dao_id == undefined) {
-            if (inpt.dao_owner == undefined)
+        if (!((inpt.dao_id || -1) >= 0)) {
+            if (!inpt.dao_owner)
                 throw ("DAO undefined");
             let p = { owner: inpt.dao_owner };
             //console.log("Get dao by owner: ", JSON.stringify(p));
@@ -604,19 +604,23 @@ class NCO_BlockchainAPI {
             console.log("received from getDaoByOwner" + JSON.stringify(w));
             inpt.dao_id = w.rows[0].id;
         }
-        if (inpt.proposal_id == undefined) {
-            if (inpt.proposal_author == undefined)
-                throw ("Proposal undefined neither ID nor name");
-            let p = {
-                daoID: inpt.dao_id.toString(),
-                proposer: inpt.proposal_author
-            };
-            console.log("Get proposal by author: ", JSON.stringify(p));
-            let q = await this.cApi.getProposalByProposer(p);
-            let w = await q.json();
-            console.log("received from getProposalByOwner" + JSON.stringify(w));
-            inpt.proposal_id = w.rows[0].id;
-        }
+        console.log("inpt:", JSON.stringify(inpt));
+        console.log("inpt.proposal_id:", JSON.stringify(inpt.proposal_id), !inpt.proposal_id);
+        if (typeof inpt.proposal_id === "undefined")
+            throw new Error("missing proposal_id");
+        // if (inpt.proposal_id == undefined) {
+        //   if (inpt.proposal_author == undefined)
+        //     throw ("Proposal undefined neither ID nor name");
+        //   let p: ProposalPayload = {
+        //     daoID: inpt.dao_id.toString(),
+        //     proposer: inpt.proposal_author
+        //   };
+        //   console.log("Get proposal by author: ", JSON.stringify(p));
+        //   let q = await this.cApi.getProposalByProposer(p);
+        //   let w = await q.json();
+        //   console.log("received from getProposalByOwner" + JSON.stringify(w));
+        //   inpt.proposal_id = w.rows[0].id as number;
+        // }
         const t = await this.aGen.approveProposal([{ actor: inpt.approver, permission: "active" }], inpt.dao_id, inpt.proposal_id);
         const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]);
         let r = {};
@@ -682,6 +686,19 @@ class NCO_BlockchainAPI {
         return Object.assign(Object.assign({}, w), { dao_id: inpt.dao_id });
     }
     async voteOnDaoProposal(inpt) {
+        if (inpt.dao_id == undefined) {
+            if (inpt.dao_owner == undefined)
+                return {};
+            let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
+            let w = await q.json();
+            console.log("received from getDaoByOwner" + JSON.stringify(w));
+            if (!w.rows.length)
+                throw new Error("User has no DAO");
+            inpt.dao_id = (w.rows[0].id).toString();
+        }
+        if (!inpt.dao_id) // mostly to silence ts
+            throw new Error("No dao id");
+        console.log("Vote for DAO proposal", JSON.stringify(inpt));
         const t = await this.aGen.vote([{ actor: inpt.voter, permission: "active" }], inpt.voter, inpt.quantity, inpt.proposal_type || "standart", inpt.dao_id, inpt.proposal_id, inpt.option);
         console.log("Vote for DAO proposal: ", JSON.stringify(t));
         const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]);
