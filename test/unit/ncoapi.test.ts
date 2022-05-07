@@ -321,7 +321,7 @@ describe("Basic blockchain operations", () => {
                 approver: name, 
                 approver_prv_key: prv_key_active,
                 dao_owner: name,
-                proposal_author: name,
+                proposal_id: 0
 
             };              
             
