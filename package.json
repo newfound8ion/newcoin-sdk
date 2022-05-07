@@ -1,12 +1,12 @@
 {
   "name": "@newcoin-foundation/newcoin-sdk",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.js",
   "scripts": {
     "test": "jest",
     "docs": "typedoc --out docs src/index.ts",
-    "dist": "webpack"
+    "dist": "./node_modules/.bin/webpack"
   },
   "author": "vitalyrue",
   "license": "MIT",

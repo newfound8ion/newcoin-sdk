@@ -210,8 +210,9 @@ export type NCMintAsset = {
 
 export type NCGetAccInfo = {
   owner: string,
-  contract?: string     // pools.nco one possible value
-};
+  contract?: string,
+  token_name?: string
+};                 
 
 export type NCGetPoolInfo = {
   owner?: string

@@ -113,7 +113,7 @@ export declare type NCPoolsInfo = {
 };
 export declare type NCCreateDao = {
     author: string;
-    authpr_prv_key: string;
+    author_prv_key: string;
     token?: string;
     descr: string;
 };
@@ -176,6 +176,7 @@ export declare type NCMintAsset = {
 export declare type NCGetAccInfo = {
     owner: string;
     contract?: string;
+    token_name?: string;
 };
 export declare type NCGetPoolInfo = {
     owner?: string;
