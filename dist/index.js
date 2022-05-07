@@ -267,18 +267,6 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
@@ -294,17 +282,12 @@ const eosjs_jssig_1 = __webpack_require__(/*! eosjs/dist/eosjs-jssig */ "eosjs/d
 const eosjs_ecc_priveos_1 = __importDefault(__webpack_require__(/*! eosjs-ecc-priveos */ "eosjs-ecc-priveos"));
 // Extra backend services
 const hyperion_1 = __webpack_require__(/*! @eoscafe/hyperion */ "@eoscafe/hyperion");
-const atomicassets_1 = __webpack_require__(/*! atomicassets */ "atomicassets");
 // Newcoin services  
 const newcoin_pools_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.pools-js/ */ "@newcoin-foundation/newcoin.pools-js/");
 const newcoin_pool_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.pool-js */ "@newcoin-foundation/newcoin.pool-js");
-const newcoin_pool_js_2 = __webpack_require__(/*! @newcoin-foundation/newcoin.pool-js */ "@newcoin-foundation/newcoin.pool-js");
 const newcoin_daos_js_1 = __webpack_require__(/*! @newcoin-foundation/newcoin.daos-js */ "@newcoin-foundation/newcoin.daos-js");
 const actions_1 = __webpack_require__(/*! ./actions */ "./src/actions.ts");
-// @ts-ignore
-const node_fetch = __importStar(__webpack_require__(/*! node-fetch */ "node-fetch"));
 const cross_fetch_1 = __importDefault(__webpack_require__(/*! cross-fetch */ "cross-fetch"));
-//import * as types from "./types";
 const types_1 = __webpack_require__(/*! ./types */ "./src/types.ts");
 __exportStar(__webpack_require__(/*! ./types */ "./src/types.ts"), exports);
 const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
@@ -342,23 +325,18 @@ class NCO_BlockchainAPI {
      * @returns a Newcoin API instance
      */
     constructor(urls, services) {
-        this.dao_id = "0";
-        this.pool_id = "0";
-        this.pool_code = "";
-        this._url = urls.nodeos_url;
-        this._h_url = urls.hyperion_url;
-        this._aa_url = urls.atomicassets_url;
-        this.aa_api = new atomicassets_1.ExplorerApi(this._aa_url, "atomicassets", { fetch: node_fetch });
-        this.nodeos_rpc = new eosjs_1.JsonRpc(this._url, { fetch: cross_fetch_1.default });
-        this.hrpc = new hyperion_1.JsonRpc(this._h_url, { fetch: cross_fetch_1.default });
-        this.cApi = new newcoin_daos_js_1.ChainApi(this._url, services.daos_contract, cross_fetch_1.default);
-        this.poolsRpcApi = new newcoin_pools_js_1.RpcApi(this._url, services.staking_contract, cross_fetch_1.default);
-        this.poolRpcApi = new newcoin_pool_js_2.RpcApi(this._url, services.maindao_contract, cross_fetch_1.default);
-        this.aGen = new newcoin_daos_js_1.ActionGenerator(services.daos_contract, services.token_contract);
+        this.urls = urls;
+        //this.aa_api = new ExplorerApi(this.urls.atomicassets_url, "atomicassets", { fetch: node_fetch });
+        this.nodeos_rpc = new eosjs_1.JsonRpc(this.urls.nodeos_url, { fetch: cross_fetch_1.default });
+        this.hrpc = new hyperion_1.JsonRpc(this.urls.hyperion_url, { fetch: cross_fetch_1.default });
+        this.cApi = new newcoin_daos_js_1.ChainApi(this.urls.nodeos_url, services.daos_contract, cross_fetch_1.default);
+        this.poolsRpcApi = new newcoin_pools_js_1.RpcApi(this.urls.nodeos_url, services.staking_contract, cross_fetch_1.default);
+        this.poolRpcApi = new newcoin_pool_js_1.RpcApi(this.urls.nodeos_url, services.maindao_contract, cross_fetch_1.default);
+        this.aGen = new newcoin_daos_js_1.ActionGenerator(services.daos_contract, services.staking_contract);
         this.mGen = new newcoin_pool_js_1.ActionGenerator(services.maindao_contract, services.token_contract);
         this.pGen = new newcoin_pools_js_1.ActionGenerator(services.staking_contract, services.maindao_contract);
         this.sdkGen = new actions_1.ActionGenerator(services.eosio_contract, services.token_contract);
-        this._services = services;
+        this.services = services;
     }
     /**
      * Create a key pair assuming a secure environment (not frontend)
@@ -537,10 +515,7 @@ class NCO_BlockchainAPI {
         const pool_id = t.rows[0].id;
         const pool_code = t.rows[0].code;
         console.log("pool:" + JSON.stringify(t));
-        const stakeTx = await this.pGen.stakeToPool([
-            { actor: inpt.payer, permission: "active" }
-            // { actor: "io", permission: "active" }
-        ], inpt.payer, inpt.amt, pool_id);
+        const stakeTx = await this.pGen.stakeToPool([{ actor: inpt.payer, permission: "active" }], inpt.payer, inpt.amt, pool_id);
         console.log("action: " + JSON.stringify(stakeTx));
         const res = await this.SubmitTx(stakeTx, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]);
         r.TxID_stakePool = res.transaction_id;
@@ -586,7 +561,7 @@ class NCO_BlockchainAPI {
     }
     async createDao(inpt) {
         const t = await this.aGen.createDao([{ actor: inpt.author, permission: "active" }], inpt.author, inpt.descr);
-        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.authpr_prv_key)], [inpt.authpr_prv_key]);
+        const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.author_prv_key)], [inpt.author_prv_key]);
         let p = { owner: inpt.author };
         console.log("Get dao by owner: ", JSON.stringify(p));
         let q = await this.cApi.getDAOByOwner(p);
@@ -594,8 +569,8 @@ class NCO_BlockchainAPI {
         console.log("received from getDaoByOwner" + JSON.stringify(w));
         let r = {};
         r.TxID_createDao = res.transaction_id;
-        r.dao_id = w.rows[0].id;
-        this.dao_id = r.dao_id.toString();
+        r.dao_id = w.rows[0].id.toString();
+        // r.dao_id = r.dao_id.toString() ; 
         return r;
     }
     async createDaoProposal(inpt) {
@@ -607,6 +582,8 @@ class NCO_BlockchainAPI {
             let q = await this.cApi.getDAOByOwner(p);
             let w = await q.json();
             console.log("received from getDaoByOwner" + JSON.stringify(w));
+            if (!w.rows.length)
+                throw new Error('User has no dao');
             inpt.dao_id = w.rows[0].id;
         }
         const t = await this.aGen.createProposal([{ actor: inpt.proposer, permission: "active" }], inpt.proposer, inpt.dao_id, inpt.title, inpt.summary, inpt.url, inpt.vote_start, inpt.vote_end);
@@ -621,7 +598,7 @@ class NCO_BlockchainAPI {
             if (inpt.dao_owner == undefined)
                 throw ("DAO undefined");
             let p = { owner: inpt.dao_owner };
-            console.log("Get dao by owner: ", JSON.stringify(p));
+            //console.log("Get dao by owner: ", JSON.stringify(p));
             let q = await this.cApi.getDAOByOwner(p);
             let w = await q.json();
             console.log("received from getDaoByOwner" + JSON.stringify(w));
@@ -652,7 +629,7 @@ class NCO_BlockchainAPI {
                 throw ("DAO undefined");
             let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
             let w = await q.json();
-            console.log("received from getDaoByOwner" + JSON.stringify(w));
+            //console.log("received from getDaoByOwner" + JSON.stringify(w));
             inpt.dao_id = w.rows[0].id;
         }
         if (inpt.proposal_id == undefined) {
@@ -675,34 +652,41 @@ class NCO_BlockchainAPI {
         return r;
     }
     async getDaoProposals(inpt) {
+        let q, w;
         if (inpt.dao_id == undefined) {
             if (inpt.dao_owner == undefined)
                 return {};
-            let q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
-            let w = await q.json();
+            q = await this.cApi.getDAOByOwner({ owner: inpt.dao_owner });
+            w = await q.json();
             console.log("received from getDaoByOwner" + JSON.stringify(w));
+            if (!w.rows.length)
+                return { dao_id: null, rows: [] };
             inpt.dao_id = (w.rows[0].id).toString();
         }
         if (inpt.proposal_author) {
             const opt = { daoID: inpt.dao_id, proposer: inpt.proposal_author };
-            let q = await this.cApi.getProposalByProposer(opt);
-            let w = await q.json();
-            console.log("received from getProposalbyProposer" + JSON.stringify(w));
+            q = await this.cApi.getProposalByProposer(opt);
+            w = await q.json();
+            //console.log("received from getProposalbyProposer" + JSON.stringify(w));
             inpt.proposal_id = (w.rows[0].id).toString();
+            //console.log("Get proposals for dao ", JSON.stringify(inpt.dao_id));
+            q = await this.cApi.getProposalByID({ daoID: inpt.dao_id, id: inpt.proposal_id });
+            w = await q.json();
         }
-        console.log("Get proposals for dao ", JSON.stringify(inpt.dao_id));
-        let q = await this.cApi.getProposalByID({ daoID: inpt.dao_id, id: inpt.proposal_id });
-        let w = await q.json();
+        else {
+            //console.log("Get ALL proposals for dao ", JSON.stringify(inpt.dao_id));
+            q = await this.cApi.getProposalByID({ daoID: inpt.dao_id });
+            w = await q.json();
+        }
         console.log("received from getProposalByID" + JSON.stringify(w.rows));
-        return w.rows;
+        return Object.assign(Object.assign({}, w), { dao_id: inpt.dao_id });
     }
     async voteOnDaoProposal(inpt) {
-        console.log("Vote for DAO proposal", JSON.stringify(inpt.dao_id));
         const t = await this.aGen.vote([{ actor: inpt.voter, permission: "active" }], inpt.voter, inpt.quantity, inpt.proposal_type || "standart", inpt.dao_id, inpt.proposal_id, inpt.option);
-        // let w = await q.json();
+        console.log("Vote for DAO proposal: ", JSON.stringify(t));
         const res = await this.SubmitTx(t, [eosjs_ecc_priveos_1.default.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]);
         console.log("received from VoteForDaoProposal" + JSON.stringify(res));
-        return { TxID_voteForDaoProposal: res.transaction_id };
+        return { TxID_voteDaoProposal: res.transaction_id };
     }
     /**
      * Mint an asset
@@ -742,8 +726,14 @@ class NCO_BlockchainAPI {
      * @returns Tx data
      */
     async getAccountBalance(acc) {
-        if (acc.contract == undefined)
-            acc.contract = 'eosio.token';
+        if (!acc.contract) {
+            if (acc.token_name == "GNCO")
+                acc.contract = this.services.maindao_contract;
+            else if (acc.token_name != "NCO")
+                acc.contract = this.services.staking_contract;
+            else
+                acc.contract = this.services.eosio_contract;
+        }
         let rc = { acc_balances: [] };
         try {
             let t = await (0, cross_fetch_1.default)(`https://nodeos-dev.newcoin.org/v1/chain/get_currency_balance`, {
@@ -777,11 +767,11 @@ class NCO_BlockchainAPI {
         return r;
     }
     async txGNCOBalance(inpt) {
-        const r = await this._txBalance(this._services.maindao_contract, inpt);
+        const r = await this._txBalance(this.services.maindao_contract, inpt);
         return r.TxID;
     }
     async txNCOBalance(inpt) {
-        const r = await this._txBalance(this._services.token_contract, inpt);
+        const r = await this._txBalance(this.services.token_contract, inpt);
         return r.TxID;
     }
     /**
@@ -802,7 +792,7 @@ class NCO_BlockchainAPI {
    * @returns Tx data
    */
     async getPoolInfo(payload) {
-        const api = new newcoin_pools_js_1.RpcApi("https://nodeos-dev.newcoin.org", "pools2.nco", cross_fetch_1.default);
+        const api = new newcoin_pools_js_1.RpcApi("https://nodeos-dev.newcoin.org", "pools2.nco", cross_fetch_1.default); // TODO
         try {
             const fn = payload.code ? "getPoolByCode" : "getPoolByOwner";
             let q = await api[fn](payload);
@@ -865,10 +855,6 @@ class NCO_BlockchainAPI {
     ;
 }
 exports.NCO_BlockchainAPI = NCO_BlockchainAPI;
-NCO_BlockchainAPI.defaults = {
-    devnet_services: exports.devnet_services,
-    devnet_urls: exports.devnet_urls
-};
 
 
 /***/ }),
@@ -961,16 +947,6 @@ module.exports = require("@newcoin-foundation/newcoin.pools-js/");
 
 /***/ }),
 
-/***/ "atomicassets":
-/*!*******************************!*\
-  !*** external "atomicassets" ***!
-  \*******************************/
-/***/ ((module) => {
-
-module.exports = require("atomicassets");
-
-/***/ }),
-
 /***/ "cross-fetch":
 /*!******************************!*\
   !*** external "cross-fetch" ***!
@@ -1008,16 +984,6 @@ module.exports = require("eosjs-ecc-priveos");
 /***/ ((module) => {
 
 module.exports = require("eosjs/dist/eosjs-jssig");
-
-/***/ }),
-
-/***/ "node-fetch":
-/*!*****************************!*\
-  !*** external "node-fetch" ***!
-  \*****************************/
-/***/ ((module) => {
-
-module.exports = require("node-fetch");
 
 /***/ })
 

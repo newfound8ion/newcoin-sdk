@@ -235,8 +235,8 @@ describe("Basic blockchain operations", () => {
         let n: NCStakePool = { 
             owner: name, 
             amt: '100.0000 GNCO', 
-            payer:'io',  
-            payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+            payer: name,//'io',  
+            payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
         let resp : NCReturnTxs = await api.stakePool(n) ;
@@ -254,9 +254,9 @@ describe("Basic blockchain operations", () => {
         expect(pool_code).toBeDefined();
 
         const n: NCUnstakePool = { 
-                payer: "io",
                 amt: '5.0000 '+pool_code,  
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
+                payer: name, //"io",
+                payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
         } ;
         console.log("unstake action: "+ JSON.stringify(n));
         let resp : NCReturnTxs = await api.unstakePool(n) ;
@@ -270,7 +270,7 @@ describe("Basic blockchain operations", () => {
 
             let n: NCCreateDao = { 
                 author: name, 
-                authpr_prv_key: prv_key_active,
+                author_prv_key: prv_key_active,
                 descr: "test DAO by "+ name
             } ;
             
@@ -337,15 +337,20 @@ describe("Basic blockchain operations", () => {
         it("vote proposal",async () => {
             let n: NCDaoProposalVote = {
                 voter: name,
+                voter_prv_key: prv_key_active,
                 dao_id: dao_id,
                 proposal_id: "0",
-                option: "standart",
                 proposal_type: "standart",
-                voter_prv_key: prv_key_active,
-                quantity: "0," + pool_code
+                quantity: "1.0000 " + pool_code, 
+                option: "YES"
+            };
 
-            }
-        }, 30000)
+            console.log("Arguments for Voting: " + JSON.stringify(n));
+            let resp :NCReturnTxs = await api.voteOnDaoProposal(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_voteDaoProposal).toBe('string');
+
+        }, 30000);
     });
 
     
@@ -361,8 +366,7 @@ describe("Basic blockchain operations", () => {
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
             let resp = await api.getDaoProposals(n);
             console.log(resp);
-            // debugger;
-            expect(resp[0].id).toBe(0);
+            expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
     });
@@ -417,7 +421,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    
+
     describe("get account pools balances", () => {
         it("get pool balances", async () => {
             
