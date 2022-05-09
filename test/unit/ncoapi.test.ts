@@ -5,7 +5,8 @@ import {
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
     NCCreatePermission, NCLinkPerm, 
     NCStakeMainDao, 
-    NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCDaoProposalVote, NCExecuteDaoProposal, NCGetDaoProposals,
+    NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCDaoProposalVote, 
+    NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
     NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
@@ -165,9 +166,10 @@ describe("Basic blockchain operations", () => {
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
             };
             
-            let resp :NCReturnTxs = await api.txNcoBalance(n) ;
+            let resp :NCReturnTxs = {};
+            resp.TxID = await api.txNCOBalance(n) ;
             console.log(resp);
-            expect(typeof resp.TxID_txNcoBalance).toBe('string');
+            expect(typeof resp.TxID).toBe('string');
 
         }, 60000)
     });
@@ -370,7 +372,23 @@ describe("Basic blockchain operations", () => {
 
         }, 60000)
     });
-    
+
+    describe("list votes", () => {
+        it("list proposals for dao", async () => {
+
+            let n: NCGetVotes = { 
+                owner: name,
+                id: "0"
+            };              
+            
+            console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
+            let resp = await api.getProposalVotes(n);
+            console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
+            expect(resp.rows[0].id).toBe(0);
+
+        }, 60000)
+    });
+
     describe("mint ERC721 asset", () => {
         it("Mint asset", async () => {
             let n: NCMintAsset = { 
