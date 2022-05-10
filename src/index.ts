@@ -102,7 +102,10 @@ export class NCO_BlockchainAPI {
   private pGen: PoolsActionGenerator;
   private sdkGen: sdkActionGen;
 
-  
+  static defaults = {
+    devnet_services,
+    devnet_urls
+  }
 
   /**
    * Init the api

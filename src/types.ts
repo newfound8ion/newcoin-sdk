@@ -195,6 +195,7 @@ export type NCDaoProposalVote = {
 export type NCGetVotes = {
   owner: string;
   id: string;
+  dao_id: string;
 }
 
 export type NCKeyValPair = {

@@ -160,6 +160,10 @@ export declare type NCDaoProposalVote = {
     quantity: string;
     dao_owner?: string;
 };
+export declare type NCGetVotes = {
+    owner: string;
+    id: string;
+};
 export declare type NCKeyValPair = {
     key: string;
     value: string[];
