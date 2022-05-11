@@ -2,7 +2,7 @@ import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { ReadOnlyTransactResult } from "eosjs/dist/eosjs-rpc-interfaces";
 import { GetTransaction } from "@eoscafe/hyperion";
 import * as NCO from "./types";
-import { NCCreateCollection, NCCreatePool, NCStakePool, NCUnstakePool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCExecuteDaoProposal, NCMintAsset, NCTxNcoBal, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCReturnTxs, NCTxBal, NCGetDaoProposals, NCDaoProposalVote } from "./types";
+import { NCCreateCollection, NCCreatePool, NCStakePool, NCUnstakePool, NCAddToWhiteList, NCRemoveFromWhiteList, NCStakeMainDao, NCCreateDao, NCCreateDaoProposal, NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCMintAsset, NCCreatePermission, NCGetAccInfo, NCGetPoolInfo, NCLinkPerm, NCReturnTxs, NCTxBal, NCGetDaoProposals, NCDaoProposalVote } from "./types";
 export * from './types';
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -37,6 +37,10 @@ export declare class NCO_BlockchainAPI {
     private mGen;
     private pGen;
     private sdkGen;
+    static defaults: {
+        devnet_services: NCInitServices;
+        devnet_urls: NCInitUrls;
+    };
     /**
      * Init the api
      * @name newcoin-api
@@ -102,11 +106,14 @@ export declare class NCO_BlockchainAPI {
     addToWhiteList(inpt: NCAddToWhiteList): Promise<NCO.NCReturnTxs>;
     removeFromWhiteList(inpt: NCRemoveFromWhiteList): Promise<NCO.NCReturnTxs>;
     createDao(inpt: NCCreateDao): Promise<NCO.NCReturnTxs>;
+    _getDAOidByOwner(owner: string): Promise<number>;
+    _getProposalsIds(dao_id: number, proposer: string): Promise<number[]>;
     createDaoProposal(inpt: NCCreateDaoProposal): Promise<NCO.NCReturnTxs>;
     approveDaoProposal(inpt: NCApproveDaoProposal): Promise<NCO.NCReturnTxs>;
     executeDaoProposal(inpt: NCExecuteDaoProposal): Promise<NCO.NCReturnTxs>;
     getDaoProposals(inpt: NCGetDaoProposals): Promise<any>;
     voteOnDaoProposal(inpt: NCDaoProposalVote): Promise<NCO.NCReturnTxs>;
+    getProposalVotes(inpt: NCGetVotes): Promise<any>;
     /**
      * Mint an asset
      * @returns Create Pool transaction id
@@ -126,14 +133,22 @@ export declare class NCO_BlockchainAPI {
      * Transfer NCO between accounts
      * @returns Transfer transaction id
      */
-    _txBalance(contract: string, inpt: NCTxBal, memo?: string): Promise<NCReturnTxs>;
+    _txBalance(contract: string, inpt: NCTxBal): Promise<NCReturnTxs>;
+    /**
+     * Transfer GNCO between accounts
+     * @returns Transfer transaction id
+     */
     txGNCOBalance(inpt: NCTxBal): Promise<string>;
-    txNCOBalance(inpt: NCTxBal): Promise<string>;
     /**
      * Transfer NCO between accounts
      * @returns Transfer transaction id
      */
-    txNcoBalance(inpt: NCTxNcoBal): Promise<NCReturnTxs>;
+    txNCOBalance(inpt: NCTxBal): Promise<string>;
+    /**
+     * Transfer pool staking tokens  between accounts
+     * @returns Transfer transaction id
+     */
+    txDAOTokenBalance(inpt: NCTxBal): Promise<string>;
     /**
    * Get pool info
    * @returns Tx data
