@@ -153,6 +153,17 @@ export type NCCreateDaoProposal = {
   vote_end: string
 };
 
+export type NCCreateDaoUserWhitelistProposal = {
+  proposer: string,
+  proposer_prv_key: string,
+  dao_id?: number,
+  dao_owner: string,
+  user: string,
+  quantity: string,
+  vote_start: string,
+  vote_end: string
+};
+
 
 export type NCApproveDaoProposal = {
   approver: string,
@@ -193,8 +204,8 @@ export type NCDaoProposalVote = {
 }
 
 export type NCGetVotes = {
-  owner: string;
-  id: string;
+  dao_owner: string,
+  vote_id?: string
 }
 
 export type NCKeyValPair = {
@@ -238,7 +249,7 @@ export type NCReturnTxs = {
   TxID_unstakePool?: string;
 
   TxID_createDao?: string;
-  TxID_createDaoProposal?: string; dao_id?: number;
+  TxID_createDaoProposal?: string; dao_id?: number; proposal_id?: number;
   TxID_approveDaoProposal?: string,
   TxID_executeDaoProposal?: string,
   TxID_voteDaoProposal?: string;
