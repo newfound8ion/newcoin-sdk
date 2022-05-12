@@ -307,7 +307,7 @@ export class NCO_BlockchainAPI {
    * @returns Create Pool transaction id
    */
   async createPool(inpt: NCCreatePool) {
-    inpt.ticker = (inpt.ticker || inpt.owner.substring(0, 3)).toUpperCase();
+    inpt.ticker = (inpt.ticker || inpt.owner.substring(0, 5)).toUpperCase();
     inpt.is_inflatable ??= true;
     inpt.is_deflatable ??= true;
     inpt.is_treasury ??= false;
@@ -529,9 +529,8 @@ export class NCO_BlockchainAPI {
     r.TxID_createDaoProposal = res.transaction_id;
     r.dao_id = dao_id;
 
-    const proposals = await this.getDaoProposals({...inpt, dao_id }); // r.dao_id, inpt.proposer
-    
-    r.proposal_id = proposals[proposals.length - 1].id;
+    const ps = await this.getDaoProposals({...inpt, dao_id }); // r.dao_id, inpt.proposer
+    r.proposal_id = ps.rows[ps.rows.length-1].id;
     return r;
   }
 
@@ -552,7 +551,7 @@ export class NCO_BlockchainAPI {
     r.TxID_createDaoProposal = res.transaction_id;
     r.dao_id = dao_id;
     let ps = await this.getDaoWhitelistProposals(Number(dao_id), inpt.proposer);
-    r.proposal_id = ps[ps.length - 1].id;
+    r.proposal_id = ps.rows[ps.rows.length - 1].id;
     return r;
   }
 

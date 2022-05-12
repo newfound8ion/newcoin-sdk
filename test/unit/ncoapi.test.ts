@@ -168,8 +168,7 @@ describe("Basic blockchain operations", () => {
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
             };
             
-            let resp :NCReturnTxs = {};
-            resp.TxID = await api.txNCOBalance(n) ;
+            let resp :NCReturnTxs = await api.txNCOBalance(n) ;
             console.log(resp);
             expect(typeof resp.TxID).toBe('string');
 
