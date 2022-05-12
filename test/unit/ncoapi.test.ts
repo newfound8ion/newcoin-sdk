@@ -585,7 +585,7 @@ describe("Basic blockchain operations", () => {
         it("list proposals for dao", async () => {
 
             let n: NCGetVotes = { 
-                dao_owner: name
+                voter: name
             };              
             
             console.log("Arguments for DAO votes list: " + JSON.stringify(n));
