@@ -159,7 +159,6 @@ export type NCCreateDaoUserWhitelistProposal = {
   dao_id?: string,
   dao_owner: string,
   user: string,
-  quantity: string,
   vote_start: string,
   vote_end: string
 };

@@ -353,8 +353,7 @@ describe("Basic blockchain operations", () => {
                 dao_owner:name,
                 vote_start: start.toISOString().slice(0,-5), //now.toISOString(),
                 vote_end:  end.toISOString().slice(0,-5),  //new Date(now.getTime()+ 8*24*60*60*1000).toISOString()
-                user: "io",
-                quantity: "1"
+                user: "io"
             } ;              
             
             console.log("Arguments for whitelist user proposal creation : " + JSON.stringify(n));
@@ -551,7 +550,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe.skip("list proposals", () => {
+    describe("list proposals", () => {
         it("list proposals for dao", async () => {
             let n: NCGetDaoProposals = { 
                dao_owner: name
@@ -565,7 +564,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe.skip("list whitelist proposals", () => {
+    describe("list whitelist proposals", () => {
         it("list whitelist proposals for dao", async () => {
             let n: NCGetDaoProposals = { 
                 dao_owner: name, 
@@ -596,7 +595,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe.skip("mint ERC721 asset", () => {
+    describe("mint ERC721 asset", () => {
         it("Mint asset", async () => {
             let n: NCMintAsset = { 
             creator: name, 
@@ -622,7 +621,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe.skip("get account pools balances", () => {
+    describe("get account pools balances", () => {
         it("get pool balances", async () => {
             
             let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;
