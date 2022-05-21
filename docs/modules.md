@@ -19,6 +19,7 @@
 
 ### Variables
 
+- [default\_schema](modules.md#default_schema)
 - [devnet\_services](modules.md#devnet_services)
 - [devnet\_urls](modules.md#devnet_urls)
 
@@ -40,7 +41,7 @@
 
 #### Defined in
 
-[index.ts:81](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L81)
+[index.ts:81](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L81)
 
 ___
 
@@ -58,9 +59,19 @@ ___
 
 #### Defined in
 
-[index.ts:75](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L75)
+[index.ts:75](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L75)
 
 ## Variables
+
+### default\_schema
+
+• **default\_schema**: { `name`: `string` = 'name'; `type`: `string` = "string" }[]
+
+#### Defined in
+
+[types.ts:272](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/types.ts#L272)
+
+___
 
 ### devnet\_services
 
@@ -68,7 +79,7 @@ ___
 
 #### Defined in
 
-[index.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L66)
+[index.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L66)
 
 ___
 
@@ -84,4 +95,4 @@ See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of th
 
 #### Defined in
 
-[index.ts:59](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L59)
+[index.ts:59](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L59)

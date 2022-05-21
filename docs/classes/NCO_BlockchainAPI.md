@@ -10,17 +10,6 @@
 
 ### Properties
 
-- [aGen](NCO_BlockchainAPI.md#agen)
-- [cApi](NCO_BlockchainAPI.md#capi)
-- [hrpc](NCO_BlockchainAPI.md#hrpc)
-- [mGen](NCO_BlockchainAPI.md#mgen)
-- [nodeos\_rpc](NCO_BlockchainAPI.md#nodeos_rpc)
-- [pGen](NCO_BlockchainAPI.md#pgen)
-- [poolRpcApi](NCO_BlockchainAPI.md#poolrpcapi)
-- [poolsRpcApi](NCO_BlockchainAPI.md#poolsrpcapi)
-- [sdkGen](NCO_BlockchainAPI.md#sdkgen)
-- [services](NCO_BlockchainAPI.md#services)
-- [urls](NCO_BlockchainAPI.md#urls)
 - [defaults](NCO_BlockchainAPI.md#defaults)
 
 ### Methods
@@ -81,119 +70,9 @@ Init the api
 
 #### Defined in
 
-[index.ts:117](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L117)
+[index.ts:117](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L117)
 
 ## Properties
-
-### aGen
-
-• `Private` **aGen**: `ActionGenerator`
-
-#### Defined in
-
-[index.ts:100](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L100)
-
-___
-
-### cApi
-
-• `Private` **cApi**: `default`
-
-#### Defined in
-
-[index.ts:98](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L98)
-
-___
-
-### hrpc
-
-• `Private` **hrpc**: `JsonRpc`
-
-#### Defined in
-
-[index.ts:95](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L95)
-
-___
-
-### mGen
-
-• `Private` **mGen**: `ActionGenerator`
-
-#### Defined in
-
-[index.ts:101](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L101)
-
-___
-
-### nodeos\_rpc
-
-• `Private` **nodeos\_rpc**: `JsonRpc`
-
-#### Defined in
-
-[index.ts:94](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L94)
-
-___
-
-### pGen
-
-• `Private` **pGen**: `ActionGenerator`
-
-#### Defined in
-
-[index.ts:102](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L102)
-
-___
-
-### poolRpcApi
-
-• `Private` **poolRpcApi**: `default`
-
-#### Defined in
-
-[index.ts:97](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L97)
-
-___
-
-### poolsRpcApi
-
-• `Private` **poolsRpcApi**: `default`
-
-#### Defined in
-
-[index.ts:96](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L96)
-
-___
-
-### sdkGen
-
-• `Private` **sdkGen**: [`ActionGenerator`](internal_.ActionGenerator.md)
-
-#### Defined in
-
-[index.ts:103](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L103)
-
-___
-
-### services
-
-• `Private` **services**: [`NCInitServices`](../modules.md#ncinitservices)
-
-#### Defined in
-
-[index.ts:91](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L91)
-
-___
-
-### urls
-
-• `Private` **urls**: [`NCInitUrls`](../modules.md#nciniturls)
-
-#### Defined in
-
-[index.ts:90](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L90)
-
-___
 
 ### defaults
 
@@ -208,7 +87,7 @@ ___
 
 #### Defined in
 
-[index.ts:105](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L105)
+[index.ts:105](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L105)
 
 ## Methods
 
@@ -230,7 +109,7 @@ ___
 
 #### Defined in
 
-[index.ts:930](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L930)
+[index.ts:930](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L930)
 
 ___
 
@@ -255,7 +134,7 @@ Transfer transaction id
 
 #### Defined in
 
-[index.ts:918](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L918)
+[index.ts:918](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L918)
 
 ___
 
@@ -277,7 +156,7 @@ NCReturnTxs.TxID_approveDaoProposal
 
 #### Defined in
 
-[index.ts:560](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L560)
+[index.ts:560](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L560)
 
 ___
 
@@ -299,7 +178,7 @@ NCReturnTxs.TxID_approveDaoProposal
 
 #### Defined in
 
-[index.ts:583](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L583)
+[index.ts:583](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L583)
 
 ___
 
@@ -323,7 +202,7 @@ Create Collection and template transactions' ids
 
 #### Defined in
 
-[index.ts:197](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L197)
+[index.ts:197](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L197)
 
 ___
 
@@ -347,7 +226,7 @@ NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
 
 #### Defined in
 
-[index.ts:479](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L479)
+[index.ts:479](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L479)
 
 ___
 
@@ -369,7 +248,7 @@ NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
 
 #### Defined in
 
-[index.ts:506](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L506)
+[index.ts:506](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L506)
 
 ___
 
@@ -391,7 +270,7 @@ NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
 
 #### Defined in
 
-[index.ts:534](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L534)
+[index.ts:534](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L534)
 
 ___
 
@@ -411,7 +290,7 @@ An EOS key pair
 
 #### Defined in
 
-[index.ts:145](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L145)
+[index.ts:145](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L145)
 
 ___
 
@@ -436,7 +315,7 @@ Create permission transaction id
 
 #### Defined in
 
-[index.ts:265](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L265)
+[index.ts:265](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L265)
 
 ___
 
@@ -463,7 +342,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[index.ts:392](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L392)
+[index.ts:392](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L392)
 
 ___
 
@@ -488,7 +367,7 @@ NCReturnTxs
 
 #### Defined in
 
-[index.ts:163](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L163)
+[index.ts:163](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L163)
 
 ___
 
@@ -512,7 +391,7 @@ NCReturnTxs
 
 #### Defined in
 
-[index.ts:366](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L366)
+[index.ts:366](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L366)
 
 ___
 
@@ -534,7 +413,7 @@ NCReturnTxs.TxID_executeDaoProposal
 
 #### Defined in
 
-[index.ts:606](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L606)
+[index.ts:606](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L606)
 
 ___
 
@@ -556,7 +435,7 @@ NCReturnTxs.TxID_executeDaoProposal
 
 #### Defined in
 
-[index.ts:628](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L628)
+[index.ts:628](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L628)
 
 ___
 
@@ -580,7 +459,7 @@ Tx data
 
 #### Defined in
 
-[index.ts:815](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L815)
+[index.ts:815](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L815)
 
 ___
 
@@ -602,7 +481,7 @@ NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
 
 #### Defined in
 
-[index.ts:672](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L672)
+[index.ts:672](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L672)
 
 ___
 
@@ -622,7 +501,7 @@ ___
 
 #### Defined in
 
-[index.ts:703](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L703)
+[index.ts:703](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L703)
 
 ___
 
@@ -642,7 +521,7 @@ ___
 
 #### Defined in
 
-[index.ts:691](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L691)
+[index.ts:691](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L691)
 
 ___
 
@@ -662,7 +541,7 @@ ___
 
 #### Defined in
 
-[index.ts:723](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L723)
+[index.ts:723](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L723)
 
 ___
 
@@ -683,7 +562,7 @@ ___
 
 #### Defined in
 
-[index.ts:713](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L713)
+[index.ts:713](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L713)
 
 ___
 
@@ -707,7 +586,7 @@ Tx data
 
 #### Defined in
 
-[index.ts:883](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L883)
+[index.ts:883](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L883)
 
 ___
 
@@ -727,7 +606,7 @@ ___
 
 #### Defined in
 
-[index.ts:767](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L767)
+[index.ts:767](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L767)
 
 ___
 
@@ -751,7 +630,7 @@ Tx data
 
 #### Defined in
 
-[index.ts:907](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L907)
+[index.ts:907](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L907)
 
 ___
 
@@ -775,7 +654,7 @@ NCReturnTxs
 
 #### Defined in
 
-[index.ts:343](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L343)
+[index.ts:343](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L343)
 
 ___
 
@@ -799,7 +678,7 @@ Link permission transaction id
 
 #### Defined in
 
-[index.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L284)
+[index.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L284)
 
 ___
 
@@ -819,7 +698,7 @@ ___
 
 #### Defined in
 
-[index.ts:733](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L733)
+[index.ts:733](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L733)
 
 ___
 
@@ -839,7 +718,7 @@ ___
 
 #### Defined in
 
-[index.ts:750](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L750)
+[index.ts:750](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L750)
 
 ___
 
@@ -863,7 +742,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[index.ts:781](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L781)
+[index.ts:781](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L781)
 
 ___
 
@@ -883,7 +762,7 @@ ___
 
 #### Defined in
 
-[index.ts:322](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L322)
+[index.ts:322](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L322)
 
 ___
 
@@ -907,7 +786,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[index.ts:421](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L421)
+[index.ts:421](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L421)
 
 ___
 
@@ -931,7 +810,7 @@ Transfer transaction id
 
 #### Defined in
 
-[index.ts:873](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L873)
+[index.ts:873](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L873)
 
 ___
 
@@ -955,7 +834,7 @@ Transfer transaction id
 
 #### Defined in
 
-[index.ts:853](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L853)
+[index.ts:853](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L853)
 
 ___
 
@@ -979,7 +858,7 @@ Transfer transaction id
 
 #### Defined in
 
-[index.ts:863](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L863)
+[index.ts:863](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L863)
 
 ___
 
@@ -1003,7 +882,7 @@ Create Pool transaction id
 
 #### Defined in
 
-[index.ts:457](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L457)
+[index.ts:457](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L457)
 
 ___
 
@@ -1025,4 +904,4 @@ NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
 
 #### Defined in
 
-[index.ts:648](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/index.ts#L648)
+[index.ts:648](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L648)

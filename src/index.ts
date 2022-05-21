@@ -32,15 +32,15 @@ import {
   NCAddToWhiteList, NCRemoveFromWhiteList,
   NCStakeMainDao,
   NCCreateDao, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal,
-  NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes,
-  NCMintAsset, NCTxNcoBal, NCCreatePermission,
+  NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
+  NCMintAsset,  NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, default_schema, NCTxBal, NCGetDaoProposals, NCDaoProposalVote
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema
 } from "./types";
 import { normalizeUsername } from "./utils";
 import { isThrowStatement, StringMappingType } from "typescript";
-
+export { default_schema}
 
 const CREATE_ACCOUNT_DEFAULTS = {
   ram_amt: 8192,
@@ -120,7 +120,7 @@ export class NCO_BlockchainAPI {
   ) {
 
     this.urls = urls;
-
+    console.log("Init URLS " + JSON.stringify(urls));
     //this.aa_api = new ExplorerApi(this.urls.atomicassets_url, "atomicassets", { fetch: node_fetch });
     this.nodeos_rpc = new JsonRpc(this.urls.nodeos_url, { fetch });
     this.hrpc = new HJsonRpc(this.urls.hyperion_url, { fetch });

@@ -17,7 +17,6 @@
 
 ### Methods
 
-- [\_pack](internal_.ActionGenerator.md#_pack)
 - [buyrambytes](internal_.ActionGenerator.md#buyrambytes)
 - [createCollection](internal_.ActionGenerator.md#createcollection)
 - [createPermission](internal_.ActionGenerator.md#createpermission)
@@ -45,7 +44,7 @@
 
 #### Defined in
 
-[actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L12)
+[actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L12)
 
 ## Properties
 
@@ -60,29 +59,6 @@ ___
 • `Readonly` **token\_contract**: `string`
 
 ## Methods
-
-### \_pack
-
-▸ `Protected` **_pack**(`account`, `authorization`, `name`, `data`): [`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
-| `name` | `string` |
-| `data` | `any` |
-
-#### Returns
-
-[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]
-
-#### Defined in
-
-[actions.ts:328](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L328)
-
-___
 
 ### buyrambytes
 
@@ -112,7 +88,7 @@ ___
 
 #### Defined in
 
-[actions.ts:51](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L51)
+[actions.ts:51](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L51)
 
 ___
 
@@ -137,7 +113,7 @@ ___
 
 #### Defined in
 
-[actions.ts:116](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L116)
+[actions.ts:116](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L116)
 
 ___
 
@@ -174,7 +150,7 @@ ___
 
 #### Defined in
 
-[actions.ts:194](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L194)
+[actions.ts:194](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L194)
 
 ___
 
@@ -212,7 +188,7 @@ ___
 
 #### Defined in
 
-[actions.ts:256](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L256)
+[actions.ts:256](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L256)
 
 ___
 
@@ -236,7 +212,7 @@ ___
 
 #### Defined in
 
-[actions.ts:143](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L143)
+[actions.ts:143](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L143)
 
 ___
 
@@ -262,7 +238,7 @@ ___
 
 #### Defined in
 
-[actions.ts:166](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L166)
+[actions.ts:166](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L166)
 
 ___
 
@@ -298,7 +274,7 @@ ___
 
 #### Defined in
 
-[actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L66)
+[actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L66)
 
 ___
 
@@ -324,7 +300,7 @@ ___
 
 #### Defined in
 
-[actions.ts:227](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L227)
+[actions.ts:227](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L227)
 
 ___
 
@@ -366,7 +342,7 @@ ___
 
 #### Defined in
 
-[actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L14)
+[actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L14)
 
 ___
 
@@ -401,7 +377,7 @@ ___
 
 #### Defined in
 
-[actions.ts:305](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L305)
+[actions.ts:305](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L305)
 
 ___
 
@@ -435,4 +411,4 @@ ___
 
 #### Defined in
 
-[actions.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/3beb5f1/src/actions.ts#L284)
+[actions.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/actions.ts#L284)

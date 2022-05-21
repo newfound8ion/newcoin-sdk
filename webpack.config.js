@@ -2,7 +2,7 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: './dist/index.js',
     mode: 'development',
     target: 'node',
     devtool: "source-map",
