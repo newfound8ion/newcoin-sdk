@@ -13,7 +13,7 @@
   "dependencies": {
     "@eoscafe/hyperion": "^3.2.9",
     "@jest/test-sequencer": "^27.4.5",
-    "@newcoin-foundation/newcoin.daos-js": "^2.0.3",
+    "@newcoin-foundation/newcoin.daos-js": "^2.0.4",
     "@newcoin-foundation/newcoin.farm-js": "^1.0.1",
     "@newcoin-foundation/newcoin.pool-js": "^1.0.3",
     "@newcoin-foundation/newcoin.pools-js": "^1.1.5",

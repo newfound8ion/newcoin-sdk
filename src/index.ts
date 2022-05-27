@@ -16,7 +16,7 @@ import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator,  RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js';
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
-import { DAOPayload, ProposalPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
+import { DAOPayload, ProposalPayload, WhitelistPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen } from "./actions";
 
 
@@ -29,9 +29,8 @@ import {
   NCKeyPair,
   NCCreateUser, NCCreateCollection,
   NCCreatePool, NCStakePool, NCUnstakePool,
-  NCAddToWhiteList, NCRemoveFromWhiteList,
-  NCStakeMainDao,
-  NCCreateDao, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal,
+  NCStakeMainDao, 
+  NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
   NCMintAsset,  NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
@@ -49,29 +48,6 @@ const CREATE_ACCOUNT_DEFAULTS = {
   xfer: false,
 };
 
-/**
- * The primary tool to interact with [https://newcoin.org](newcoin.org).
- * 
- * This is an early alpha.
- * 
- * See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
- */
-export const devnet_urls: NCInitUrls =
-{
-  nodeos_url: "https://nodeos-dev.newcoin.org",
-  hyperion_url: "https://hyperion-dev.newcoin.org",
-  atomicassets_url: "https://atomic-dev.newcoin.org/"
-}
-
-export const devnet_services: NCInitServices =
-{
-  eosio_contract: "eosio",
-  token_contract: "eosio.token",
-  maindao_contract: "pool.nco",
-  staking_contract: "pools2.nco",
-  daos_contract: "daos.nco"
-}
-
 export type NCInitUrls = {
   nodeos_url: string,
   hyperion_url: string,
@@ -84,8 +60,32 @@ export type NCInitServices = {
   maindao_contract: string,
   staking_contract: string,
   daos_contract: string
-}
+};
 
+export const devnet_urls: NCInitUrls =
+{
+  nodeos_url: "https://nodeos-dev.newcoin.org",
+  hyperion_url: "https://hyperion-dev.newcoin.org",
+  atomicassets_url: "https://atomic-dev.newcoin.org/"
+};
+
+export const devnet_services: NCInitServices =
+{
+  eosio_contract: "eosio",
+  token_contract: "eosio.token",
+  maindao_contract: "pool.nco",
+  staking_contract: "pools2.nco",
+  daos_contract: "daos.nco"
+};
+
+
+/**
+ * The primary tool to interact with [https://newcoin.org](newcoin.org).
+ * 
+ * This is an early alpha.
+ * 
+ * See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
+ */
 export class NCO_BlockchainAPI {
   private urls: NCInitUrls;
   private services: NCInitServices;
@@ -104,7 +104,8 @@ export class NCO_BlockchainAPI {
 
   static defaults = {
     devnet_services,
-    devnet_urls
+    devnet_urls,
+    default_schema
   }
 
   /**
@@ -201,8 +202,8 @@ export class NCO_BlockchainAPI {
     let tres: TransactResult;
 
     let d = 12 - inpt.user.length;
-    if (inpt.collection_name == undefined) inpt.collection_name = normalizeUsername(inpt.user, "z");//(inpt.creator).replace('.', 'z' + 'z'.repeat(d));
-    if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w"); // (inpt.creator).replace('.', 'w' + 'w'.repeat(d));
+    if (inpt.collection_name == undefined) inpt.collection_name = normalizeUsername(inpt.user, "z");
+    if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w");
 
     let user_public_active_key = ecc.privateToPublic(inpt.user_prv_active_key);
     let mkt_fee = inpt.mkt_fee ? inpt.mkt_fee : 0.05;
@@ -686,6 +687,13 @@ export class NCO_BlockchainAPI {
     throw new Error("DAO undefined");
   
   return r;
+}
+
+async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
+  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+  let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
+  let w = await q.json();
+  return { ...w, dao_id };
 }
 
 async getDaoProposals(inpt: NCGetDaoProposals) {
