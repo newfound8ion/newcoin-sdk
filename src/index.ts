@@ -471,7 +471,7 @@ export class NCO_BlockchainAPI {
     return r;
   }
 
-  async getDaoIdByOwner(owner?: string) : Promise<string> {
+  async getDaoIdByOwner(owner?: string, noFail?: boolean) : Promise<string> {
     if (!owner)
       throw new Error("DAO undefined");
 
@@ -479,25 +479,29 @@ export class NCO_BlockchainAPI {
     //console.log("Get dao by owner: ", JSON.stringify(p));
     let q = await this.cApi.getDAOByOwner(p);
     let w = await q.json();
-
+    
     //console.log("received from getDaoByOwner" + JSON.stringify(w));
-    if (!w.rows.length)
+    if (!w.rows.length && !noFail)
       throw new Error('User has no dao');
 
     const r: string = w.rows[0]?.id?.toString();
-    if(!r)
+    if(!r && !noFail)
       throw new Error("DAO undefined");
     
     return r;
   }
 
   async getDaoProposals(inpt: NCGetDaoProposals) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
+
+    if(!dao_id)
+      return { dao_id: null };
 
     // let p: ProposalPayload = { daoID: dao_id.toString(), proposer: proposer };
     //console.log("Get proposal by author: ", JSON.stringify(p));
     let q = await this.cApi.getProposalByProposer({ ...inpt, daoID: dao_id });
     let w = await q.json();
+
     //console.log("received from getProposalByOwner" + JSON.stringify(w));
     return { ...w, dao_id };
   }
