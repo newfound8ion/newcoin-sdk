@@ -1,11 +1,11 @@
 {
   "name": "@newcoin-foundation/newcoin-sdk",
-  "version": "1.0.283",
+  "version": "1.0.302",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "jest",
-    "docs": "typedoc --out docs src/index.ts",
+    "test": "./node_modules/.bin/jest",
+    "docs": "./node_modules/.bin/typedoc --out docs src/index.ts --excludeExternals --excludePrivate --excludeProtected --emit docs",
     "dist": "./node_modules/.bin/webpack"
   },
   "author": "vitalyrue",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@eoscafe/hyperion": "^3.2.9",
     "@jest/test-sequencer": "^27.4.5",
-    "@newcoin-foundation/newcoin.daos-js": "^2.0.3",
+    "@newcoin-foundation/newcoin.daos-js": "^2.0.4",
     "@newcoin-foundation/newcoin.farm-js": "^1.0.1",
     "@newcoin-foundation/newcoin.pool-js": "^1.0.3",
     "@newcoin-foundation/newcoin.pools-js": "^1.1.5",
