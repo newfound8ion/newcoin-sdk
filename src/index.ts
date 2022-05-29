@@ -37,9 +37,22 @@ import {
   NCPoolsInfo, NCNameType,
   NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema
 } from "./types";
+
+export {
+  NCKeyPair,
+  NCCreateUser, NCCreateCollection,
+  NCCreatePool, NCStakePool, NCUnstakePool,
+  NCStakeMainDao, 
+  NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal,
+  NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
+  NCMintAsset,  NCCreatePermission,
+  NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
+  NCPoolsInfo, NCNameType,
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema
+};
+
 import { normalizeUsername } from "./utils";
 import { isThrowStatement, StringMappingType } from "typescript";
-export { default_schema}
 
 const CREATE_ACCOUNT_DEFAULTS = {
   ram_amt: 8192,
