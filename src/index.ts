@@ -724,6 +724,7 @@ async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
   const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
   let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
   let w = await q.json();
+
   return { ...w, dao_id };
 }
 
@@ -785,7 +786,7 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
 
     let q = await this.cApi.getWhiteListProposalByProposer(opt);
     //console.log("received from getProposalByProposer" + JSON.stringify(q));
-    let w = q.json().rows;
+    let w = (await q.json()).rows;
     return { list: w, id: dao_id };
 
   }
