@@ -185,6 +185,12 @@ export type NCDaoProposalVote = {
   option: string;     // YES/NO
 }
 
+export type NCDaoWithdrawVoteDeposit = {
+  voter: string;
+  voter_prv_key: string;
+  vote_id: string;
+}
+
 export type NCGetVotes = {
   voter: string,
   vote_id?: string
@@ -240,6 +246,7 @@ export type NCReturnTxs = {
   TxID_approveDaoProposal?: string,
   TxID_executeDaoProposal?: string,
   TxID_voteDaoProposal?: string;
+  TxID_WithdrawVoteDeposit?: string;
 
   TxID_withdrawFromPool?: string;
   TxID_addToWhiteList?: string;
