@@ -31,7 +31,8 @@ import {
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, 
   NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal,
-  NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
+  NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, 
+  NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
   NCMintAsset,  NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
@@ -692,6 +693,24 @@ export class NCO_BlockchainAPI {
     //console.log("received from VoteForDaoProposal" + JSON.stringify(res));
     return { TxID_voteDaoProposal: res.transaction_id } as NCReturnTxs;
   }
+
+  async withdrawVoteDeposit(inpt: NCDaoWithdrawVoteDeposit) {
+    //const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+    //console.log("Vote for DAO proposal", JSON.stringify(inpt));
+    const t = await this.aGen.withdraw(
+      [{ actor: inpt.voter, permission: "active" }],
+      inpt.voter, ~~inpt.vote_id
+    );
+
+    console.log("Withdraw vote deposit: ", JSON.stringify(t));
+    const res = await this.SubmitTx(t,
+      [ecc.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]) as TransactResult;
+
+    //console.log("received from VoteForDaoProposal" + JSON.stringify(res));
+    return { TxID_withdrawVoteDeposit: res.transaction_id } as NCReturnTxs;
+  }
+
+
 
 // Getters 
   

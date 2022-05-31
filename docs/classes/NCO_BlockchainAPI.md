@@ -2,6 +2,12 @@
 
 # Class: NCO\_BlockchainAPI
 
+The primary tool to interact with [https://newcoin.org](newcoin.org).
+
+This is an early alpha.
+
+See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
+
 ## Table of contents
 
 ### Constructors
@@ -33,6 +39,7 @@
 - [getDaoIdByOwner](NCO_BlockchainAPI.md#getdaoidbyowner)
 - [getDaoProposal](NCO_BlockchainAPI.md#getdaoproposal)
 - [getDaoProposals](NCO_BlockchainAPI.md#getdaoproposals)
+- [getDaoWhitelist](NCO_BlockchainAPI.md#getdaowhitelist)
 - [getDaoWhitelistProposal](NCO_BlockchainAPI.md#getdaowhitelistproposal)
 - [getDaoWhitelistProposals](NCO_BlockchainAPI.md#getdaowhitelistproposals)
 - [getPoolInfo](NCO_BlockchainAPI.md#getpoolinfo)
@@ -50,6 +57,7 @@
 - [txNCOBalance](NCO_BlockchainAPI.md#txncobalance)
 - [unstakePool](NCO_BlockchainAPI.md#unstakepool)
 - [voteOnProposal](NCO_BlockchainAPI.md#voteonproposal)
+- [withdrawVoteDeposit](NCO_BlockchainAPI.md#withdrawvotedeposit)
 
 ## Constructors
 
@@ -70,7 +78,7 @@ Init the api
 
 #### Defined in
 
-[index.ts:117](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L117)
+[index.ts:132](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L132)
 
 ## Properties
 
@@ -82,12 +90,13 @@ Init the api
 
 | Name | Type |
 | :------ | :------ |
+| `default_schema` | { `name`: `string` = 'name'; `type`: `string` = "string" }[] |
 | `devnet_services` | [`NCInitServices`](../modules.md#ncinitservices) |
 | `devnet_urls` | [`NCInitUrls`](../modules.md#nciniturls) |
 
 #### Defined in
 
-[index.ts:105](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L105)
+[index.ts:119](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L119)
 
 ## Methods
 
@@ -109,13 +118,13 @@ Init the api
 
 #### Defined in
 
-[index.ts:930](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L930)
+[index.ts:976](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L976)
 
 ___
 
 ### \_txBalance
 
-▸ **_txBalance**(`contract`, `inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **_txBalance**(`contract`, `inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer NCO between accounts
 
@@ -124,67 +133,67 @@ Transfer NCO between accounts
 | Name | Type |
 | :------ | :------ |
 | `contract` | `string` |
-| `inpt` | [`NCTxBal`](../modules/internal_.md#nctxbal) |
+| `inpt` | [`NCTxBal`](../modules.md#nctxbal) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer transaction id
 
 #### Defined in
 
-[index.ts:918](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L918)
+[index.ts:964](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L964)
 
 ___
 
 ### approveDaoProposal
 
-▸ **approveDaoProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **approveDaoProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCApproveDaoProposal`](../modules/internal_.md#ncapprovedaoproposal) | : NCApproveDaoProposal |
+| `inpt` | [`NCApproveDaoProposal`](../modules.md#ncapprovedaoproposal) | : NCApproveDaoProposal |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_approveDaoProposal
 
 #### Defined in
 
-[index.ts:560](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L560)
+[index.ts:591](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L591)
 
 ___
 
 ### approveDaoWhitelistProposal
 
-▸ **approveDaoWhitelistProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **approveDaoWhitelistProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCApproveDaoProposal`](../modules/internal_.md#ncapprovedaoproposal) | : NCApproveDaoProposal |
+| `inpt` | [`NCApproveDaoProposal`](../modules.md#ncapprovedaoproposal) | : NCApproveDaoProposal |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_approveDaoProposal
 
 #### Defined in
 
-[index.ts:583](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L583)
+[index.ts:614](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L614)
 
 ___
 
 ### createCollection
 
-▸ **createCollection**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **createCollection**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create default collection for the account
 
@@ -192,23 +201,23 @@ Create default collection for the account
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCCreateCollection`](../modules/internal_.md#nccreatecollection) |
+| `inpt` | [`NCCreateCollection`](../modules.md#nccreatecollection) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create Collection and template transactions' ids
 
 #### Defined in
 
-[index.ts:197](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L197)
+[index.ts:212](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L212)
 
 ___
 
 ### createDao
 
-▸ **createDao**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **createDao**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 DAO creation. One per account.
 
@@ -216,67 +225,67 @@ DAO creation. One per account.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCCreateDao`](../modules/internal_.md#nccreatedao) | : NCCreateDao |
+| `inpt` | [`NCCreateDao`](../modules.md#nccreatedao) | : NCCreateDao |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
 
 #### Defined in
 
-[index.ts:479](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L479)
+[index.ts:494](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L494)
 
 ___
 
 ### createDaoProposal
 
-▸ **createDaoProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **createDaoProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCCreateDaoProposal`](../modules/internal_.md#nccreatedaoproposal) | : NCCreateDaoProposal |
+| `inpt` | [`NCCreateDaoProposal`](../modules.md#nccreatedaoproposal) | : NCCreateDaoProposal |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
 
 #### Defined in
 
-[index.ts:506](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L506)
+[index.ts:537](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L537)
 
 ___
 
 ### createDaoUserWhitelistProposal
 
-▸ **createDaoUserWhitelistProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **createDaoUserWhitelistProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCCreateDaoUserWhitelistProposal`](../modules/internal_.md#nccreatedaouserwhitelistproposal) | : NCCreateDaoUserWhitelistProposal |
+| `inpt` | [`NCCreateDaoUserWhitelistProposal`](../modules.md#nccreatedaouserwhitelistproposal) | : NCCreateDaoUserWhitelistProposal |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
 
 #### Defined in
 
-[index.ts:534](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L534)
+[index.ts:565](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L565)
 
 ___
 
 ### createKeyPair
 
-▸ **createKeyPair**(): `Promise`<[`NCKeyPair`](../modules/internal_.md#nckeypair)\>
+▸ **createKeyPair**(): `Promise`<[`NCKeyPair`](../modules.md#nckeypair)\>
 
 Create a key pair assuming a secure environment (not frontend)
 
@@ -284,19 +293,19 @@ Create a key pair assuming a secure environment (not frontend)
 
 #### Returns
 
-`Promise`<[`NCKeyPair`](../modules/internal_.md#nckeypair)\>
+`Promise`<[`NCKeyPair`](../modules.md#nckeypair)\>
 
 An EOS key pair
 
 #### Defined in
 
-[index.ts:145](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L145)
+[index.ts:160](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L160)
 
 ___
 
 ### createPermission
 
-▸ **createPermission**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **createPermission**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create a new permission subordinate to the Active permission.
 (future optional: allow under owner, TBD)
@@ -305,23 +314,23 @@ Create a new permission subordinate to the Active permission.
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCCreatePermission`](../modules/internal_.md#nccreatepermission) |
+| `inpt` | [`NCCreatePermission`](../modules.md#nccreatepermission) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create permission transaction id
 
 #### Defined in
 
-[index.ts:265](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L265)
+[index.ts:280](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L280)
 
 ___
 
 ### createPool
 
-▸ **createPool**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **createPool**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Staking pools service, issuing social tokens
 
@@ -332,23 +341,23 @@ Selection of ticker and inflation/deflation optionality
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCCreatePool`](../modules/internal_.md#nccreatepool) |
+| `inpt` | [`NCCreatePool`](../modules.md#nccreatepool) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create Pool transaction id
 
 #### Defined in
 
-[index.ts:392](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L392)
+[index.ts:407](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L407)
 
 ___
 
 ### createUser
 
-▸ **createUser**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **createUser**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create a user - multistage operation creating new user account,
 defailt collection, schema and template for the account
@@ -357,23 +366,23 @@ defailt collection, schema and template for the account
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCCreateUser`](../modules/internal_.md#nccreateuser) |
+| `inpt` | [`NCCreateUser`](../modules.md#nccreateuser) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs
 
 #### Defined in
 
-[index.ts:163](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L163)
+[index.ts:178](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L178)
 
 ___
 
 ### dldUnstakeMainDAO
 
-▸ **dldUnstakeMainDAO**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **dldUnstakeMainDAO**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Delayed UnStake mainDAO delay without penalty
 
@@ -381,67 +390,67 @@ Delayed UnStake mainDAO delay without penalty
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCStakeMainDao`](../modules/internal_.md#ncstakemaindao) |
+| `inpt` | [`NCStakeMainDao`](../modules.md#ncstakemaindao) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs
 
 #### Defined in
 
-[index.ts:366](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L366)
+[index.ts:381](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L381)
 
 ___
 
 ### executeDaoProposal
 
-▸ **executeDaoProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **executeDaoProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCExecuteDaoProposal`](../modules/internal_.md#ncexecutedaoproposal) | : NCExecuteDaoProposal |
+| `inpt` | [`NCExecuteDaoProposal`](../modules.md#ncexecutedaoproposal) | : NCExecuteDaoProposal |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_executeDaoProposal
 
 #### Defined in
 
-[index.ts:606](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L606)
+[index.ts:637](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L637)
 
 ___
 
 ### executeDaoWhitelistProposal
 
-▸ **executeDaoWhitelistProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **executeDaoWhitelistProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCExecuteDaoProposal`](../modules/internal_.md#ncexecutedaoproposal) | : NCExecuteDaoProposal |
+| `inpt` | [`NCExecuteDaoProposal`](../modules.md#ncexecutedaoproposal) | : NCExecuteDaoProposal |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_executeDaoProposal
 
 #### Defined in
 
-[index.ts:628](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L628)
+[index.ts:659](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L659)
 
 ___
 
 ### getAccountBalance
 
-▸ **getAccountBalance**(`acc`): `Promise`<`undefined` \| [`NCReturnInfo`](../modules/internal_.md#ncreturninfo)\>
+▸ **getAccountBalance**(`acc`): `Promise`<`undefined` \| [`NCReturnInfo`](../modules.md#ncreturninfo)\>
 
 Get account balance
 
@@ -449,29 +458,30 @@ Get account balance
 
 | Name | Type |
 | :------ | :------ |
-| `acc` | [`NCGetAccInfo`](../modules/internal_.md#ncgetaccinfo) |
+| `acc` | [`NCGetAccInfo`](../modules.md#ncgetaccinfo) |
 
 #### Returns
 
-`Promise`<`undefined` \| [`NCReturnInfo`](../modules/internal_.md#ncreturninfo)\>
+`Promise`<`undefined` \| [`NCReturnInfo`](../modules.md#ncreturninfo)\>
 
 Tx data
 
 #### Defined in
 
-[index.ts:815](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L815)
+[index.ts:861](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L861)
 
 ___
 
 ### getDaoIdByOwner
 
-▸ **getDaoIdByOwner**(`owner?`): `Promise`<`string`\>
+▸ **getDaoIdByOwner**(`owner?`, `noFail?`): `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `owner?` | `string` |
+| `noFail?` | `boolean` |
 
 #### Returns
 
@@ -481,7 +491,7 @@ NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
 
 #### Defined in
 
-[index.ts:672](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L672)
+[index.ts:721](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L721)
 
 ___
 
@@ -493,7 +503,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCGetDaoProposals`](../modules/internal_.md#ncgetdaoproposals) |
+| `inpt` | [`NCGetDaoProposals`](../modules.md#ncgetdaoproposals) |
 
 #### Returns
 
@@ -501,7 +511,7 @@ ___
 
 #### Defined in
 
-[index.ts:703](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L703)
+[index.ts:749](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L749)
 
 ___
 
@@ -513,7 +523,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCGetDaoProposals`](../modules/internal_.md#ncgetdaoproposals) |
+| `inpt` | [`NCGetDaoProposals`](../modules.md#ncgetdaoproposals) |
 
 #### Returns
 
@@ -521,7 +531,27 @@ ___
 
 #### Defined in
 
-[index.ts:691](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L691)
+[index.ts:517](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L517)
+
+___
+
+### getDaoWhitelist
+
+▸ **getDaoWhitelist**(`inpt`): `Promise`<`any`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `inpt` | [`NCGetDaoWhiteList`](../modules.md#ncgetdaowhitelist) |
+
+#### Returns
+
+`Promise`<`any`\>
+
+#### Defined in
+
+[index.ts:742](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L742)
 
 ___
 
@@ -533,7 +563,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCGetDaoProposals`](../modules/internal_.md#ncgetdaoproposals) |
+| `inpt` | [`NCGetDaoProposals`](../modules.md#ncgetdaoproposals) |
 
 #### Returns
 
@@ -541,7 +571,7 @@ ___
 
 #### Defined in
 
-[index.ts:723](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L723)
+[index.ts:769](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L769)
 
 ___
 
@@ -562,13 +592,13 @@ ___
 
 #### Defined in
 
-[index.ts:713](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L713)
+[index.ts:759](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L759)
 
 ___
 
 ### getPoolInfo
 
-▸ **getPoolInfo**(`payload`): `Promise`<[`NCPoolsInfo`](../modules/internal_.md#ncpoolsinfo)\>
+▸ **getPoolInfo**(`payload`): `Promise`<[`NCPoolsInfo`](../modules.md#ncpoolsinfo)\>
 
 Get pool info
 
@@ -576,17 +606,17 @@ Get pool info
 
 | Name | Type |
 | :------ | :------ |
-| `payload` | [`NCGetPoolInfo`](../modules/internal_.md#ncgetpoolinfo) |
+| `payload` | [`NCGetPoolInfo`](../modules.md#ncgetpoolinfo) |
 
 #### Returns
 
-`Promise`<[`NCPoolsInfo`](../modules/internal_.md#ncpoolsinfo)\>
+`Promise`<[`NCPoolsInfo`](../modules.md#ncpoolsinfo)\>
 
 Tx data
 
 #### Defined in
 
-[index.ts:883](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L883)
+[index.ts:929](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L929)
 
 ___
 
@@ -598,7 +628,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCGetVotes`](../modules/internal_.md#ncgetvotes) |
+| `inpt` | [`NCGetVotes`](../modules.md#ncgetvotes) |
 
 #### Returns
 
@@ -606,7 +636,7 @@ ___
 
 #### Defined in
 
-[index.ts:767](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L767)
+[index.ts:813](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L813)
 
 ___
 
@@ -630,13 +660,13 @@ Tx data
 
 #### Defined in
 
-[index.ts:907](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L907)
+[index.ts:953](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L953)
 
 ___
 
 ### instUnstakeMainDAO
 
-▸ **instUnstakeMainDAO**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **instUnstakeMainDAO**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Instant UnStake mainDAO with penalty
 
@@ -644,23 +674,23 @@ Instant UnStake mainDAO with penalty
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCStakeMainDao`](../modules/internal_.md#ncstakemaindao) |
+| `inpt` | [`NCStakeMainDao`](../modules.md#ncstakemaindao) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs
 
 #### Defined in
 
-[index.ts:343](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L343)
+[index.ts:358](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L358)
 
 ___
 
 ### linkPermission
 
-▸ **linkPermission**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **linkPermission**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Link a permission to a specific action of a specific contract.
 
@@ -668,17 +698,17 @@ Link a permission to a specific action of a specific contract.
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCLinkPerm`](../modules/internal_.md#nclinkperm) |
+| `inpt` | [`NCLinkPerm`](../modules.md#nclinkperm) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Link permission transaction id
 
 #### Defined in
 
-[index.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L284)
+[index.ts:299](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L299)
 
 ___
 
@@ -690,7 +720,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCGetDaoProposals`](../modules/internal_.md#ncgetdaoproposals) |
+| `inpt` | [`NCGetDaoProposals`](../modules.md#ncgetdaoproposals) |
 
 #### Returns
 
@@ -698,7 +728,7 @@ ___
 
 #### Defined in
 
-[index.ts:733](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L733)
+[index.ts:779](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L779)
 
 ___
 
@@ -710,7 +740,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCGetDaoProposals`](../modules/internal_.md#ncgetdaoproposals) |
+| `inpt` | [`NCGetDaoProposals`](../modules.md#ncgetdaoproposals) |
 
 #### Returns
 
@@ -718,13 +748,13 @@ ___
 
 #### Defined in
 
-[index.ts:750](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L750)
+[index.ts:796](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L796)
 
 ___
 
 ### mintAsset
 
-▸ **mintAsset**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **mintAsset**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Mint an asset
 
@@ -732,43 +762,43 @@ Mint an asset
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCMintAsset`](../modules/internal_.md#ncmintasset) |
+| `inpt` | [`NCMintAsset`](../modules.md#ncmintasset) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create Pool transaction id
 
 #### Defined in
 
-[index.ts:781](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L781)
+[index.ts:827](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L827)
 
 ___
 
 ### stakeMainDAO
 
-▸ **stakeMainDAO**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **stakeMainDAO**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCStakeMainDao`](../modules/internal_.md#ncstakemaindao) |
+| `inpt` | [`NCStakeMainDao`](../modules.md#ncstakemaindao) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Defined in
 
-[index.ts:322](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L322)
+[index.ts:337](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L337)
 
 ___
 
 ### stakePool
 
-▸ **stakePool**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **stakePool**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Stake to creator pool
 
@@ -776,23 +806,23 @@ Stake to creator pool
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCStakePool`](../modules/internal_.md#ncstakepool) |
+| `inpt` | [`NCStakePool`](../modules.md#ncstakepool) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create Pool transaction id
 
 #### Defined in
 
-[index.ts:421](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L421)
+[index.ts:436](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L436)
 
 ___
 
 ### txDAOTokenBalance
 
-▸ **txDAOTokenBalance**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **txDAOTokenBalance**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer creator tokens between accounts
 
@@ -800,23 +830,23 @@ Transfer creator tokens between accounts
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCTxBal`](../modules/internal_.md#nctxbal) |
+| `inpt` | [`NCTxBal`](../modules.md#nctxbal) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer transaction id
 
 #### Defined in
 
-[index.ts:873](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L873)
+[index.ts:919](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L919)
 
 ___
 
 ### txGNCOBalance
 
-▸ **txGNCOBalance**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **txGNCOBalance**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer GNCO between accounts
 
@@ -824,23 +854,23 @@ Transfer GNCO between accounts
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCTxBal`](../modules/internal_.md#nctxbal) |
+| `inpt` | [`NCTxBal`](../modules.md#nctxbal) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer transaction id
 
 #### Defined in
 
-[index.ts:853](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L853)
+[index.ts:899](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L899)
 
 ___
 
 ### txNCOBalance
 
-▸ **txNCOBalance**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **txNCOBalance**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer NCO between accounts
 
@@ -848,23 +878,23 @@ Transfer NCO between accounts
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCTxBal`](../modules/internal_.md#nctxbal) |
+| `inpt` | [`NCTxBal`](../modules.md#nctxbal) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Transfer transaction id
 
 #### Defined in
 
-[index.ts:863](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L863)
+[index.ts:909](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L909)
 
 ___
 
 ### unstakePool
 
-▸ **unstakePool**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **unstakePool**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Unstake creator pool
 
@@ -872,36 +902,56 @@ Unstake creator pool
 
 | Name | Type |
 | :------ | :------ |
-| `inpt` | [`NCUnstakePool`](../modules/internal_.md#ncunstakepool) |
+| `inpt` | [`NCUnstakePool`](../modules.md#ncunstakepool) |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 Create Pool transaction id
 
 #### Defined in
 
-[index.ts:457](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L457)
+[index.ts:472](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L472)
 
 ___
 
 ### voteOnProposal
 
-▸ **voteOnProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+▸ **voteOnProposal**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `inpt` | [`NCDaoProposalVote`](../modules/internal_.md#ncdaoproposalvote) | : NCCreateDao |
+| `inpt` | [`NCDaoProposalVote`](../modules.md#ncdaoproposalvote) | : NCCreateDao |
 
 #### Returns
 
-`Promise`<[`NCReturnTxs`](../modules/internal_.md#ncreturntxs)\>
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
 
 NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
 
 #### Defined in
 
-[index.ts:648](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/b39ffc2/src/index.ts#L648)
+[index.ts:679](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L679)
+
+___
+
+### withdrawVoteDeposit
+
+▸ **withdrawVoteDeposit**(`inpt`): `Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `inpt` | [`NCDaoWithdrawVoteDeposit`](../modules/internal_.md#ncdaowithdrawvotedeposit) |
+
+#### Returns
+
+`Promise`<[`NCReturnTxs`](../modules.md#ncreturntxs)\>
+
+#### Defined in
+
+[index.ts:697](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/index.ts#L697)

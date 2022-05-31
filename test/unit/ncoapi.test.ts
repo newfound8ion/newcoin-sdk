@@ -7,21 +7,17 @@ import {
     NCCreatePermission, NCLinkPerm, 
     NCStakeMainDao, 
     NCCreateDao, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, 
-    NCApproveDaoProposal, NCDaoProposalVote, 
+    NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
     NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
     NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
-    NCReturnTxs, NCReturnInfo,
-    default_schema,
-    NCGetDaoWhiteList
+    NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
+    default_schema
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
 
-
 //import * as nco from 'newcoin';
-
-
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
 let name = randomname();
 console.log(name);
@@ -38,6 +34,10 @@ let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
 let pool_code: string;
 let dao_id: string = "160";
+let io_vote_id: string = "100";
+
+//@ts-ignore
+let wait = (t) => new Promise((res) => setTimeout(res, t));
 
 const api = new NCO_BlockchainAPI(
     devnet_urls, devnet_services
@@ -378,10 +378,8 @@ describe("Basic blockchain operations", () => {
     describe("'execute whitelist proposal' transaction", () => {
         it("execute whitelist proposal", async () => {
 
-            console.log("waiting 15 sec .... ");
-            // @ts-ignore
-            let wait = (t) => new Promise((res) => setTimeout(res, t));
-            await wait(20000);
+            console.log("waiting 30 sec .... ");
+            await wait(30000);
 
             let n: NCExecuteDaoProposal = { 
                 exec: name, 
@@ -512,10 +510,8 @@ describe("Basic blockchain operations", () => {
     describe("'execute dao proposal' transaction", () => {
         it("execute dao proposal", async () => {
 
-            console.log("waiting 15 sec .... ");
-            // @ts-ignore
-            let wait = (t) => new Promise((res) => setTimeout(res, t));
-            await wait(20000);
+            console.log("waiting 25 sec .... ");
+            await wait(25000);
 
             let n: NCExecuteDaoProposal = { 
                 exec: name, 
@@ -613,6 +609,24 @@ describe("Basic blockchain operations", () => {
             console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
             //expect(resp.rows[0].id).toBe(0);
+
+        }, 60000)
+    });
+
+    describe("get vote deposit back", () => {
+        it("list proposals for dao", async () => {
+
+            let n: NCDaoWithdrawVoteDeposit = { 
+                voter: "io",
+                voter_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                vote_id: "100",
+            };              
+            
+            console.log("Arguments for DAO votes list: " + JSON.stringify(n));
+            let resp = await api.getProposalVotes(n);
+            console.log("Answer" + JSON.stringify(resp));
+            //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
+            expect(typeof resp.TxID_WithdrawVoteDeposit).toBe('string');
 
         }, 60000)
     });
