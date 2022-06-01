@@ -17,17 +17,24 @@
 
 ### Methods
 
-- [buyrambytes](internal_.ActionGenerator.md#buyrambytes)
-- [createCollection](internal_.ActionGenerator.md#createcollection)
-- [createPermission](internal_.ActionGenerator.md#createpermission)
-- [createPool](internal_.ActionGenerator.md#createpool)
-- [createSchema](internal_.ActionGenerator.md#createschema)
-- [createTemplate](internal_.ActionGenerator.md#createtemplate)
-- [delegateBw](internal_.ActionGenerator.md#delegatebw)
-- [mintAsset](internal_.ActionGenerator.md#mintasset)
-- [newaccount](internal_.ActionGenerator.md#newaccount)
-- [txBalance](internal_.ActionGenerator.md#txbalance)
-- [txNcoBalance](internal_.ActionGenerator.md#txncobalance)
+- [approveDeflateProposal](internal_.ActionGenerator.md#approvedeflateproposal)
+- [approveInflateProposal](internal_.ActionGenerator.md#approveinflateproposal)
+- [approveProposal](internal_.ActionGenerator.md#approveproposal)
+- [approveStakeProposal](internal_.ActionGenerator.md#approvestakeproposal)
+- [approveWhiteListProposal](internal_.ActionGenerator.md#approvewhitelistproposal)
+- [createDao](internal_.ActionGenerator.md#createdao)
+- [createDeflateProposal](internal_.ActionGenerator.md#createdeflateproposal)
+- [createInflateProposal](internal_.ActionGenerator.md#createinflateproposal)
+- [createProposal](internal_.ActionGenerator.md#createproposal)
+- [createStakeProposal](internal_.ActionGenerator.md#createstakeproposal)
+- [createWhiteListProposal](internal_.ActionGenerator.md#createwhitelistproposal)
+- [executeDeflateProposal](internal_.ActionGenerator.md#executedeflateproposal)
+- [executeInflateProposal](internal_.ActionGenerator.md#executeinflateproposal)
+- [executeProposal](internal_.ActionGenerator.md#executeproposal)
+- [executeStakeProposal](internal_.ActionGenerator.md#executestakeproposal)
+- [executeWhiteListProposal](internal_.ActionGenerator.md#executewhitelistproposal)
+- [vote](internal_.ActionGenerator.md#vote)
+- [withdraw](internal_.ActionGenerator.md#withdraw)
 
 ## Constructors
 
@@ -44,7 +51,7 @@
 
 #### Defined in
 
-[actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L12)
+newcoin.daos-js/dist/actions/index.d.ts:14
 
 ## Properties
 
@@ -52,363 +59,436 @@
 
 • `Readonly` **contract**: `string`
 
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:12
+
 ___
 
 ### token\_contract
 
 • `Readonly` **token\_contract**: `string`
 
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:13
+
 ## Methods
 
-### buyrambytes
+### approveDeflateProposal
 
-▸ **buyrambytes**(`receiver`, `payer?`, `amt?`): `Object`
+▸ **approveDeflateProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `receiver` | `string` | `undefined` |
-| `payer` | `string` | `'io'` |
-| `amt` | `number` | `8192` |
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
 
 #### Returns
 
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | { `actor`: `string` = payer; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.bytes` | `number` |
-| `data.payer` | `string` |
-| `data.receiver` | `string` |
-| `name` | `string` |
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:51](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L51)
+newcoin.daos-js/dist/actions/index.d.ts:24
 
 ___
 
-### createCollection
+### approveInflateProposal
 
-▸ **createCollection**(`author`, `collection_name`, `authorized_accounts`, `notify_accounts?`, `market_fee`, `allow_notify`): `any`
+▸ **approveInflateProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `author` | `string` | `undefined` |
-| `collection_name` | `string` | `undefined` |
-| `authorized_accounts` | `string`[] | `undefined` |
-| `notify_accounts` | `string`[] | `[]` |
-| `market_fee` | `number` | `undefined` |
-| `allow_notify` | `boolean` | `undefined` |
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
 
 #### Returns
 
-`any`
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:116](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L116)
+newcoin.daos-js/dist/actions/index.d.ts:23
 
 ___
 
-### createPermission
+### approveProposal
 
-▸ **createPermission**(`author`, `perm_name`, `perm_key`): `Object`
+▸ **approveProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `author` | `string` |
-| `perm_name` | `string` |
-| `perm_key` | `string` |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
 
 #### Returns
 
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | { `actor`: `string` = author; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.account` | `string` |
-| `data.auth` | `Object` |
-| `data.auth.accounts` | { `permission`: { `actor`: `string` = author; `permission`: `string` = 'active' } ; `weight`: `number` = 1 }[] |
-| `data.auth.keys` | { `key`: `string` = perm\_key; `weight`: `number` = 1 }[] |
-| `data.auth.threshold` | `number` |
-| `data.auth.waits` | `never`[] |
-| `data.parent` | `string` |
-| `data.permission` | `string` |
-| `name` | `string` |
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:194](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L194)
+newcoin.daos-js/dist/actions/index.d.ts:21
 
 ___
 
-### createPool
+### approveStakeProposal
 
-▸ **createPool**(`creator`, `ticker`, `is_inflatable`, `is_deflatable`, `is_treasury`, `descr`): `Object`
+▸ **approveStakeProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `creator` | `string` |
-| `ticker` | `string` |
-| `is_inflatable` | `boolean` |
-| `is_deflatable` | `boolean` |
-| `is_treasury` | `boolean` |
-| `descr` | `string` |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
 
 #### Returns
 
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | { `actor`: `string` = creator; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.description` | `string` |
-| `data.is_deflatable` | `boolean` |
-| `data.is_inflatable` | `boolean` |
-| `data.is_treasury` | `boolean` |
-| `data.owner` | `string` |
-| `data.ticker` | `string` |
-| `name` | `string` |
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:256](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L256)
+newcoin.daos-js/dist/actions/index.d.ts:22
 
 ___
 
-### createSchema
+### approveWhiteListProposal
 
-▸ **createSchema**(`author`, `payer`, `collection_name`, `schema_name`, `sch`): `any`
+▸ **approveWhiteListProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `author` | `string` |
-| `payer` | `string` |
-| `collection_name` | `string` |
-| `schema_name` | `string` |
-| `sch` | [`NCNameType`](../modules.md#ncnametype)[] |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
 
 #### Returns
 
-`any`
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:143](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L143)
+newcoin.daos-js/dist/actions/index.d.ts:25
 
 ___
 
-### createTemplate
+### createDao
 
-▸ **createTemplate**(`author`, `collection_name`, `schema_name`, `xferable`, `burnable`, `max_supply`, `template_fields`): `any`
+▸ **createDao**(`authorization`, `owner`, `description`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `author` | `string` |
-| `collection_name` | `string` |
-| `schema_name` | `string` |
-| `xferable` | `boolean` |
-| `burnable` | `boolean` |
-| `max_supply` | `number` |
-| `template_fields` | `any`[] |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `owner` | `string` |
+| `description` | `string` |
 
 #### Returns
 
-`any`
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:166](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L166)
+newcoin.daos-js/dist/actions/index.d.ts:15
 
 ___
 
-### delegateBw
+### createDeflateProposal
 
-▸ **delegateBw**(`receiver`, `payer?`, `net_amount?`, `cpu_amount?`, `trfer?`): `Object`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `receiver` | `string` | `undefined` |
-| `payer` | `string` | `'io'` |
-| `net_amount` | `string` | `'100.0000 NCO'` |
-| `cpu_amount` | `string` | `'100.0000 NCO'` |
-| `trfer` | `boolean` | `true` |
-
-#### Returns
-
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | { `actor`: `string` = payer; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.from` | `string` |
-| `data.receiver` | `string` |
-| `data.stake_cpu_quantity` | `string` |
-| `data.stake_net_quantity` | `string` |
-| `data.transfer` | `boolean` |
-| `name` | `string` |
-
-#### Defined in
-
-[actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L66)
-
-___
-
-### mintAsset
-
-▸ **mintAsset**(`author`, `payer`, `col_name`, `sch_name`, `tmpl_id`, `immutable_data`, `mutable_data`): `any`
+▸ **createDeflateProposal**(`authorization`, `proposer`, `dao_id`, `from`, `quantity`, `vote_start`, `vote_end`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `author` | `string` |
-| `payer` | `string` |
-| `col_name` | `string` |
-| `sch_name` | `string` |
-| `tmpl_id` | `number` |
-| `immutable_data` | `any`[] |
-| `mutable_data` | `any`[] |
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[actions.ts:227](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L227)
-
-___
-
-### newaccount
-
-▸ **newaccount**(`new_name`, `payer`, `newacc_public_active_key`, `newacc_public_owner_key`): `Object`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `new_name` | `string` |
-| `payer` | `string` |
-| `newacc_public_active_key` | `string` |
-| `newacc_public_owner_key` | `string` |
-
-#### Returns
-
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | { `actor`: `string` = payer; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.active` | `Object` |
-| `data.active.accounts` | `never`[] |
-| `data.active.keys` | { `key`: `string` = newacc\_public\_active\_key; `weight`: `number` = 1 }[] |
-| `data.active.threshold` | `number` |
-| `data.active.waits` | `never`[] |
-| `data.creator` | `string` |
-| `data.name` | `string` |
-| `data.owner` | `Object` |
-| `data.owner.accounts` | `never`[] |
-| `data.owner.keys` | { `key`: `string` = newacc\_public\_owner\_key; `weight`: `number` = 1 }[] |
-| `data.owner.threshold` | `number` |
-| `data.owner.waits` | `never`[] |
-| `name` | `string` |
-
-#### Defined in
-
-[actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L14)
-
-___
-
-### txBalance
-
-▸ **txBalance**(`contract`, `from`, `to`, `amt`, `memo`): `Object`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `contract` | `string` |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `proposer` | `string` |
+| `dao_id` | `number` |
 | `from` | `string` |
-| `to` | `string` |
-| `amt` | `string` |
-| `memo` | `string` |
+| `quantity` | `string` |
+| `vote_start` | `string` |
+| `vote_end` | `string` |
 
 #### Returns
 
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | { `actor`: `string` = from; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.from` | `string` |
-| `data.memo` | `string` |
-| `data.quantity` | `string` |
-| `data.to` | `string` |
-| `name` | `string` |
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:305](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L305)
+newcoin.daos-js/dist/actions/index.d.ts:19
 
 ___
 
-### txNcoBalance
+### createInflateProposal
 
-▸ **txNcoBalance**(`from`, `to`, `amt`, `memo`): `Object`
+▸ **createInflateProposal**(`authorization`, `proposer`, `dao_id`, `to`, `quantity`, `vote_start`, `vote_end`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `from` | `string` |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `proposer` | `string` |
+| `dao_id` | `number` |
 | `to` | `string` |
-| `amt` | `string` |
-| `memo` | `string` |
+| `quantity` | `string` |
+| `vote_start` | `string` |
+| `vote_end` | `string` |
 
 #### Returns
 
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | { `actor`: `string` = from; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.from` | `string` |
-| `data.memo` | `string` |
-| `data.quantity` | `string` |
-| `data.to` | `string` |
-| `name` | `string` |
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
 
 #### Defined in
 
-[actions.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/d88935f/src/actions.ts#L284)
+newcoin.daos-js/dist/actions/index.d.ts:18
+
+___
+
+### createProposal
+
+▸ **createProposal**(`authorization`, `proposer`, `dao_id`, `title`, `summary`, `url`, `vote_start`, `vote_end`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `proposer` | `string` |
+| `dao_id` | `number` |
+| `title` | `string` |
+| `summary` | `string` |
+| `url` | `string` |
+| `vote_start` | `string` |
+| `vote_end` | `string` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:16
+
+___
+
+### createStakeProposal
+
+▸ **createStakeProposal**(`authorization`, `proposer`, `dao_id`, `to`, `quantity`, `vote_start`, `vote_end`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `proposer` | `string` |
+| `dao_id` | `number` |
+| `to` | `string` |
+| `quantity` | `string` |
+| `vote_start` | `string` |
+| `vote_end` | `string` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:17
+
+___
+
+### createWhiteListProposal
+
+▸ **createWhiteListProposal**(`authorization`, `proposer`, `dao_id`, `user`, `vote_start`, `vote_end`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `proposer` | `string` |
+| `dao_id` | `number` |
+| `user` | `string` |
+| `vote_start` | `string` |
+| `vote_end` | `string` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:20
+
+___
+
+### executeDeflateProposal
+
+▸ **executeDeflateProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:29
+
+___
+
+### executeInflateProposal
+
+▸ **executeInflateProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:28
+
+___
+
+### executeProposal
+
+▸ **executeProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:26
+
+___
+
+### executeStakeProposal
+
+▸ **executeStakeProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:27
+
+___
+
+### executeWhiteListProposal
+
+▸ **executeWhiteListProposal**(`authorization`, `dao_id`, `proposal_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `dao_id` | `number` |
+| `proposal_id` | `number` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:30
+
+___
+
+### vote
+
+▸ **vote**(`authorization`, `from`, `quantity`, `proposal_type`, `dao_id`, `proposal_id`, `option`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `from` | `string` |
+| `quantity` | `string` |
+| `proposal_type` | `string` |
+| `dao_id` | `string` |
+| `proposal_id` | `string` |
+| `option` | `string` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:32
+
+___
+
+### withdraw
+
+▸ **withdraw**(`authorization`, `owner`, `vote_id`): `Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `authorization` | [`EosioAuthorizationObject`](../modules/internal_.md#eosioauthorizationobject)[] |
+| `owner` | `string` |
+| `vote_id` | `number` |
+
+#### Returns
+
+`Promise`<[`EosioActionObject`](../modules/internal_.md#eosioactionobject)[]\>
+
+#### Defined in
+
+newcoin.daos-js/dist/actions/index.d.ts:31
