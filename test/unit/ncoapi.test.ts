@@ -43,6 +43,8 @@ const api = new NCO_BlockchainAPI(
     devnet_urls, devnet_services
 );
 
+
+
 describe("Basic blockchain operations", () => {
     describe("test template", () => {
         it("test template", async () => {
@@ -313,9 +315,7 @@ describe("Basic blockchain operations", () => {
             let start = new Date();
             let end = start;
             start = new Date(start.setSeconds(start.getSeconds() + 7)); 
-            end   = new Date(end.setSeconds(start.getSeconds() + 15));
-
-            end.setMinutes(start.getMinutes() + 1);
+            end   = new Date(end.setSeconds(end.getSeconds() + 27));
 
             let n: NCCreateDaoUserWhitelistProposal = { 
                 proposer: name, 
@@ -339,6 +339,44 @@ describe("Basic blockchain operations", () => {
     });
 
     
+
+    describe("get whitelist proposal by ID", () => {
+        it("get proposal by id", async () => {
+
+            let n: NCGetDaoProposals = { 
+                proposal_id: "0",
+                dao_id: dao_id
+            };              
+            
+            console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
+            let resp = await api.getDaoWhitelistProposal(n);
+            console.log(JSON.stringify(resp));
+            console.log(
+                    "Quantities: " 
+                    + " --- Vote YES: " + JSON.stringify(resp.rows[0].vote_yes) 
+                    + " --- Vote NO:  " + JSON.stringify(resp.rows[0].vote_no )); 
+            expect(resp.rows[0].id).toBe(0);
+
+        }, 60000)
+    });
+
+   
+    describe("list whitelist proposals", () => {
+        it("list whitelist proposals for dao", async () => {
+            let n: NCGetDaoProposals = { 
+                dao_owner: name, 
+                //proposal_author: name 
+            };              
+            
+            //console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
+            let resp = await api.listDaoWhitelistProposals(n);
+            console.log("list of WL proposals " + JSON.stringify(resp));
+            // @ts-ignore
+            expect(resp.list[0].id).toBe(0);
+
+        }, 60000)
+    });
+
     describe("'approve whitelist proposal' transaction", () => {
         it("approve WL proposal", async () => {
 
@@ -378,8 +416,8 @@ describe("Basic blockchain operations", () => {
     describe("'execute whitelist proposal' transaction", () => {
         it("execute whitelist proposal", async () => {
 
-            console.log("waiting 30 sec .... ");
-            await wait(30000);
+            console.log("waiting 40 sec .... ");
+            await wait(40000);
 
             let n: NCExecuteDaoProposal = { 
                 exec: name, 
@@ -417,10 +455,13 @@ describe("Basic blockchain operations", () => {
 
             let start = new Date();
             let end = start;
+
             start = new Date(start.setSeconds(start.getSeconds() + 10)); 
             end   = new Date(end.setSeconds(start.getSeconds() + 20));
-
-            end.setMinutes(start.getMinutes() + 1);
+            console.log("start vote: " + start);
+            console.log("end vote: " + end);
+            
+            //end.setMinutes(start.getMinutes() + 1);
 
             let n: NCCreateDaoProposal = { 
                 proposer: name, 
@@ -463,6 +504,42 @@ describe("Basic blockchain operations", () => {
 
         }, 60000)
     });
+
+    describe("get DAO proposal by ID", () => {
+        it("get proposal by id", async () => {
+
+            let n: NCGetDaoProposals = { 
+                proposal_id: "0",
+                dao_id: dao_id
+            };              
+            
+            console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
+            let resp = await api.getDaoProposal(n);
+            console.log(JSON.stringify(resp));
+            console.log(
+                    "Quantities: " 
+                    + " --- Vote YES: " + JSON.stringify(resp.rows[0].vote_yes) 
+                    + " --- Vote NO:  " + JSON.stringify(resp.rows[0].vote_no )); 
+            expect(resp.rows[0].id).toBe(0);
+
+        }, 60000)
+    });
+
+    describe("list proposals", () => {
+        it("list proposals for dao", async () => {
+            let n: NCGetDaoProposals = { 
+               dao_owner: name
+            };              
+            
+            //console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
+            let resp = await api.listDaoProposals(n);
+            console.log("list of DAO proposals " + JSON.stringify(resp));
+            // @ts-ignore
+            expect(resp.list[0].id).toBe(0);
+
+        }, 60000)
+    });
+
 
 
     describe("vote dao proposal transaction", () => {
@@ -524,81 +601,60 @@ describe("Basic blockchain operations", () => {
             let resp :NCReturnTxs = await api.executeDaoProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_executeDaoProposal).toBe('string');
+            
 
         }, 60000)
     });
 
-    describe("get DAO proposal by ID", () => {
-        it("get proposal by id", async () => {
+    describe.skip("mint ERC721 asset", () => {
+        it("Mint asset", async () => {
 
-            let n: NCGetDaoProposals = { 
-                proposal_id: "0",
-                dao_owner: name
+            let test = "1".repeat(64);
+
+            let n: NCMintAsset = { 
+            creator: name, 
+            payer: name,  
+            payer_prv_key: prv_key_active, 
+            immutable_data: [
+                {'key': 'name', 'value': ['string', name+'_'+(new Date()).getTime()]},
+                {'key': 'description','value': ['string', 'demo nft']}, 
+                {'key': 'image','value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png']},
+                {'key': "external_url",'value':['string', '']},
+                {'key': 'content_type','value':['string', 'text']},
+                {'key': 'content','value':['string', test]},
+                {'key': "license",'value':['string', 'CC-EX-123456']},
+                //{'key': "template_name"}, {'value': ['string', '']},
+                //{'key': "attributes"}, { 'value': ['string[]', []] }
+              ],
+            mutable_data: [
+                //{'key': 'storage', 'value': ['string', test]}
+            ]
+            };
+            
+        let resp :NCReturnTxs = await api.mintAsset(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_mintAsset).toBe('string');
+        }, 60000)
+    });
+
+
+    //jest.retryTimes(3);
+    describe("get DAO whitelist", () => {
+        it("get dao whitelist", async () => {
+
+            let n: NCGetDaoWhiteList = { 
+                dao_id: dao_id
             };              
             
-            console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoProposal(n);
+            let resp = await api.getDaoWhitelist(n);
             console.log(JSON.stringify(resp));
-            console.log(
-                    "Quantities: " 
-                    + " --- Vote YES: " + JSON.stringify(resp.rows[0].vote_yes) 
-                    + " --- Vote NO:  " + JSON.stringify(resp.rows[0].vote_no )); 
-            expect(resp.rows[0].id).toBe(0);
-
-        }, 60000)
-    });
-
-    describe("get whitelist proposal by ID", () => {
-        it("get proposal by id", async () => {
-
-            let n: NCGetDaoProposals = { 
-                proposal_id: "0",
-                dao_owner: name
-            };              
-            
-            console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoWhitelistProposal(n);
-            console.log(JSON.stringify(resp));
-            console.log(
-                    "Quantities: " 
-                    + " --- Vote YES: " + JSON.stringify(resp.rows[0].vote_yes) 
-                    + " --- Vote NO:  " + JSON.stringify(resp.rows[0].vote_no )); 
-            expect(resp.rows[0].id).toBe(0);
-
-        }, 60000)
-    });
-
-    describe("list proposals", () => {
-        it("list proposals for dao", async () => {
-            let n: NCGetDaoProposals = { 
-               dao_owner: name
-            };              
-            
-            console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
-            let resp = await api.listDaoProposals(n);
-            console.log("list of proposals " + JSON.stringify(resp));
-            //expect(resp[0].id).toBe(0);
-
-        }, 60000)
-    });
-
-    describe("list whitelist proposals", () => {
-        it("list whitelist proposals for dao", async () => {
-            let n: NCGetDaoProposals = { 
-                dao_owner: name, 
-                //proposal_author: name 
-            };              
-            
-            console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
-            let resp = await api.listDaoWhitelistProposals(n);
-            console.log("list of proposals " + JSON.stringify(resp));
-            //expect(resp[0].id).toBe(0);
+            expect(resp.rows.length).toBe(2);
 
         }, 60000)
     });
 
     describe("list votes", () => {
-        it("list proposals for dao", async () => {
+        it("list votes for a proposer", async () => {
 
             let n: NCGetVotes = { 
                 voter: name
@@ -614,16 +670,16 @@ describe("Basic blockchain operations", () => {
     });
 
     describe("get vote deposit back", () => {
-        it("list proposals for dao", async () => {
+        it("vote deposit back", async () => {
 
             let n: NCDaoWithdrawVoteDeposit = { 
-                voter: "io",
-                voter_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                vote_id: "100",
+                voter: name,
+                voter_prv_key: prv_key_active,
+                vote_id: "0",
             };              
             
-            console.log("Arguments for DAO votes list: " + JSON.stringify(n));
-            let resp = await api.getProposalVotes(n);
+            console.log("Arguments for get vote depost back : " + JSON.stringify(n));
+            let resp = await api.withdrawVoteDeposit(n);
             console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
             expect(typeof resp.TxID_WithdrawVoteDeposit).toBe('string');
@@ -631,31 +687,6 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe("mint ERC721 asset", () => {
-        it("Mint asset", async () => {
-            let n: NCMintAsset = { 
-            creator: name, 
-            payer: name,  
-            payer_prv_key: prv_key_active, 
-            immutable_data: [
-                {'key': 'name', 'value': ['string', name+'_'+(new Date()).getTime()]},
-                {'key': 'description','value': ['string', 'demo nft']}, 
-                {'key': 'image','value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png']},
-                {'key': "external_url",'value':['string', '']},
-                {'key': 'content_type','value':['string', 'text']},
-                {'key': 'content','value':['string', 'test content']},
-                {'key': "license",'value':['string', 'CC-EX-123456']},
-                //{'key': "template_name"}, {'value': ['string', '']},
-                //{'key': "attributes"}, { 'value': ['string[]', []] }
-              ],
-            mutable_data: []
-            };
-            
-        let resp :NCReturnTxs = await api.mintAsset(n) ;
-        console.log(resp);
-        expect(typeof resp.TxID_mintAsset).toBe('string');
-        }, 60000)
-    });
 
     describe("get account pools balances", () => {
         it("get pool balances", async () => {

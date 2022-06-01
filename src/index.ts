@@ -15,7 +15,7 @@ import { ExplorerApi } from 'atomicassets';
 import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator,  RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js';
-import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
+import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from "../../newcoin.daos-js";//'@newcoin-foundation/newcoin.daos-js'
 import { DAOPayload, ProposalPayload, WhitelistPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen } from "./actions";
 
@@ -696,17 +696,17 @@ export class NCO_BlockchainAPI {
 
   async withdrawVoteDeposit(inpt: NCDaoWithdrawVoteDeposit) {
     //const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-    //console.log("Vote for DAO proposal", JSON.stringify(inpt));
+    console.log("withdraw vote deposit make action", JSON.stringify(inpt));
     const t = await this.aGen.withdraw(
       [{ actor: inpt.voter, permission: "active" }],
-      inpt.voter, ~~inpt.vote_id
+      inpt.voter, +inpt.vote_id
     );
 
-    console.log("Withdraw vote deposit: ", JSON.stringify(t));
+    console.log("Withdraw vote deposit send action: ", JSON.stringify(t));
     const res = await this.SubmitTx(t,
       [ecc.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]) as TransactResult;
 
-    //console.log("received from VoteForDaoProposal" + JSON.stringify(res));
+    console.log("received from withdraw: " + JSON.stringify(res));
     return { TxID_withdrawVoteDeposit: res.transaction_id } as NCReturnTxs;
   }
 
@@ -780,32 +780,28 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
   async listDaoProposals(inpt: NCGetDaoProposals) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
 
-    let opt: DaoInterfaces.ProposalPayload;
-    if (inpt.proposal_author == undefined)
-      opt = { daoID: inpt.dao_id as string }
-    else
-      opt = { daoID: inpt.dao_id as string, proposer: inpt.proposal_author };
+    let opt: DaoInterfaces.ProposalPayload = { daoID: dao_id};
+    //opt.proposer = inpt.proposal_author ?? undefined;
 
-    console.log("sent to getProposalByProposer" + JSON.stringify(opt));
+    console.log("sent to getProposalByProposer: " + JSON.stringify(opt));
     let q = await this.cApi.getProposalByProposer(opt);
-    console.log("received from getProposalByProposer" + JSON.stringify(q));
-    let w = q.json().rows;
-    return { list: w, id: inpt.dao_id };
+    console.log("received from getProposalByProposer: " + JSON.stringify(q));
+    let w = (await q.json()).rows;
+    return { list: w, id: dao_id };
 
   }
 
   async listDaoWhitelistProposals(inpt: NCGetDaoProposals) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
 
-    let opt: DaoInterfaces.ProposalPayload;
-    if (!inpt.proposal_author)
-      opt = { daoID: dao_id }
-    else
-      opt = { daoID: dao_id as string, proposer: inpt.proposal_author };
+    let opt: DaoInterfaces.ProposalPayload = { daoID: dao_id};
+    //opt.proposer = inpt.proposal_author ?? undefined;
 
     let q = await this.cApi.getWhiteListProposalByProposer(opt);
-    //console.log("received from getProposalByProposer" + JSON.stringify(q));
+    //console.log("received from getProposalByProposer: " + JSON.stringify(q));
     let w = (await q.json()).rows;
+    //console.log("received from getProposalByProposer: " + JSON.stringify(w));
+    
     return { list: w, id: dao_id };
 
   }
@@ -977,8 +973,9 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
   async SubmitTx(
     actions: any[],
     public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
-    private_keys: string[]  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
-  ) {
+    private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
+    debug?: number 
+    ) {
     const signatureProvider = new JsSignatureProvider(private_keys);
     signatureProvider.availableKeys = public_keys;
     //@ts-ignore
@@ -1006,13 +1003,16 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
     const requiredKeys = await api.authorityProvider.getRequiredKeys({ transaction, availableKeys });
     const abis = await api.getTransactionAbis(transaction);
     // const pushTransactionArgs: PushTransactionArgs = { serializedTransaction, signatures };
-    const pushTransactionArgs: PushTransactionArgs = await api.signatureProvider.sign({
+    
+    let tx = {
       chainId: info.chain_id, // from getinfo
       requiredKeys: requiredKeys,
       serializedTransaction: serializedTransaction,
       serializedContextFreeData: undefined,
       abis: abis
-    });
+    };
+    if (debug) console.log("unsigned transaction: " + JSON.stringify(tx));
+    const pushTransactionArgs: PushTransactionArgs = await api.signatureProvider.sign(tx);
     //console.log("signed transaction: " + JSON.stringify(pushTransactionArgs));
     /*
     let tr  = serializedTransaction.buffer.toString();
