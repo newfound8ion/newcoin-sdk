@@ -606,7 +606,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe.skip("mint ERC721 asset", () => {
+    describe("mint ERC721 asset", () => {
         it("Mint asset", async () => {
 
             let test = "1".repeat(64);
@@ -664,7 +664,7 @@ describe("Basic blockchain operations", () => {
             let resp = await api.getProposalVotes(n);
             console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
-            //expect(resp.rows[0].id).toBe(0);
+            expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
     });
@@ -673,14 +673,14 @@ describe("Basic blockchain operations", () => {
         it("vote deposit back", async () => {
 
             let n: NCDaoWithdrawVoteDeposit = { 
-                voter: name,
+                voter:  name,
                 voter_prv_key: prv_key_active,
                 vote_id: "0",
             };              
             
             console.log("Arguments for get vote depost back : " + JSON.stringify(n));
             let resp = await api.withdrawVoteDeposit(n);
-            console.log("Answer" + JSON.stringify(resp));
+            //console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
             expect(typeof resp.TxID_WithdrawVoteDeposit).toBe('string');
 
