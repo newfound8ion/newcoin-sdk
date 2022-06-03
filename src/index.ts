@@ -15,7 +15,7 @@ import { ExplorerApi } from 'atomicassets';
 import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator,  RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js';
-import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from "../../newcoin.daos-js";//'@newcoin-foundation/newcoin.daos-js'
+import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from "@newcoin-foundation/newcoin.daos-js/dist";
 import { DAOPayload, ProposalPayload, WhitelistPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen } from "./actions";
 
