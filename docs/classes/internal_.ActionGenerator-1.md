@@ -44,7 +44,7 @@
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L12)
+[newcoin-sdk/src/actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L12)
 
 ## Properties
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:51](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L51)
+[newcoin-sdk/src/actions.ts:51](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L51)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:116](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L116)
+[newcoin-sdk/src/actions.ts:116](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L116)
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:194](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L194)
+[newcoin-sdk/src/actions.ts:194](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L194)
 
 ___
 
@@ -188,7 +188,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:256](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L256)
+[newcoin-sdk/src/actions.ts:256](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L256)
 
 ___
 
@@ -212,7 +212,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:143](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L143)
+[newcoin-sdk/src/actions.ts:143](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L143)
 
 ___
 
@@ -238,7 +238,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:166](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L166)
+[newcoin-sdk/src/actions.ts:166](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L166)
 
 ___
 
@@ -274,7 +274,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L66)
+[newcoin-sdk/src/actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L66)
 
 ___
 
@@ -300,7 +300,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:227](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L227)
+[newcoin-sdk/src/actions.ts:227](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L227)
 
 ___
 
@@ -342,7 +342,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L14)
+[newcoin-sdk/src/actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L14)
 
 ___
 
@@ -377,7 +377,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:305](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L305)
+[newcoin-sdk/src/actions.ts:305](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L305)
 
 ___
 
@@ -411,4 +411,4 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/1307c28/src/actions.ts#L284)
+[newcoin-sdk/src/actions.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L284)

@@ -704,10 +704,10 @@ export class NCO_BlockchainAPI {
 
     console.log("Withdraw vote deposit send action: ", JSON.stringify(t));
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]) as TransactResult;
+      [ecc.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key], 1) as TransactResult;
 
-    console.log("received from withdraw: " + JSON.stringify(res));
-    return { TxID_withdrawVoteDeposit: res.transaction_id } as NCReturnTxs;
+    //console.log("received from withdraw: " + JSON.stringify(res));
+    return { TxID_WithdrawVoteDeposit: res.transaction_id } as NCReturnTxs;
   }
 
 
@@ -978,6 +978,7 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
     ) {
     const signatureProvider = new JsSignatureProvider(private_keys);
     signatureProvider.availableKeys = public_keys;
+
     //@ts-ignore
     const rpc = this.nodeos_rpc;
     const api = new Api({ rpc, signatureProvider }); //required to submit transactions
@@ -995,6 +996,8 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
       ref_block_num: lastBlockInfo.block_num & 0xffff, // 22774
     };
 
+    if (debug) console.log("actions before serialization: " + JSON.stringify(transactionObj.actions));
+    
     const a = await api.serializeActions(transactionObj.actions);
     const transaction = { ...transactionObj, actions: a };
     const serializedTransaction = api.serializeTransaction(transaction);
@@ -1011,9 +1014,8 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
       serializedContextFreeData: undefined,
       abis: abis
     };
-    if (debug) console.log("unsigned transaction: " + JSON.stringify(tx));
+
     const pushTransactionArgs: PushTransactionArgs = await api.signatureProvider.sign(tx);
-    //console.log("signed transaction: " + JSON.stringify(pushTransactionArgs));
     /*
     let tr  = serializedTransaction.buffer.toString();
     let eccst = ecc.sign(serializedTransaction, private_keys[0]);
