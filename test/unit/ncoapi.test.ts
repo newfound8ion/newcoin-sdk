@@ -58,15 +58,20 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    describe.skip("custom test", () => {
+    describe.only("custom test", () => {
         it("custom code", async () => {
-            let n: NCBuyRam = {
-                user: "testaaagt.io",
-                payer: "io",
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                ram_amt: 8192
-            };
-            const resp = await api.buyRam(n) as TransactResult;
+            //let n: NCBuyRam = {  user: "testaaagt.io",  payer: "io", payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", ram_amt: 8192 };
+            //const resp = await api.buyRam(n) as TransactResult;
+
+            let n: NCGetDaoProposals = {
+                dao_owner: "testaaagt.io",
+                upper_bound: "30",
+                limit: "5",
+                reverse: true
+            }
+            const resp = await api.getDaoProposals(n);
+            console.log(JSON.stringify(resp));
+
         }, 15000);
     });
     

@@ -179,6 +179,10 @@ export type NCGetDaoProposals = {
   dao_owner?: string,
   proposal_id?: string,
   proposal_author?: string;
+  lower_bound?: string;
+  upper_bound?: string;
+  limit?: string;
+  reverse?: boolean;
 }
 
 export type NCDaoProposalVote = {
