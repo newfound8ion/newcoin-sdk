@@ -69,7 +69,7 @@
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:151](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L151)
+[types.ts:158](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L158)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:25](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L25)
+[types.ts:32](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L32)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:121](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L121)
+[types.ts:128](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L128)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:128](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L128)
+[types.ts:135](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L135)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:140](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L140)
+[types.ts:147](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L147)
 
 ___
 
@@ -180,7 +180,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:40](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L40)
+[types.ts:47](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L47)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:55](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L55)
+[types.ts:62](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L62)
 
 ___
 
@@ -225,7 +225,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:13](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L13)
+[types.ts:20](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L20)
 
 ___
 
@@ -248,7 +248,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:177](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L177)
+[types.ts:184](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L184)
 
 ___
 
@@ -269,7 +269,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:160](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L160)
+[types.ts:167](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L167)
 
 ___
 
@@ -287,7 +287,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:220](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L220)
+[types.ts:227](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L227)
 
 ___
 
@@ -306,7 +306,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:170](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L170)
+[types.ts:177](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L177)
 
 ___
 
@@ -323,7 +323,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:199](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L199)
+[types.ts:206](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L206)
 
 ___
 
@@ -340,7 +340,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:226](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L226)
+[types.ts:233](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L233)
 
 ___
 
@@ -357,7 +357,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:194](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L194)
+[types.ts:201](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L201)
 
 ___
 
@@ -377,7 +377,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/index.ts:71](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/index.ts#L71)
+[index.ts:71](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/index.ts#L71)
 
 ___
 
@@ -395,7 +395,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/index.ts:65](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/index.ts#L65)
+[index.ts:65](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/index.ts#L65)
 
 ___
 
@@ -412,7 +412,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:3](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L3)
+[types.ts:3](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L3)
 
 ___
 
@@ -432,7 +432,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:47](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L47)
+[types.ts:54](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L54)
 
 ___
 
@@ -455,7 +455,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:209](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L209)
+[types.ts:216](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L216)
 
 ___
 
@@ -472,7 +472,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:8](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L8)
+[types.ts:8](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L8)
 
 ___
 
@@ -490,7 +490,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:114](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L114)
+[types.ts:121](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L121)
 
 ___
 
@@ -506,7 +506,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:263](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L263)
+[types.ts:270](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L270)
 
 ___
 
@@ -548,7 +548,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:231](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L231)
+[types.ts:238](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L238)
 
 ___
 
@@ -566,7 +566,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:64](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L64)
+[types.ts:71](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L71)
 
 ___
 
@@ -585,7 +585,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:70](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L70)
+[types.ts:77](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L77)
 
 ___
 
@@ -605,7 +605,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:92](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L92)
+[types.ts:99](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L99)
 
 ___
 
@@ -625,7 +625,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:84](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L84)
+[types.ts:91](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L91)
 
 ___
 
@@ -643,7 +643,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:77](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L77)
+[types.ts:84](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L84)
 
 ## Variables
 
@@ -653,7 +653,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:267](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L267)
+[types.ts:274](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L274)
 
 ___
 
@@ -663,7 +663,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/index.ts:86](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/index.ts#L86)
+[index.ts:86](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/index.ts#L86)
 
 ___
 
@@ -673,4 +673,4 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/index.ts:79](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/index.ts#L79)
+[index.ts:79](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/index.ts#L79)

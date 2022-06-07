@@ -1,6 +1,6 @@
 {
   "name": "@newcoin-foundation/newcoin-sdk",
-  "version": "1.0.308",
+  "version": "1.0.309",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.js",
   "scripts": {

@@ -10,6 +10,13 @@ export type NCNameType = {
   type: string
 };
 
+export type NCBuyRam = {
+  user: string;
+  payer: string;
+  payer_prv_key: string;
+  ram_amt: number ;
+}
+
 export type NCCreateUser = {
   newUser: string,
   newacc_pub_active_key: string,

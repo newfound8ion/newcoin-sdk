@@ -7,23 +7,12 @@
 ### Classes
 
 - [ActionGenerator](../classes/internal_.ActionGenerator.md)
-- [ActionGenerator](../classes/internal_.ActionGenerator-1.md)
-- [default](../classes/internal_.default.md)
-
-### Interfaces
-
-- [DAOPayload](../interfaces/internal_.DAOPayload.md)
-- [GetTableRowsPayload](../interfaces/internal_.GetTableRowsPayload.md)
-- [ProposalPayload](../interfaces/internal_.ProposalPayload.md)
-- [VotePayload](../interfaces/internal_.VotePayload.md)
-- [WhitelistPayload](../interfaces/internal_.WhitelistPayload.md)
 
 ### Type aliases
 
 - [EosioActionObject](internal_.md#eosioactionobject)
-- [EosioActionObject](internal_.md#eosioactionobject)
 - [EosioAuthorizationObject](internal_.md#eosioauthorizationobject)
-- [EosioAuthorizationObject](internal_.md#eosioauthorizationobject)
+- [NCBuyRam](internal_.md#ncbuyram)
 - [NCDaoWithdrawVoteDeposit](internal_.md#ncdaowithdrawvotedeposit)
 - [NCKeyValPair](internal_.md#nckeyvalpair)
 - [NCPoolInfo](internal_.md#ncpoolinfo)
@@ -45,26 +34,7 @@
 
 #### Defined in
 
-newcoin.daos-js/dist/actions/index.d.ts:5
-
-___
-
-### EosioActionObject
-
-Ƭ **EosioActionObject**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `account` | `string` |
-| `authorization` | [`EosioAuthorizationObject`](internal_.md#eosioauthorizationobject)[] |
-| `data` | `any` |
-| `name` | `string` |
-
-#### Defined in
-
-[newcoin-sdk/src/actions.ts:4](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L4)
+[actions.ts:4](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/actions.ts#L4)
 
 ___
 
@@ -81,24 +51,26 @@ ___
 
 #### Defined in
 
-newcoin.daos-js/dist/actions/index.d.ts:1
+[actions.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/actions.ts#L2)
 
 ___
 
-### EosioAuthorizationObject
+### NCBuyRam
 
-Ƭ **EosioAuthorizationObject**: `Object`
+Ƭ **NCBuyRam**: `Object`
 
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `actor` | `string` |
-| `permission` | `string` |
+| `payer` | `string` |
+| `payer_prv_key` | `string` |
+| `ram_amt` | `number` |
+| `user` | `string` |
 
 #### Defined in
 
-[newcoin-sdk/src/actions.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/actions.ts#L2)
+[types.ts:13](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L13)
 
 ___
 
@@ -116,7 +88,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:188](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L188)
+[types.ts:195](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L195)
 
 ___
 
@@ -133,7 +105,7 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:204](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L204)
+[types.ts:211](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L211)
 
 ___
 
@@ -157,4 +129,4 @@ ___
 
 #### Defined in
 
-[newcoin-sdk/src/types.ts:100](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/8de0e44/src/types.ts#L100)
+[types.ts:107](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/abc97ba/src/types.ts#L107)

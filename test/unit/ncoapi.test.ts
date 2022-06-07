@@ -1,4 +1,5 @@
 import exp from 'constants';
+import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
 import { isObjectBindingPattern } from 'typescript';
 import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src';
 import { 
@@ -13,7 +14,8 @@ import {
     NCMintAsset, NCTxNcoBal, 
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
-    default_schema
+    default_schema,
+    NCBuyRam
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
 
@@ -40,7 +42,7 @@ let io_vote_id: string = "100";
 let wait = (t) => new Promise((res) => setTimeout(res, t));
 
 const api = new NCO_BlockchainAPI(
-    devnet_urls, devnet_services
+    devnet_urls, devnet_services, true
 );
 
 
@@ -53,6 +55,19 @@ describe("Basic blockchain operations", () => {
 
             return resp;
         }, 1000);
+    });
+
+
+    describe.skip("custom test", () => {
+        it("custom code", async () => {
+            let n: NCBuyRam = {
+                user: "testaaagt.io",
+                payer: "io",
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                ram_amt: 8192
+            };
+            const resp = await api.buyRam(n) as TransactResult;
+        }, 15000);
     });
     
     describe("create key pair", () => {
