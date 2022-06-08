@@ -58,18 +58,16 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    describe.only("custom test", () => {
+    describe.skip("custom test", () => {
         it("custom code", async () => {
             //let n: NCBuyRam = {  user: "testaaagt.io",  payer: "io", payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", ram_amt: 8192 };
             //const resp = await api.buyRam(n) as TransactResult;
 
             let n: NCGetDaoProposals = {
                 dao_owner: "testaaagt.io",
-                upper_bound: "30",
-                limit: "5",
-                reverse: true
+                reverse: false
             }
-            const resp = await api.getDaoProposals(n);
+            const resp = await api.getDaoWhitelistProposals(n);
             console.log(JSON.stringify(resp));
 
         }, 15000);
@@ -563,7 +561,7 @@ describe("Basic blockchain operations", () => {
 
 
     describe("vote dao proposal transaction", () => {
-        it("vote proposal",async () => {
+        it("vote DAO proposal",async () => {
             let n: NCDaoProposalVote = {
                 voter: name,
                 voter_prv_key: prv_key_active,
@@ -579,13 +577,13 @@ describe("Basic blockchain operations", () => {
             console.log(resp);
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
-        }, 30000);
+        }, 45000);
     });
 
     
 
     describe(" whitelisted IO vote dao proposal transaction", () => {
-        it("vote proposal",async () => {
+        it("IO vote proposal",async () => {
             let n: NCDaoProposalVote = {
                 voter: "io",
                 voter_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
@@ -601,7 +599,7 @@ describe("Basic blockchain operations", () => {
             console.log(resp);
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
-        }, 30000);
+        }, 45000);
     });
 
     describe("'execute dao proposal' transaction", () => {

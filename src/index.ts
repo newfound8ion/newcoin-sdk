@@ -516,7 +516,7 @@ export class NCO_BlockchainAPI {
       [ecc.privateToPublic(inpt.author_prv_key)], [inpt.author_prv_key]) as TransactResult;
 
     let p: DAOPayload = { owner: inpt.author };
-    //if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
+    if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
     let q = await this.cApi.getDAOByOwner(p);
     let w = await q.json();
     if(this.debug) console.log("received from getDaoByOwner" + JSON.stringify(w));
@@ -528,32 +528,6 @@ export class NCO_BlockchainAPI {
     return r;
   }
   
-  async getDaoProposals(inpt: NCGetDaoProposals) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
-    let w;
-    if(!dao_id)
-      return { dao_id: null };
-    if(this.debug) console.log("Get proposal list: ", JSON.stringify(inpt));
-
-    if(inpt.proposal_author || inpt.proposal_id) {
-      w = await (await this.cApi.getProposalByProposer({ ...inpt, daoID: dao_id })).json();
-    } else {
-      const opt = {
-          json: true,
-          code: "daos.nco",
-          scope: dao_id,
-          table: "proposals",
-          lower_bound: inpt.lower_bound,
-          upper_bound: inpt.upper_bound,
-          limit: inpt.limit,
-          reverse: inpt.reverse,
-          index_position: "1",
-      } as GetTableRowsPayload;
-      w = await (await this.cApi.getTableRows( opt )).json();
-    }
-    if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
-    return { ...w, dao_id };
-  }
 
 /**
  * 
@@ -604,7 +578,8 @@ export class NCO_BlockchainAPI {
     let r: NCReturnTxs = {};
     r.TxID_createDaoProposal = res.transaction_id;
     r.dao_id = dao_id;
-    let ps = await this.getDaoWhitelistProposals(Number(dao_id), inpt.proposer);
+    let ps = await this.getDaoWhitelistProposals(
+      { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
     r.proposal_id = ps.rows[ps.rows.length - 1].id;
     return r;
   }
@@ -737,6 +712,39 @@ export class NCO_BlockchainAPI {
   }
 
 
+   /**
+   * Mint an asset
+   * @param inpt: NCMintAsset
+   * @returns Create Pool transaction id
+   */
+    async mintAsset(inpt: NCMintAsset) {
+      let d = 12 - inpt.creator.length;
+      if (inpt.col_name == undefined) inpt.col_name = normalizeUsername(inpt.creator, "z");
+      if (inpt.sch_name == undefined) inpt.sch_name = normalizeUsername(inpt.creator, "w");
+      if (inpt.tmpl_id == undefined) inpt.tmpl_id = -1;
+  
+      if (inpt.immutable_data == undefined)
+        inpt.immutable_data = [
+          { key: 'name', value: ['string', inpt.creator + '_' + (new Date()).getTime()] }
+        ];
+  
+      if (inpt.mutable_data == undefined)
+        inpt.mutable_data = [];
+  
+      const t = this.sdkGen.mintAsset(
+        inpt.creator, inpt.payer, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
+        inpt.immutable_data, inpt.mutable_data
+      );
+  
+      let res = await this.SubmitTx([t],
+        [ecc.privateToPublic(inpt.payer_prv_key)],
+        [inpt.payer_prv_key]
+      ) as TransactResult;
+      let r: NCReturnTxs = {};
+      r.TxID_mintAsset = res.transaction_id;
+      return r;
+    }
+  
 
 // Getters 
   
@@ -749,11 +757,11 @@ export class NCO_BlockchainAPI {
     throw new Error("DAO undefined");
 
   let p: DAOPayload = { owner: owner }
-  //if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
+  if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
   let q = await this.cApi.getDAOByOwner(p);
   let w = await q.json();
   
-  //if(this.debug) console.log("received from getDaoByOwner" + JSON.stringify(w));
+  if(this.debug) console.log("received from getDaoByOwner" + JSON.stringify(w));
   if (!w.rows.length && !noFail)
     throw new Error('User has no dao');
 
@@ -764,41 +772,75 @@ export class NCO_BlockchainAPI {
   return r;
 }
 
+async getDaoProposals(inpt: NCGetDaoProposals) {
+  
+  if(this.debug) console.log("Get proposal list: ", JSON.stringify(inpt));
+  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
+  if(!dao_id) return { dao_id: null };
 
-async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
-  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-  let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
-  let w = await q.json();
+  let w;
+  if(inpt.proposal_author || inpt.proposal_id) {
+    w = await (await this.cApi.getProposalByProposer({ ...inpt, daoID: dao_id })).json();
+  } else {
+    const opt = {
+        json: true,
+        code: "daos.nco",
+        scope: dao_id,
+        table: "proposals",
+        lower_bound: inpt.lower_bound,
+        upper_bound: inpt.upper_bound,
+        limit: inpt.limit,
+        reverse: inpt.reverse,
+        index_position: "1",
+    } as GetTableRowsPayload;
+    w = await (await this.cApi.getTableRows( opt )).json();
+  }
+  if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
+  return { ...w, dao_id };
+}
 
+async getDaoWhitelistProposals(inpt: NCGetDaoProposals) {
+  
+  if(this.debug) console.log("Get proposal list: ", JSON.stringify(inpt));
+  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
+  if(!dao_id) return { dao_id: null };
+
+  let w;
+  if(inpt.proposal_author || inpt.proposal_id) {
+    w = await (await this.cApi.getWhiteListProposalByProposer({ ...inpt, daoID: dao_id })).json();
+  } else {
+    const opt = {
+        json: true,
+        code: "daos.nco",
+        scope: dao_id,
+        table: "whlistprpls",
+        lower_bound: inpt.lower_bound,
+        upper_bound: inpt.upper_bound,
+        limit: inpt.limit,
+        reverse: inpt.reverse,
+        index_position: "1",
+    } as GetTableRowsPayload;
+    w = await (await this.cApi.getTableRows( opt )).json();
+  }
+  if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
   return { ...w, dao_id };
 }
 
 async getDaoProposal(inpt: NCGetDaoProposals) {
   const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
 
-  //if(inpt.proposal_id)  throw "Must provide proposal ID";    
-  let w = await
-    (await this.cApi.getProposalByID({ daoID: inpt.dao_id as string, id: inpt.proposal_id })).json();
+  if(!inpt.proposal_id)  throw "Must provide proposal ID";    
+  let w = await (await this.cApi.getProposalByID({ daoID: inpt.dao_id as string, id: inpt.proposal_id })).json();
   if(this.debug) console.log("received from getProposalByID " + JSON.stringify(w.rows[0]));
   return { ...w, dao_id };
 }
 
-async getDaoWhitelistProposals(dao_id: number, proposer: string) {
 
-  let p: ProposalPayload = { daoID: dao_id.toString(), proposer: proposer };
-  //if(this.debug) console.log("Get proposal by author: ", JSON.stringify(p));
-  let q = await this.cApi.getWhiteListProposalByProposer(p);
-  let w = await q.json();
-  //if(this.debug) console.log("received from getProposalByOwner" + JSON.stringify(w));
-  return w;
-}
-
-  async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
+async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
 
     if (!inpt.proposal_id) throw "Must provide proposal ID";
-    let w = await 
-      (await this.cApi.getWhiteListProposal({ daoID: dao_id, id: inpt.proposal_id })).json();
+    let w = await (await this.cApi.getWhiteListProposal({ daoID: dao_id, id: inpt.proposal_id })).json();
     if(this.debug) console.log("received from getProposalByID" + JSON.stringify(w.rows[0]));
     return { ...w, dao_id: inpt.dao_id };
   }
@@ -808,8 +850,6 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
 
     let opt: DaoInterfaces.ProposalPayload = { daoID: dao_id};
     //opt.proposer = inpt.proposal_author ?? undefined;
-
-
     if(this.debug) console.log("sent to getProposalByProposer: " + JSON.stringify(opt));
     let q = await this.cApi.getProposalByProposer(opt);
     if(this.debug) console.log("received from getProposalByProposer: " + JSON.stringify(q));
@@ -820,19 +860,24 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
 
   async listDaoWhitelistProposals(inpt: NCGetDaoProposals) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
     let opt: DaoInterfaces.ProposalPayload = { daoID: dao_id};
     //opt.proposer = inpt.proposal_author ?? undefined;
-
     let q = await this.cApi.getWhiteListProposalByProposer(opt);
     if(this.debug) console.log("received from getProposalByProposer: " + JSON.stringify(q));
     let w = (await q.json()).rows;
     if(this.debug) console.log("received from getProposalByProposer: " + JSON.stringify(w));
-    
     return { list: w, id: dao_id };
 
   }
 
+  async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
+    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+    let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
+    let w = await q.json();
+  
+    return { ...w, dao_id };
+  }
+    
 
   async getProposalVotes(inpt: NCGetVotes) {
     let w, q;
@@ -844,38 +889,7 @@ async getDaoWhitelistProposals(dao_id: number, proposer: string) {
     return w;
   }
 
-  /**
-   * Mint an asset
-   * @returns Create Pool transaction id
-   */
-  async mintAsset(inpt: NCMintAsset) {
-    let d = 12 - inpt.creator.length;
-    if (inpt.col_name == undefined) inpt.col_name = normalizeUsername(inpt.creator, "z");
-    if (inpt.sch_name == undefined) inpt.sch_name = normalizeUsername(inpt.creator, "w");
-    if (inpt.tmpl_id == undefined) inpt.tmpl_id = -1;
-
-    if (inpt.immutable_data == undefined)
-      inpt.immutable_data = [
-        { key: 'name', value: ['string', inpt.creator + '_' + (new Date()).getTime()] }
-      ];
-
-    if (inpt.mutable_data == undefined)
-      inpt.mutable_data = [];
-
-    const t = this.sdkGen.mintAsset(
-      inpt.creator, inpt.payer, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
-      inpt.immutable_data, inpt.mutable_data
-    );
-
-    let res = await this.SubmitTx([t],
-      [ecc.privateToPublic(inpt.payer_prv_key)],
-      [inpt.payer_prv_key]
-    ) as TransactResult;
-    let r: NCReturnTxs = {};
-    r.TxID_mintAsset = res.transaction_id;
-    return r;
-  }
-
+ 
   /**
    * Get account balance
    * @param acc: NCGetAccInfo
