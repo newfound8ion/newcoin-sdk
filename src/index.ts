@@ -872,7 +872,7 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
 
   async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-    let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
+    let q = await this.cApi.getDAOWhiteList({ id: dao_id as string });
     let w = await q.json();
   
     return { ...w, dao_id };
