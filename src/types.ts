@@ -204,12 +204,19 @@ export type NCDaoWithdrawVoteDeposit = {
 
 export type NCGetVotes = {
   voter: string,
-  vote_id?: string
+  lower_bound?: string;
+  upper_bound?: string;
+  limit?: string;
+  reverse?: boolean;
 }
 
 export type NCGetDaoWhiteList = {
   dao_id?: string,
-  dao_owner?: string
+  dao_owner?: string,
+  lower_bound?: string;
+  upper_bound?: string;
+  limit?: string;
+  reverse?: boolean;
 }
 
 export type NCKeyValPair = {

@@ -16,7 +16,7 @@ import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator,  RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js';
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
-import { DAOPayload, GetTableRowsPayload, ProposalPayload, WhitelistPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
+import { DAOPayload, GetTableRowsPayload, ProposalPayload, VotePayload, WhitelistPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen } from "./actions";
 
 
@@ -789,7 +789,7 @@ async getDaoProposals(inpt: NCGetDaoProposals) {
         table: "proposals",
         lower_bound: inpt.lower_bound,
         upper_bound: inpt.upper_bound,
-        limit: inpt.limit,
+        limit: ~~(inpt.limit??"10"),
         reverse: inpt.reverse,
         index_position: "1",
     } as GetTableRowsPayload;
@@ -816,7 +816,7 @@ async getDaoWhitelistProposals(inpt: NCGetDaoProposals) {
         table: "whlistprpls",
         lower_bound: inpt.lower_bound,
         upper_bound: inpt.upper_bound,
-        limit: inpt.limit,
+        limit: ~~(inpt.limit??"10"),
         reverse: inpt.reverse,
         index_position: "1",
     } as GetTableRowsPayload;
@@ -872,20 +872,44 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
 
   async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-    let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
-    let w = await q.json();
-  
+    //let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
+    //let w = await q.json();
+    const opt = {
+        json: true,
+        code: "daos.nco",
+        scope: dao_id,
+        table: "whitelist",
+        key_type: "name",
+        lower_bound: inpt.lower_bound,
+        upper_bound: inpt.upper_bound,
+        limit: ~~(inpt.limit??"10"),
+        reverse: inpt.reverse,
+        index_position: "1",
+    } as GetTableRowsPayload;
+    let w = await (await this.cApi.getTableRows( opt )).json();
+    if(this.debug) console.log("received white list" + JSON.stringify(w)); 
     return { ...w, dao_id };
   }
     
 
-  async getProposalVotes(inpt: NCGetVotes) {
-    let w, q;
-    const r = { owner: inpt.voter } as any;
-    if (inpt.vote_id) r.id = inpt.vote_id;
-    q = (await this.cApi.getVote(r));
-    w = await q.json();
-    //if(this.debug) console.log("received from getVotes " + JSON.stringify(w.rows));
+  async getVotes(inpt: NCGetVotes) {
+    let w;
+
+    const opt = {
+      json: true,
+      code: "daos.nco",
+      scope: inpt.voter,
+      table: "votes",
+      key_type: "i64",
+      lower_bound: inpt.lower_bound,
+      upper_bound: inpt.upper_bound,
+      limit: ~~(inpt.limit??"10"),
+      reverse: inpt.reverse,
+      index_position: "1",
+    } as GetTableRowsPayload;
+
+    w = await (await this.cApi.getTableRows(opt)).json();
+    if(this.debug) console.log("received from getVotes " + JSON.stringify(w.rows));
     return w;
   }
 

@@ -657,11 +657,11 @@ describe("Basic blockchain operations", () => {
 
 
     //jest.retryTimes(3);
-    describe("get DAO whitelist", () => {
+    describe.only("get DAO whitelist", () => {
         it("get dao whitelist", async () => {
 
             let n: NCGetDaoWhiteList = { 
-                dao_id: dao_id
+                dao_id: "97"
             };              
             
             let resp = await api.getDaoWhitelist(n);
@@ -671,15 +671,17 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe("list votes", () => {
+    describe.only("list votes", () => {
         it("list votes for a proposer", async () => {
 
             let n: NCGetVotes = { 
-                voter: name
+                voter: "testaaagt.io",
+                lower_bound: "2", 
+                limit: "12"
             };              
             
             console.log("Arguments for DAO votes list: " + JSON.stringify(n));
-            let resp = await api.getProposalVotes(n);
+            let resp = await api.getVotes(n);
             console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
             expect(resp.rows[0].id).toBe(0);
