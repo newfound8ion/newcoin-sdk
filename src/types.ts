@@ -181,7 +181,7 @@ export type NCGetDaoProposals = {
   proposal_author?: string;
   lower_bound?: string;
   upper_bound?: string;
-  limit?: string;
+  limit?: number;
   reverse?: boolean;
 }
 
