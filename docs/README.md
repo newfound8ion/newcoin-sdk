@@ -10,12 +10,12 @@ This is the newcoin sdk, a starting point for a tooling environment that will ma
 npm install --save @newcoin-foundation/newcoin-sdk
 ```
 See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
-General SDK structure [here](https://newcoin-foundation.github.io/)
+
+General SDK structure [https://newcoin-foundation.github.io/](https://newcoin-foundation.github.io/)
 
 ## Contributing
 Pull requests are welcome. 
 For major changes, please open an issue first to discuss what you would like to change.
-
 Please make sure to update tests as appropriate.
 
 ## License
