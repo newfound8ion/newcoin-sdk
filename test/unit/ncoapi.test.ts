@@ -58,16 +58,13 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    describe.skip("custom test", () => {
+    describe("custom test", () => {
         it("custom code", async () => {
-            //let n: NCBuyRam = {  user: "testaaagt.io",  payer: "io", payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", ram_amt: 8192 };
-            //const resp = await api.buyRam(n) as TransactResult;
+            let n: NCBuyRam = {  user: "testaaaeg.io",  payer: "io", payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", ram_amt: 8192 };
+            const resp = await api.buyRam(n) as TransactResult;
 
-            let n: NCGetDaoProposals = {
-                dao_owner: "testaaagt.io",
-                reverse: false
-            }
-            const resp = await api.getDaoWhitelistProposals(n);
+            //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
+            //const resp = await api.getDaoWhitelistProposals(n);
             console.log(JSON.stringify(resp));
 
         }, 15000);
@@ -558,8 +555,6 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-
-
     describe("vote dao proposal transaction", () => {
         it("vote DAO proposal",async () => {
             let n: NCDaoProposalVote = {
@@ -624,6 +619,10 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
+
+
+
+    // ================= minting ================================================== 
     describe("mint ERC721 asset", () => {
         it("Mint asset", async () => {
 
@@ -657,7 +656,7 @@ describe("Basic blockchain operations", () => {
 
 
     //jest.retryTimes(3);
-    describe.only("get DAO whitelist", () => {
+    describe("get DAO whitelist", () => {
         it("get dao whitelist", async () => {
 
             let n: NCGetDaoWhiteList = { 
@@ -671,7 +670,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe.only("list votes", () => {
+    describe("list votes", () => {
         it("list votes for a proposer", async () => {
 
             let n: NCGetVotes = { 

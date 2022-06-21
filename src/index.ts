@@ -30,7 +30,8 @@ import {
   NCCreateUser, NCCreateCollection,
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, NCBuyRam,
-  NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal,
+  NCCreateDao, NCGetDaoWhiteList, 
+  NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, 
   NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
   NCMintAsset,  NCCreatePermission,
@@ -44,7 +45,7 @@ export {
   NCCreateUser, NCCreateCollection,
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, 
-  NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal,
+  NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
   NCMintAsset,  NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
@@ -586,6 +587,35 @@ export class NCO_BlockchainAPI {
 
   /**
  * 
+ * @param inpt : NCCreateDaoUserWhitelistProposal
+ * @returns NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
+ */
+   async createDaoStakeProposal(inpt: NCCreateDaoStakeProposal) {
+    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+
+    const t = await this.aGen.createStakeProposal(
+      [{ actor: inpt.proposer, permission: "active" }],
+      inpt.proposer, Number(dao_id), 
+      inpt.to, inpt.quantity,
+      inpt.vote_start, inpt.vote_end
+    );
+
+    const res = await this.SubmitTx(t,
+      [ecc.privateToPublic(inpt.proposer_prv_key)],
+      [inpt.proposer_prv_key]) as TransactResult;
+
+    let r: NCReturnTxs = {};
+    r.TxID_createDaoProposal = res.transaction_id;
+    r.dao_id = dao_id;
+    let ps = await this.getDaoStakeProposals(
+      { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
+    r.proposal_id = ps.rows[ps.rows.length - 1].id;
+    return r;
+  }
+
+
+  /**
+ * 
  * @param inpt : NCApproveDaoProposal
  * @returns NCReturnTxs.TxID_approveDaoProposal
  */
@@ -814,6 +844,33 @@ async getDaoWhitelistProposals(inpt: NCGetDaoProposals) {
         code: "daos.nco",
         scope: dao_id,
         table: "whlistprpls",
+        lower_bound: inpt.lower_bound,
+        upper_bound: inpt.upper_bound,
+        limit: ~~(inpt.limit??"10"),
+        reverse: inpt.reverse,
+        index_position: "1",
+    } as GetTableRowsPayload;
+    w = await (await this.cApi.getTableRows( opt )).json();
+  }
+  if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
+  return { ...w, dao_id };
+}
+
+async getDaoStakeProposals(inpt: NCGetDaoProposals) {
+  
+  if(this.debug) console.log("Get proposal list: ", JSON.stringify(inpt));
+  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
+  if(!dao_id) return { dao_id: null };
+
+  let w;
+  if(inpt.proposal_author || inpt.proposal_id) {
+    w = await (await this.cApi.getStakeProposalByProposer({ ...inpt, daoID: dao_id })).json();
+  } else {
+    const opt = {
+        json: true,
+        code: "daos.nco",
+        scope: dao_id,
+        table: "stakeprpls",
         lower_bound: inpt.lower_bound,
         upper_bound: inpt.upper_bound,
         limit: ~~(inpt.limit??"10"),

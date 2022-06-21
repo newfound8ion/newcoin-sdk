@@ -154,6 +154,16 @@ export type NCCreateDaoUserWhitelistProposal = {
   vote_end: string
 };
 
+export type NCCreateDaoStakeProposal = {
+  proposer: string,
+  proposer_prv_key: string,
+  dao_id?: string,
+  dao_owner: string,
+  to: string,
+  quantity: string,
+  vote_start: string,
+  vote_end: string
+};
 
 export type NCApproveDaoProposal = {
   approver: string,
