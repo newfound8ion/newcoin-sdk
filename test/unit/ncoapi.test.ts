@@ -11,11 +11,12 @@ import {
     NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
     NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
-    NCMintAsset, NCTxNcoBal, 
+    NCMintAsset, NCTxNcoBal, NCTxBal,
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
     default_schema,
-    NCBuyRam
+    NCBuyRam,
+    SBT_NFT_schema
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
 
@@ -58,14 +59,12 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    describe("custom test", () => {
+    describe.skip("custom test", () => {
         it("custom code", async () => {
-            let n: NCBuyRam = {  user: "testaaaeg.io",  payer: "io", payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV", ram_amt: 8192 };
-            const resp = await api.buyRam(n) as TransactResult;
 
             //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
             //const resp = await api.getDaoWhitelistProposals(n);
-            console.log(JSON.stringify(resp));
+            //console.log(JSON.stringify(resp));
 
         }, 15000);
     });
@@ -112,7 +111,7 @@ describe("Basic blockchain operations", () => {
     });
 
     describe("create collection transaction", () => {
-        it("create coll", async () => { 
+        it("create default generic user collection", async () => { 
 
             let d = 12 - name.length; // short name extension
             let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
@@ -134,14 +133,45 @@ describe("Basic blockchain operations", () => {
                 max_supply : 0xffff 
             };
 
-            let resp : NCReturnTxs = await api.createCollection(nco_struct) ;
+            let resp : NCReturnTxs = await api.createCollection(nco_struct);
 
             console.log(resp);
             expect(typeof resp.TxID_createCol).toBe('string'); 
             expect(typeof resp.TxID_createSch).toBe('string'); 
             //expect(typeof resp.TxID_createTpl).toBe('string');
 
-        }, 60000)
+        }, 60000);
+
+        it.skip("create special non-transf collection", async () => { 
+
+            let d = 12 - name.length; // short name extension
+            let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
+            let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
+            let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+            
+            let nco_struct : NCCreateCollection = {
+                user: "io", 
+                user_prv_active_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                collection_name:"sbtcolltn.io",
+                schema_name: "sbtschema.io",
+                schema_fields: SBT_NFT_schema,
+                template_name: "-1",
+                template_fields: [], 
+                allow_notify: true,
+                mkt_fee    : 0.00,
+                xferable   : false,
+                burnable   : false,
+                max_supply : 0xffffff 
+            };
+
+            let resp : NCReturnTxs = await api.createCollection(nco_struct);
+
+            console.log(resp);
+            expect(typeof resp.TxID_createCol).toBe('string'); 
+            expect(typeof resp.TxID_createSch).toBe('string'); 
+            //expect(typeof resp.TxID_createTpl).toBe('string');
+
+        }, 60000);
     });
 
     describe("create permission for an account under active", () => {
@@ -651,7 +681,38 @@ describe("Basic blockchain operations", () => {
         let resp :NCReturnTxs = await api.mintAsset(n) ;
         console.log(resp);
         expect(typeof resp.TxID_mintAsset).toBe('string');
-        }, 60000)
+        }, 60000);
+
+        it.skip("Mint SBT", async () => {
+
+            let test = "1".repeat(64);
+
+            let n: NCMintAsset = { 
+            creator: name,
+            col_name: "sbtcolltn.io",
+            sch_name: "sbtschema.io",
+            payer: name,  
+            payer_prv_key: prv_key_active, 
+            immutable_data: [
+                {'key': 'name', 'value': ['string', name+'_'+(new Date()).getTime()]},
+                {'key': 'description','value': ['string', 'demo nft']}, 
+                {'key': 'image','value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png']},
+                { 'key': 'type', 'value':['string', 'non transferable SBT'] },
+                { 'key': 'issuer', 'value': ['string', 'io'] },
+                { 'key': 'recipient','value': ['string', name] },
+                { 'key': 'quantifiers','value': ['string', ''] },
+                { 'key': 'signature', 'value': ['string', 'SIG_example'] },
+                { 'key': 'content', 'value': ['string', 'example JSON here'] }
+              ],
+            mutable_data: [
+                //{'key': 'storage', 'value': ['string', test]}
+            ]
+        };
+            
+        let resp :NCReturnTxs = await api.mintAsset(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_mintAsset).toBe('string');
+        }, 60000);
     });
 
 

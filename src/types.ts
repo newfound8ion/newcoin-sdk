@@ -302,6 +302,18 @@ export const default_schema = [
   { name: 'license', type: 'string' }
 ];
 
+export const SBT_NFT_schema = [
+  { name: 'name', type: "string" },
+  { name: 'description', type: "string" },
+  { name: 'image', type: 'string' },
+  { name: 'type', type: 'string' },
+  { name: 'issuer', type: 'string' },
+  { name: 'recipient', type: 'string' },
+  { name: 'quantifiers', type: 'string' },
+  { name: 'signature', type: 'string' },
+  { name: 'content', type: 'string' }
+];
+
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
 export const ERC721_schema = [
   { name: 'name', type: "string" },
