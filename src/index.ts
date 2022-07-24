@@ -37,7 +37,7 @@ import {
   NCMintAsset,  NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, SBT_NFT_schema
 } from "./types";
 
 export {
@@ -233,6 +233,7 @@ export class NCO_BlockchainAPI {
     let d = 12 - inpt.user.length;
     if (inpt.collection_name == undefined) inpt.collection_name = normalizeUsername(inpt.user, "z");
     if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w");
+    let sbt_sch_name = normalizeUsername(inpt.user, "s");
 
     let user_public_active_key = ecc.privateToPublic(inpt.user_prv_active_key);
     let mkt_fee = inpt.mkt_fee ? inpt.mkt_fee : 0.05;
@@ -253,21 +254,38 @@ export class NCO_BlockchainAPI {
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
+    if(this.debug) console.log(tres);
 
-    if(this.debug) console.log("creating schema");
+    if(this.debug) console.log("creating default schema ");
     let schema_fields = inpt.schema_fields ? inpt.schema_fields : default_schema;
     t = this.sdkGen.createSchema(
       inpt.user, inpt.user,
       inpt.collection_name, inpt.schema_name,
       schema_fields);
     if(this.debug) console.log(t);
-
+    
     if(this.debug) console.log("createsch transaction");
     tres = await this.SubmitTx([t],
       [user_public_active_key],
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
+    if(this.debug) console.log(tres);
+
+    if(this.debug) console.log("creating SBT schema");
+    let t1 = this.sdkGen.createSchema(
+      inpt.user, inpt.user,
+      inpt.collection_name, sbt_sch_name,
+      SBT_NFT_schema);
+    if(this.debug) console.log(t1);
+
+    if(this.debug) console.log("createsch SBT transaction");
+    tres = await this.SubmitTx([t1],
+      [user_public_active_key],
+      [inpt.user_prv_active_key]
+    ) as TransactResult;
+    res.TxID_createSch = tres.transaction_id;
+    if(this.debug) console.log(tres);
 
     if(this.debug) console.log("creating template");
     let template = inpt.template_fields ? inpt.template_fields : [];
@@ -283,6 +301,8 @@ export class NCO_BlockchainAPI {
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
+    if(this.debug) console.log(tres);
+
     return res;
   }
 

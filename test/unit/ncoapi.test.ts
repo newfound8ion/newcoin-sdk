@@ -144,16 +144,12 @@ describe("Basic blockchain operations", () => {
 
         it.skip("create special non-transf collection", async () => { 
 
-            let d = 12 - name.length; // short name extension
-            let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
-            let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
-            let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
-            
+      
             let nco_struct : NCCreateCollection = {
                 user: "io", 
                 user_prv_active_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                collection_name:"sbtcolltn.io",
-                schema_name: "sbtschema.io",
+                collection_name:"sbtcollctn11",
+                schema_name: "sbtschemaa11",
                 schema_fields: SBT_NFT_schema,
                 template_name: "-1",
                 template_fields: [], 
@@ -683,14 +679,14 @@ describe("Basic blockchain operations", () => {
         expect(typeof resp.TxID_mintAsset).toBe('string');
         }, 60000);
 
-        it.skip("Mint SBT", async () => {
+        it("Mint SBT", async () => {
 
             let test = "1".repeat(64);
 
             let n: NCMintAsset = { 
             creator: name,
-            col_name: "sbtcolltn.io",
-            sch_name: "sbtschema.io",
+            //col_name: "sbtcollctn11",
+            sch_name: normalizeUsername(name, "s"),
             payer: name,  
             payer_prv_key: prv_key_active, 
             immutable_data: [
@@ -702,12 +698,13 @@ describe("Basic blockchain operations", () => {
                 { 'key': 'recipient','value': ['string', name] },
                 { 'key': 'quantifiers','value': ['string', ''] },
                 { 'key': 'signature', 'value': ['string', 'SIG_example'] },
-                { 'key': 'content', 'value': ['string', 'example JSON here'] }
+                { 'key': 'content', 'value': ['string', 'example JSON here'] },
+                { 'key': 'version', 'value': ['string', '1.0']}
               ],
             mutable_data: [
                 //{'key': 'storage', 'value': ['string', test]}
             ]
-        };
+        };  
             
         let resp :NCReturnTxs = await api.mintAsset(n) ;
         console.log(resp);

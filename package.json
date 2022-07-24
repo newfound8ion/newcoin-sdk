@@ -4,7 +4,7 @@
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest --bail",
     "docs": "./node_modules/.bin/typedoc --out docs src/index.ts --excludeExternals --excludePrivate --excludeProtected --emit docs",
     "dist": "./node_modules/.bin/webpack"
   },

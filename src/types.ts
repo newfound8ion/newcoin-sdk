@@ -311,7 +311,8 @@ export const SBT_NFT_schema = [
   { name: 'recipient', type: 'string' },
   { name: 'quantifiers', type: 'string' },
   { name: 'signature', type: 'string' },
-  { name: 'content', type: 'string' }
+  { name: 'content', type: 'string' },
+  { name: 'version', type: 'string' }
 ];
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
