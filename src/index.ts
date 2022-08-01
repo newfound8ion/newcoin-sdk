@@ -145,7 +145,7 @@ export class NCO_BlockchainAPI {
     this.hrpc = new HJsonRpc(this.urls.hyperion_url, { fetch } as any);
     this.cApi = new DaosChainApi(this.urls.nodeos_url, services.daos_contract, fetch);
     this.poolsRpcApi = new PoolsRpcApi(this.urls.nodeos_url, services.staking_contract, fetch);
-    this.poolRpcApi = new PoolRpcApi(this.urls.nodeos_url, services.maindao_contract, fetch)
+    // this.poolRpcApi = new PoolRpcApi(this.urls.nodeos_url, services.maindao_contract, fetch)
 
     this.aGen = new DaosAG(services.daos_contract, services.staking_contract);
     this.mGen = new MainDAOActionGenerator(services.maindao_contract, services.token_contract);
