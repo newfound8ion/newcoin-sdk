@@ -14,7 +14,7 @@ import { ExplorerApi } from 'atomicassets';
 // Newcoin services  
 import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
-import { ActionGenerator as MainDAOActionGenerator,  RpcApi as PoolRpcApi } from '@newcoin-foundation/newcoin.pool-js';
+import { ActionGenerator as MainDAOActionGenerator } from '@newcoin-foundation/newcoin.pool-js';
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
 import { DAOPayload, GetTableRowsPayload, ProposalPayload, VotePayload, WhitelistPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen } from "./actions";
@@ -109,7 +109,7 @@ export class NCO_BlockchainAPI {
   private nodeos_rpc: JsonRpc;
   private hrpc: HJsonRpc;
   private poolsRpcApi: PoolsRpcApi;
-  private poolRpcApi: PoolRpcApi;
+  // private poolRpcApi: PoolRpcApi;
   private cApi: DaosChainApi;
 
   private aGen: DaosAG;
