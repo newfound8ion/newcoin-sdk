@@ -1,4 +1,3 @@
-import exp from "constants";
 
 export type NCKeyPair = {
   pub_key: string;

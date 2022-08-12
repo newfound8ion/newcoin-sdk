@@ -142,7 +142,6 @@ export class ActionGenerator {
     
     createSchema = (
       author: string,
-      payer: string,
       collection_name: string,
       schema_name: string,
       sch: NCNameType[]
@@ -169,7 +168,6 @@ export class ActionGenerator {
       schema_name: string,
       xferable: boolean,
       burnable: boolean,
-      max_supply: number, 
       template_fields: any[]
     ) => {
       const action: any = {
@@ -226,7 +224,6 @@ export class ActionGenerator {
     
     mintAsset = (
       author: string,
-      payer: string,
       col_name: string,
       sch_name: string,
       tmpl_id: number,

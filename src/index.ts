@@ -2,28 +2,23 @@
 import { Api, JsonRpc, RpcError } from "eosjs";
 import { Transaction, TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';  // development only
-import { PushTransactionArgs, ReadOnlyTransactResult } from "eosjs/dist/eosjs-rpc-interfaces";
+import { PushTransactionArgs } from "eosjs/dist/eosjs-rpc-interfaces";
 
 // @ts-ignore
 import ecc from "eosjs-ecc-priveos";
 
 // Extra backend services
-import { GetTransaction, JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
-import { ExplorerApi } from 'atomicassets';
+import { JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
 
 // Newcoin services  
-import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js/'
+import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js'
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator } from '@newcoin-foundation/newcoin.pool-js';
-import { ActionGenerator as DaosAG, ChainApi as DaosChainApi, Interfaces as DaoInterfaces } from '@newcoin-foundation/newcoin.daos-js'
-import { DAOPayload, GetTableRowsPayload, ProposalPayload, VotePayload, WhitelistPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
+import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from '@newcoin-foundation/newcoin.daos-js'
+import { DAOPayload, GetTableRowsPayload, ProposalPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen } from "./actions";
 
-
-// @ts-ignore
-// import * as node_fetch from 'node-fetch';
 import fetch from 'cross-fetch';
-import { info } from "console";
 
 import {
   NCKeyPair,
@@ -54,7 +49,6 @@ export {
 };
 
 import { normalizeUsername } from "./utils";
-import { isThrowStatement, StringMappingType } from "typescript";
 
 const CREATE_ACCOUNT_DEFAULTS = {
   ram_amt: 8192,
@@ -187,7 +181,6 @@ export class NCO_BlockchainAPI {
       ram_amt, net_amount, cpu_amount, xfer
     } = { ...CREATE_ACCOUNT_DEFAULTS, ...inpt };
 
-    let t: any;
     let res: NCReturnTxs = {};
   
 
@@ -230,7 +223,6 @@ export class NCO_BlockchainAPI {
     let res: NCReturnTxs = {};
     let tres: TransactResult;
 
-    let d = 12 - inpt.user.length;
     if (inpt.collection_name == undefined) inpt.collection_name = normalizeUsername(inpt.user, "z");
     if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w");
     let sbt_sch_name = normalizeUsername(inpt.user, "s");
@@ -259,7 +251,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log("creating default schema ");
     let schema_fields = inpt.schema_fields ? inpt.schema_fields : default_schema;
     t = this.sdkGen.createSchema(
-      inpt.user, inpt.user,
+      inpt.user,
       inpt.collection_name, inpt.schema_name,
       schema_fields);
     if(this.debug) console.log(t);
@@ -274,7 +266,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("creating SBT schema");
     let t1 = this.sdkGen.createSchema(
-      inpt.user, inpt.user,
+      inpt.user,
       inpt.collection_name, sbt_sch_name,
       SBT_NFT_schema);
     if(this.debug) console.log(t1);
@@ -291,8 +283,7 @@ export class NCO_BlockchainAPI {
     let template = inpt.template_fields ? inpt.template_fields : [];
     let xferable = inpt.xferable ? inpt.xferable : true;
     let burnable = inpt.burnable ? inpt.burnable : true;
-    let max_supply = inpt.max_supply ? inpt.max_supply : 0xffffff;
-    t = this.sdkGen.createTemplate(inpt.user, inpt.collection_name, inpt.schema_name, xferable, burnable, max_supply, template);
+    t = this.sdkGen.createTemplate(inpt.user, inpt.collection_name, inpt.schema_name, xferable, burnable, template);
     if(this.debug) console.log(t);
 
     if(this.debug) console.log("creating template transaction");
@@ -768,7 +759,6 @@ export class NCO_BlockchainAPI {
    * @returns Create Pool transaction id
    */
     async mintAsset(inpt: NCMintAsset) {
-      let d = 12 - inpt.creator.length;
       if (inpt.col_name == undefined) inpt.col_name = normalizeUsername(inpt.creator, "z");
       if (inpt.sch_name == undefined) inpt.sch_name = normalizeUsername(inpt.creator, "w");
       if (inpt.tmpl_id == undefined) inpt.tmpl_id = -1;
@@ -782,7 +772,7 @@ export class NCO_BlockchainAPI {
         inpt.mutable_data = [];
   
       const t = this.sdkGen.mintAsset(
-        inpt.creator, inpt.payer, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
+        inpt.creator, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
         inpt.immutable_data, inpt.mutable_data
       );
   
@@ -925,7 +915,7 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
   async listDaoProposals(inpt: NCGetDaoProposals) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
 
-    let opt: DaoInterfaces.ProposalPayload = { daoID: dao_id};
+    let opt: ProposalPayload = { daoID: dao_id};
     //opt.proposer = inpt.proposal_author ?? undefined;
     if(this.debug) console.log("sent to getProposalByProposer: " + JSON.stringify(opt));
     let q = await this.cApi.getProposalByProposer(opt);
@@ -937,7 +927,7 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
 
   async listDaoWhitelistProposals(inpt: NCGetDaoProposals) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-    let opt: DaoInterfaces.ProposalPayload = { daoID: dao_id};
+    let opt: ProposalPayload = { daoID: dao_id};
     //opt.proposer = inpt.proposal_author ?? undefined;
     let q = await this.cApi.getWhiteListProposalByProposer(opt);
     if(this.debug) console.log("received from getProposalByProposer: " + JSON.stringify(q));
@@ -1024,9 +1014,9 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
       //if(this.debug) if(this.debug) console.log(rc);
       return rc;
     } catch (e) {
-      if(this.debug) if(this.debug) console.log('\nCaught exception: ' + e);
-      if (e instanceof RpcError)
-        if(this.debug) if(this.debug) console.log(JSON.stringify(e.json, null, 2));
+      if(this.debug) console.log('\nCaught exception: ' + e);
+      if (e instanceof RpcError && this.debug) console.log(JSON.stringify(e.json, null, 2));
+      throw e;
     }
   }
 
