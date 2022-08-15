@@ -4,8 +4,7 @@ import { Transaction, TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';  // development only
 import { PushTransactionArgs } from "eosjs/dist/eosjs-rpc-interfaces";
 
-// @ts-ignore
-import ecc from "eosjs-ecc-priveos";
+const ecc = require("eosjs-ecc-priveos");
 
 // Extra backend services
 import { JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
