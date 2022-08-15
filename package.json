@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "test": "jest --bail",
+    "test": "npm run build && jest --bail",
     "docs": "typedoc --out docs src/index.ts --excludeExternals --excludePrivate --excludeProtected --emit docs",
     "build": "npm run dist",
     "dist": "rollup -c"
