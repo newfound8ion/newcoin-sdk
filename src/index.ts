@@ -15,7 +15,7 @@ import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-j
 import { ActionGenerator as MainDAOActionGenerator } from '@newcoin-foundation/newcoin.pool-js';
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from '@newcoin-foundation/newcoin.daos-js'
 import { DAOPayload, GetTableRowsPayload, ProposalPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
-import { ActionGenerator as sdkActionGen } from "./actions";
+import { ActionGenerator as sdkActionGen, EosioActionObject } from "./actions";
 
 import fetch from 'cross-fetch';
 
@@ -48,6 +48,8 @@ export {
 };
 
 import { normalizeUsername } from "./utils";
+import { getClaimNftsActions, getClaimWinBidActions, getCreateAuctionActions, getEditAuctionActions, getEraseAuctionActions, getPlaceBidActions } from "./neftymarket";
+import { ClaimNftsParams, ClaimWinBidParams, CreateAuctionParams, EditAuctionParams, EraseAuctionParams, NeftyMarketParamsBase, PlaceBidParams } from "./neftymarket/types";
 
 const CREATE_ACCOUNT_DEFAULTS = {
   ram_amt: 8192,
@@ -67,7 +69,9 @@ export type NCInitServices = {
   token_contract: string,
   maindao_contract: string,
   staking_contract: string,
-  daos_contract: string
+  daos_contract: string;
+  neftymarket_contract: string;
+  atomicassets_contract: string;
 };
 
 export const devnet_urls: NCInitUrls =
@@ -83,7 +87,9 @@ export const devnet_services: NCInitServices =
   token_contract: "eosio.token",
   maindao_contract: "pool.nco",
   staking_contract: "pools2.nco",
-  daos_contract: "daos.nco"
+  daos_contract: "daos.nco",
+  neftymarket_contract: "market.nefty",
+  atomicassets_contract: "atomicassets"
 };
 
 
@@ -1100,6 +1106,83 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
       return r;
     }
 
+
+
+  // Neftymarket
+  private getActionParams<T>(params: T): NeftyMarketParamsBase & T {
+    return {
+      atomicassetsContract: this.services.atomicassets_contract,
+      neftymarketContract: this.services.neftymarket_contract,
+      ...params,
+    };
+  }
+
+  private async submitAuctionTx(actions: EosioActionObject[], input: NCMintAsset): Promise<NCReturnTxs> {
+    const response = await this.SubmitTx(
+      actions, 
+      [ecc.privateToPublic(input.payer_prv_key)], 
+      [input.payer_prv_key]
+    ) as TransactResult;
+    return {
+      TxID: response.transaction_id,
+    };
+  }
+
+  // Nefty market actions
+  /**
+   * Create a new auction with the specified parameters
+   * @returns create auction transaction id
+   */
+  async createAuction(params: CreateAuctionParams, input: NCMintAsset) {
+    const actions = getCreateAuctionActions(this.getActionParams(params));
+    return this.submitAuctionTx(actions, input);
+  }
+
+  /**
+   * Place a new bid into an active auction
+   * @returns bid transaction id
+   */
+  async placeAuctionBid(params: PlaceBidParams, input: NCMintAsset) {
+    const actions = getPlaceBidActions(this.getActionParams(params));
+    return this.submitAuctionTx(actions, input);
+  }
+  
+  /**
+   * Claim NFTs whenever you win an auction
+   * @returns claim transaction id
+   */
+  async claimNftsFromAuction(params: ClaimNftsParams, input: NCMintAsset) {
+    const actions = getClaimNftsActions(this.getActionParams(params));
+    return this.submitAuctionTx(actions, input);
+  }
+
+  /**
+   * Claim the winning bid as the seller of an auction
+   * @returns claim transaction id
+   */
+  async claimAuctionWinBid(params: ClaimWinBidParams, input: NCMintAsset) {
+    const actions = getClaimWinBidActions(this.getActionParams(params));
+    return this.submitAuctionTx(actions, input);
+  }
+
+  /**
+   * Erase an auction as long as it has no bids
+   * @returns delete transaction id
+   */
+  async eraseAuction(params: EraseAuctionParams, input: NCMintAsset) {
+    const actions = getEraseAuctionActions(this.getActionParams(params));
+    return this.submitAuctionTx(actions, input);
+  }
+
+  /**
+   * Edit an auction with the specified parameters, internally it erases the existing one
+   * and creates a new one with the specified parameters.
+   * @returns transaction id
+   */
+  async editAuction(params: EditAuctionParams, input: NCMintAsset) {
+    const actions = getEditAuctionActions(this.getActionParams(params));
+    return this.submitAuctionTx(actions, input);
+  }
 
   async SubmitTx(
     actions: any[],

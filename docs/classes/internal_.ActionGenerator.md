@@ -44,7 +44,7 @@
 
 #### Defined in
 
-[actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L12)
+[actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L12)
 
 ## Properties
 
@@ -52,11 +52,19 @@
 
 • `Readonly` **contract**: `string`
 
+#### Defined in
+
+[actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L12)
+
 ___
 
 ### token\_contract
 
 • `Readonly` **token\_contract**: `string`
+
+#### Defined in
+
+[actions.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L12)
 
 ## Methods
 
@@ -80,7 +88,7 @@ ___
 | :------ | :------ |
 | `account` | `string` |
 | `authorization` | { `actor`: `string` = payer; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
+| `data` | { `bytes`: `number` = amt; `payer`: `string` = payer; `receiver`: `string` = receiver } |
 | `data.bytes` | `number` |
 | `data.payer` | `string` |
 | `data.receiver` | `string` |
@@ -88,7 +96,7 @@ ___
 
 #### Defined in
 
-[actions.ts:51](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L51)
+[actions.ts:51](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L51)
 
 ___
 
@@ -113,7 +121,7 @@ ___
 
 #### Defined in
 
-[actions.ts:116](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L116)
+[actions.ts:116](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L116)
 
 ___
 
@@ -137,9 +145,9 @@ ___
 | :------ | :------ |
 | `account` | `string` |
 | `authorization` | { `actor`: `string` = author; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
+| `data` | { `account`: `string` = author; `auth`: { `accounts`: { `permission`: { `actor`: `string` = author; `permission`: `string` = 'active' } ; `weight`: `number` = 1 }[] ; `keys`: { `key`: `string` = perm\_key; `weight`: `number` = 1 }[] ; `threshold`: `number` = 1; `waits`: `never`[] = [] } = authorization\_object; `parent`: `string` = 'active'; `permission`: `string` = perm\_name } |
 | `data.account` | `string` |
-| `data.auth` | `Object` |
+| `data.auth` | { `accounts`: { `permission`: { `actor`: `string` = author; `permission`: `string` = 'active' } ; `weight`: `number` = 1 }[] ; `keys`: { `key`: `string` = perm\_key; `weight`: `number` = 1 }[] ; `threshold`: `number` = 1; `waits`: `never`[] = [] } |
 | `data.auth.accounts` | { `permission`: { `actor`: `string` = author; `permission`: `string` = 'active' } ; `weight`: `number` = 1 }[] |
 | `data.auth.keys` | { `key`: `string` = perm\_key; `weight`: `number` = 1 }[] |
 | `data.auth.threshold` | `number` |
@@ -150,7 +158,7 @@ ___
 
 #### Defined in
 
-[actions.ts:194](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L194)
+[actions.ts:192](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L192)
 
 ___
 
@@ -177,7 +185,7 @@ ___
 | :------ | :------ |
 | `account` | `string` |
 | `authorization` | { `actor`: `string` = creator; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
+| `data` | { `description`: `string` = descr; `is_deflatable`: `boolean` = is\_deflatable; `is_inflatable`: `boolean` = is\_inflatable; `is_treasury`: `boolean` = is\_treasury; `owner`: `string` = creator; `ticker`: `string` = ticker } |
 | `data.description` | `string` |
 | `data.is_deflatable` | `boolean` |
 | `data.is_inflatable` | `boolean` |
@@ -188,20 +196,19 @@ ___
 
 #### Defined in
 
-[actions.ts:256](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L256)
+[actions.ts:253](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L253)
 
 ___
 
 ### createSchema
 
-▸ **createSchema**(`author`, `payer`, `collection_name`, `schema_name`, `sch`): `any`
+▸ **createSchema**(`author`, `collection_name`, `schema_name`, `sch`): `any`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `author` | `string` |
-| `payer` | `string` |
 | `collection_name` | `string` |
 | `schema_name` | `string` |
 | `sch` | [`NCNameType`](../modules.md#ncnametype)[] |
@@ -212,13 +219,13 @@ ___
 
 #### Defined in
 
-[actions.ts:143](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L143)
+[actions.ts:143](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L143)
 
 ___
 
 ### createTemplate
 
-▸ **createTemplate**(`author`, `collection_name`, `schema_name`, `xferable`, `burnable`, `max_supply`, `template_fields`): `any`
+▸ **createTemplate**(`author`, `collection_name`, `schema_name`, `xferable`, `burnable`, `template_fields`): `any`
 
 #### Parameters
 
@@ -229,7 +236,6 @@ ___
 | `schema_name` | `string` |
 | `xferable` | `boolean` |
 | `burnable` | `boolean` |
-| `max_supply` | `number` |
 | `template_fields` | `any`[] |
 
 #### Returns
@@ -238,7 +244,7 @@ ___
 
 #### Defined in
 
-[actions.ts:166](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L166)
+[actions.ts:165](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L165)
 
 ___
 
@@ -264,7 +270,7 @@ ___
 | :------ | :------ |
 | `account` | `string` |
 | `authorization` | { `actor`: `string` = payer; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
+| `data` | { `from`: `string` = payer; `receiver`: `string` = receiver; `stake_cpu_quantity`: `string` = cpu\_amount; `stake_net_quantity`: `string` = net\_amount; `transfer`: `boolean` = trfer } |
 | `data.from` | `string` |
 | `data.receiver` | `string` |
 | `data.stake_cpu_quantity` | `string` |
@@ -274,20 +280,19 @@ ___
 
 #### Defined in
 
-[actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L66)
+[actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L66)
 
 ___
 
 ### mintAsset
 
-▸ **mintAsset**(`author`, `payer`, `col_name`, `sch_name`, `tmpl_id`, `immutable_data`, `mutable_data`): `any`
+▸ **mintAsset**(`author`, `col_name`, `sch_name`, `tmpl_id`, `immutable_data`, `mutable_data`): `any`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `author` | `string` |
-| `payer` | `string` |
 | `col_name` | `string` |
 | `sch_name` | `string` |
 | `tmpl_id` | `number` |
@@ -300,7 +305,7 @@ ___
 
 #### Defined in
 
-[actions.ts:227](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L227)
+[actions.ts:225](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L225)
 
 ___
 
@@ -325,15 +330,15 @@ ___
 | :------ | :------ |
 | `account` | `string` |
 | `authorization` | { `actor`: `string` = payer; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
-| `data.active` | `Object` |
+| `data` | { `active`: { `accounts`: `never`[] = []; `keys`: { `key`: `string` = newacc\_public\_active\_key; `weight`: `number` = 1 }[] ; `threshold`: `number` = 1; `waits`: `never`[] = [] } ; `creator`: `string` = payer; `name`: `string` = new\_name; `owner`: { `accounts`: `never`[] = []; `keys`: { `key`: `string` = newacc\_public\_owner\_key; `weight`: `number` = 1 }[] ; `threshold`: `number` = 1; `waits`: `never`[] = [] }  } |
+| `data.active` | { `accounts`: `never`[] = []; `keys`: { `key`: `string` = newacc\_public\_active\_key; `weight`: `number` = 1 }[] ; `threshold`: `number` = 1; `waits`: `never`[] = [] } |
 | `data.active.accounts` | `never`[] |
 | `data.active.keys` | { `key`: `string` = newacc\_public\_active\_key; `weight`: `number` = 1 }[] |
 | `data.active.threshold` | `number` |
 | `data.active.waits` | `never`[] |
 | `data.creator` | `string` |
 | `data.name` | `string` |
-| `data.owner` | `Object` |
+| `data.owner` | { `accounts`: `never`[] = []; `keys`: { `key`: `string` = newacc\_public\_owner\_key; `weight`: `number` = 1 }[] ; `threshold`: `number` = 1; `waits`: `never`[] = [] } |
 | `data.owner.accounts` | `never`[] |
 | `data.owner.keys` | { `key`: `string` = newacc\_public\_owner\_key; `weight`: `number` = 1 }[] |
 | `data.owner.threshold` | `number` |
@@ -342,7 +347,7 @@ ___
 
 #### Defined in
 
-[actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L14)
+[actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L14)
 
 ___
 
@@ -368,7 +373,7 @@ ___
 | :------ | :------ |
 | `account` | `string` |
 | `authorization` | { `actor`: `string` = from; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
+| `data` | { `from`: `string` = from; `memo`: `string` = memo; `quantity`: `string` = amt; `to`: `string` = to } |
 | `data.from` | `string` |
 | `data.memo` | `string` |
 | `data.quantity` | `string` |
@@ -377,7 +382,7 @@ ___
 
 #### Defined in
 
-[actions.ts:305](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L305)
+[actions.ts:302](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L302)
 
 ___
 
@@ -402,7 +407,7 @@ ___
 | :------ | :------ |
 | `account` | `string` |
 | `authorization` | { `actor`: `string` = from; `permission`: `string` = 'active' }[] |
-| `data` | `Object` |
+| `data` | { `from`: `string` = from; `memo`: `string` = memo; `quantity`: `string` = amt; `to`: `string` = to } |
 | `data.from` | `string` |
 | `data.memo` | `string` |
 | `data.quantity` | `string` |
@@ -411,4 +416,4 @@ ___
 
 #### Defined in
 
-[actions.ts:284](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L284)
+[actions.ts:281](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/23235e6/src/actions.ts#L281)
