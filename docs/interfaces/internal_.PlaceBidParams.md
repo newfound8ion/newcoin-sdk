@@ -24,7 +24,7 @@
 
 #### Defined in
 
-neftymarket/types/actions.ts:64
+[neftymarket/types/actions.ts:64](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L64)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-neftymarket/types/actions.ts:67
+[neftymarket/types/actions.ts:67](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L67)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-neftymarket/types/actions.ts:66
+[neftymarket/types/actions.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L66)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-neftymarket/types/actions.ts:69
+[neftymarket/types/actions.ts:69](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L69)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-neftymarket/types/actions.ts:70
+[neftymarket/types/actions.ts:70](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L70)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-neftymarket/types/actions.ts:65
+[neftymarket/types/actions.ts:65](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L65)
 
 ___
 
@@ -84,4 +84,4 @@ ___
 
 #### Defined in
 
-neftymarket/types/actions.ts:68
+[neftymarket/types/actions.ts:68](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L68)

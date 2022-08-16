@@ -19,7 +19,7 @@
 
 #### Defined in
 
-neftymarket/types/actions.ts:14
+[neftymarket/types/actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L14)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-neftymarket/types/actions.ts:13
+[neftymarket/types/actions.ts:13](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L13)
