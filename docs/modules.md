@@ -12,7 +12,7 @@
 
 - [NCO\_BlockchainAPI](classes/NCO_BlockchainAPI.md)
 
-### Type aliases
+### Type Aliases
 
 - [NCApproveDaoProposal](modules.md#ncapprovedaoproposal)
 - [NCCreateCollection](modules.md#nccreatecollection)
@@ -51,7 +51,7 @@
 - [devnet\_services](modules.md#devnet_services)
 - [devnet\_urls](modules.md#devnet_urls)
 
-## Type aliases
+## Type Aliases
 
 ### NCApproveDaoProposal
 
@@ -70,7 +70,7 @@
 
 #### Defined in
 
-[types.ts:168](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L168)
+[types.ts:167](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L167)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[types.ts:32](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L32)
+[types.ts:31](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L31)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[types.ts:128](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L128)
+[types.ts:127](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L127)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-[types.ts:135](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L135)
+[types.ts:134](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L134)
 
 ___
 
@@ -163,7 +163,7 @@ ___
 
 #### Defined in
 
-[types.ts:157](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L157)
+[types.ts:156](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L156)
 
 ___
 
@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[types.ts:147](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L147)
+[types.ts:146](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L146)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[types.ts:47](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L47)
+[types.ts:46](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L46)
 
 ___
 
@@ -225,7 +225,7 @@ ___
 
 #### Defined in
 
-[types.ts:62](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L62)
+[types.ts:61](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L61)
 
 ___
 
@@ -249,7 +249,7 @@ ___
 
 #### Defined in
 
-[types.ts:20](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L20)
+[types.ts:19](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L19)
 
 ___
 
@@ -272,7 +272,7 @@ ___
 
 #### Defined in
 
-[types.ts:198](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L198)
+[types.ts:197](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L197)
 
 ___
 
@@ -293,7 +293,7 @@ ___
 
 #### Defined in
 
-[types.ts:177](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L177)
+[types.ts:176](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L176)
 
 ___
 
@@ -311,7 +311,7 @@ ___
 
 #### Defined in
 
-[types.ts:248](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L248)
+[types.ts:247](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L247)
 
 ___
 
@@ -334,7 +334,7 @@ ___
 
 #### Defined in
 
-[types.ts:187](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L187)
+[types.ts:186](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L186)
 
 ___
 
@@ -355,7 +355,7 @@ ___
 
 #### Defined in
 
-[types.ts:223](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L223)
+[types.ts:222](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L222)
 
 ___
 
@@ -372,7 +372,7 @@ ___
 
 #### Defined in
 
-[types.ts:254](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L254)
+[types.ts:253](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L253)
 
 ___
 
@@ -392,7 +392,7 @@ ___
 
 #### Defined in
 
-[types.ts:215](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L215)
+[types.ts:214](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L214)
 
 ___
 
@@ -404,15 +404,17 @@ ___
 
 | Name | Type |
 | :------ | :------ |
+| `atomicassets_contract` | `string` |
 | `daos_contract` | `string` |
 | `eosio_contract` | `string` |
 | `maindao_contract` | `string` |
+| `neftymarket_contract` | `string` |
 | `staking_contract` | `string` |
 | `token_contract` | `string` |
 
 #### Defined in
 
-[index.ts:72](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/index.ts#L72)
+[index.ts:67](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/index.ts#L67)
 
 ___
 
@@ -430,7 +432,7 @@ ___
 
 #### Defined in
 
-[index.ts:66](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/index.ts#L66)
+[index.ts:61](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/index.ts#L61)
 
 ___
 
@@ -447,7 +449,7 @@ ___
 
 #### Defined in
 
-[types.ts:3](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L3)
+[types.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L2)
 
 ___
 
@@ -467,7 +469,7 @@ ___
 
 #### Defined in
 
-[types.ts:54](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L54)
+[types.ts:53](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L53)
 
 ___
 
@@ -490,7 +492,7 @@ ___
 
 #### Defined in
 
-[types.ts:237](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L237)
+[types.ts:236](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L236)
 
 ___
 
@@ -507,7 +509,7 @@ ___
 
 #### Defined in
 
-[types.ts:8](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L8)
+[types.ts:7](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L7)
 
 ___
 
@@ -525,7 +527,7 @@ ___
 
 #### Defined in
 
-[types.ts:121](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L121)
+[types.ts:120](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L120)
 
 ___
 
@@ -541,7 +543,7 @@ ___
 
 #### Defined in
 
-[types.ts:291](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L291)
+[types.ts:290](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L290)
 
 ___
 
@@ -583,7 +585,7 @@ ___
 
 #### Defined in
 
-[types.ts:259](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L259)
+[types.ts:258](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L258)
 
 ___
 
@@ -601,7 +603,7 @@ ___
 
 #### Defined in
 
-[types.ts:71](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L71)
+[types.ts:70](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L70)
 
 ___
 
@@ -620,7 +622,7 @@ ___
 
 #### Defined in
 
-[types.ts:77](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L77)
+[types.ts:76](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L76)
 
 ___
 
@@ -640,7 +642,7 @@ ___
 
 #### Defined in
 
-[types.ts:99](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L99)
+[types.ts:98](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L98)
 
 ___
 
@@ -660,7 +662,7 @@ ___
 
 #### Defined in
 
-[types.ts:91](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L91)
+[types.ts:90](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L90)
 
 ___
 
@@ -678,34 +680,34 @@ ___
 
 #### Defined in
 
-[types.ts:84](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L84)
+[types.ts:83](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L83)
 
 ## Variables
 
 ### default\_schema
 
-• **default\_schema**: { `name`: `string` = 'name'; `type`: `string` = "string" }[]
+• `Const` **default\_schema**: { `name`: `string` = 'name'; `type`: `string` = "string" }[]
 
 #### Defined in
 
-[types.ts:295](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L295)
+[types.ts:294](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L294)
 
 ___
 
 ### devnet\_services
 
-• **devnet\_services**: [`NCInitServices`](modules.md#ncinitservices)
+• `Const` **devnet\_services**: [`NCInitServices`](modules.md#ncinitservices)
 
 #### Defined in
 
-[index.ts:87](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/index.ts#L87)
+[index.ts:84](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/index.ts#L84)
 
 ___
 
 ### devnet\_urls
 
-• **devnet\_urls**: [`NCInitUrls`](modules.md#nciniturls)
+• `Const` **devnet\_urls**: [`NCInitUrls`](modules.md#nciniturls)
 
 #### Defined in
 
-[index.ts:80](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/index.ts#L80)
+[index.ts:77](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/index.ts#L77)

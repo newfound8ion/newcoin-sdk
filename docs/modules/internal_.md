@@ -4,11 +4,23 @@
 
 ## Table of contents
 
+### Enumerations
+
+- [AuctionType](../enums/internal_.AuctionType.md)
+
 ### Classes
 
 - [ActionGenerator](../classes/internal_.ActionGenerator.md)
 
-### Type aliases
+### Interfaces
+
+- [ClaimNftsParams](../interfaces/internal_.ClaimNftsParams.md)
+- [CreateAuctionParams](../interfaces/internal_.CreateAuctionParams.md)
+- [EditAuctionParams](../interfaces/internal_.EditAuctionParams.md)
+- [NeftyMarketParamsBase](../interfaces/internal_.NeftyMarketParamsBase.md)
+- [PlaceBidParams](../interfaces/internal_.PlaceBidParams.md)
+
+### Type Aliases
 
 - [EosioActionObject](internal_.md#eosioactionobject)
 - [EosioAuthorizationObject](internal_.md#eosioauthorizationobject)
@@ -17,7 +29,7 @@
 - [NCKeyValPair](internal_.md#nckeyvalpair)
 - [NCPoolInfo](internal_.md#ncpoolinfo)
 
-## Type aliases
+## Type Aliases
 
 ### EosioActionObject
 
@@ -34,7 +46,7 @@
 
 #### Defined in
 
-[actions.ts:4](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L4)
+[actions.ts:4](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/actions.ts#L4)
 
 ___
 
@@ -51,7 +63,7 @@ ___
 
 #### Defined in
 
-[actions.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/actions.ts#L2)
+[actions.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/actions.ts#L2)
 
 ___
 
@@ -70,7 +82,7 @@ ___
 
 #### Defined in
 
-[types.ts:13](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L13)
+[types.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L12)
 
 ___
 
@@ -88,7 +100,7 @@ ___
 
 #### Defined in
 
-[types.ts:209](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L209)
+[types.ts:208](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L208)
 
 ___
 
@@ -105,7 +117,7 @@ ___
 
 #### Defined in
 
-[types.ts:232](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L232)
+[types.ts:231](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L231)
 
 ___
 
@@ -123,10 +135,10 @@ ___
 | `id` | `string` |
 | `last_update_date` | `string` |
 | `owner` | `string` |
-| `total` | `Object` |
+| `total` | { `contract`: `string` ; `quantity`: `string`  } |
 | `total.contract` | `string` |
 | `total.quantity` | `string` |
 
 #### Defined in
 
-[types.ts:107](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/c507d5e/src/types.ts#L107)
+[types.ts:106](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/types.ts#L106)
