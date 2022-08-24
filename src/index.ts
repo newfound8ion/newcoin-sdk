@@ -721,7 +721,7 @@ export class NCO_BlockchainAPI {
 
 /**
  * @param inpt : NCCreateDao
- * @returns NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
+ * @returns NCReturnTxs.TxID_voteDaoProposal
  */
   async voteOnProposal(inpt: NCDaoProposalVote) {
 
