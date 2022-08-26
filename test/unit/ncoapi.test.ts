@@ -1,9 +1,9 @@
-import exp from 'constants';
-import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
-import { isObjectBindingPattern } from 'typescript';
+//import exp from 'constants';
+//import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
+//import { isObjectBindingPattern } from 'typescript';
 import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src';
 import { 
-    NCKeyPair,
+    //NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
     NCCreatePermission, NCLinkPerm, 
     NCStakeMainDao, 
@@ -11,12 +11,12 @@ import {
     NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
     NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
-    NCMintAsset, NCTxNcoBal, NCTxBal,
+    NCMintAsset, NCTxNcoBal, //NCTxBal,
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
     default_schema,
-    NCBuyRam,
-    SBT_NFT_schema
+    SBT_NFT_schema,
+    //NCBuyRam
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
 
@@ -30,13 +30,16 @@ let pub_key_active = "EOS8KnfBrVCvdWr1JXybAcMvz8NjqB3XLArEAzRm7wLJchWKw6NFM";
 let prv_key_active = "5JLUzZYfMJUim4KPdGw1ipA8i4Std8QM4hunnvwaesqgRfWiD3j";
 
 let pub_key_owner = "EOS6j3ATfMaBRM7DnGHqZ8Miqw4ah1awgtpbriq4zubfdhey9pcDx";
+// @ts-ignore
 let prv_key_owner = "5JvR9dzATtTkPPDcUdNZzQ8Grp6w4eKJz4xqomCx9T7M9VCaQgN";
 
 let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
+// @ts-ignore
 let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
 let pool_code: string;
 let dao_id: string = "160";
+// @ts-ignore
 let io_vote_id: string = "100";
 
 //@ts-ignore
@@ -113,7 +116,6 @@ describe("Basic blockchain operations", () => {
     describe("create collection transaction", () => {
         it("create default generic user collection", async () => { 
 
-            let d = 12 - name.length; // short name extension
             let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
             let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
             let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
@@ -681,7 +683,7 @@ describe("Basic blockchain operations", () => {
 
         it("Mint SBT", async () => {
 
-            let test = "1".repeat(64);
+            //let test = "1".repeat(64);
 
             let n: NCMintAsset = { 
             creator: name,

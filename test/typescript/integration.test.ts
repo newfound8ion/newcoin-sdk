@@ -1,4 +1,4 @@
-import { NCO_BlockchainAPI, devnet_services, devnet_urls } from '../..';
+import { NCO_BlockchainAPI, devnet_services, devnet_urls } from '../../src/index';
 
 
 test('it should perform a test call correctly', async () => {

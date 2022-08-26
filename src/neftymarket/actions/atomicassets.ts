@@ -1,9 +1,9 @@
-import { EosioActionObject } from "@newcoin-foundation/newcoin.pool-js";
-import { TransferTokenTransactionActionsParams } from "../types";
+import { EosioActionObject } from "@newcoin-foundation/newcoin.pool-js/dist/actions/index";
 import { getNameForTransaction, priceForCurrency } from "../utils";
+import { NCTransferTokenTransactionActionsParams } from "../types";
 
 export function getTransferTokensActions(
-  params: TransferTokenTransactionActionsParams
+  params: NCTransferTokenTransactionActionsParams
 ): EosioActionObject[] {
   const {
     accountName,

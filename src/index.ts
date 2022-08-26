@@ -49,7 +49,7 @@ export {
 
 import { normalizeUsername } from "./utils";
 import { getClaimNftsActions, getClaimWinBidActions, getCreateAuctionActions, getEditAuctionActions, getEraseAuctionActions, getPlaceBidActions } from "./neftymarket";
-import { ClaimNftsParams, ClaimWinBidParams, CreateAuctionParams, EditAuctionParams, EraseAuctionParams, NeftyMarketParamsBase, PlaceBidParams } from "./neftymarket/types";
+import { NCClaimNftsParams, NCClaimWinBidParams, NCCreateAuctionParams, NCEditAuctionParams, NCEraseAuctionParams, NeftyMarketParamsBase, NCPlaceBidParams } from "./neftymarket/types";
 
 const CREATE_ACCOUNT_DEFAULTS = {
   ram_amt: 8192,
@@ -1117,11 +1117,11 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
     };
   }
 
-  private async submitAuctionTx(actions: EosioActionObject[], input: NCMintAsset): Promise<NCReturnTxs> {
+  private async submitAuctionTx(actions: EosioActionObject[], payer_prv_key: string): Promise<NCReturnTxs> {
     const response = await this.SubmitTx(
       actions, 
-      [ecc.privateToPublic(input.payer_prv_key)], 
-      [input.payer_prv_key]
+      [ecc.privateToPublic(payer_prv_key)], 
+      [payer_prv_key]
     ) as TransactResult;
     return {
       TxID: response.transaction_id,
@@ -1133,45 +1133,45 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
    * Create a new auction with the specified parameters
    * @returns create auction transaction id
    */
-  async createAuction(params: CreateAuctionParams, input: NCMintAsset) {
+  async createAuction(params: NCCreateAuctionParams, key: string) {
     const actions = getCreateAuctionActions(this.getActionParams(params));
-    return this.submitAuctionTx(actions, input);
+    return this.submitAuctionTx(actions, key);
   }
 
   /**
    * Place a new bid into an active auction
    * @returns bid transaction id
    */
-  async placeAuctionBid(params: PlaceBidParams, input: NCMintAsset) {
+  async placeAuctionBid(params: NCPlaceBidParams, key: string) {
     const actions = getPlaceBidActions(this.getActionParams(params));
-    return this.submitAuctionTx(actions, input);
+    return this.submitAuctionTx(actions, key);
   }
   
   /**
    * Claim NFTs whenever you win an auction
    * @returns claim transaction id
    */
-  async claimNftsFromAuction(params: ClaimNftsParams, input: NCMintAsset) {
+  async claimNftsFromAuction(params: NCClaimNftsParams, key: string) {
     const actions = getClaimNftsActions(this.getActionParams(params));
-    return this.submitAuctionTx(actions, input);
+    return this.submitAuctionTx(actions, key);
   }
 
   /**
    * Claim the winning bid as the seller of an auction
    * @returns claim transaction id
    */
-  async claimAuctionWinBid(params: ClaimWinBidParams, input: NCMintAsset) {
+  async claimAuctionWinBid(params: NCClaimWinBidParams, key: string) {
     const actions = getClaimWinBidActions(this.getActionParams(params));
-    return this.submitAuctionTx(actions, input);
+    return this.submitAuctionTx(actions, key);
   }
 
   /**
    * Erase an auction as long as it has no bids
    * @returns delete transaction id
    */
-  async eraseAuction(params: EraseAuctionParams, input: NCMintAsset) {
+  async eraseAuction(params: NCEraseAuctionParams, key: string) {
     const actions = getEraseAuctionActions(this.getActionParams(params));
-    return this.submitAuctionTx(actions, input);
+    return this.submitAuctionTx(actions, key);
   }
 
   /**
@@ -1179,9 +1179,9 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
    * and creates a new one with the specified parameters.
    * @returns transaction id
    */
-  async editAuction(params: EditAuctionParams, input: NCMintAsset) {
+  async editAuction(params: NCEditAuctionParams, key: string ) {
     const actions = getEditAuctionActions(this.getActionParams(params));
-    return this.submitAuctionTx(actions, input);
+    return this.submitAuctionTx(actions, key);
   }
 
   async SubmitTx(
