@@ -26,10 +26,10 @@ See [here](./docs/modules.md)
 function async createUser() {
             const nco_struct : NCCreateUser = {
                 newUser: name, 
-                newacc_public_active_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
-                newacc_public_owner_key: "EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT",
+                newacc_public_active_key: "<active-key>",
+                newacc_public_owner_key:  "<owner-key>",
                 payer: "io", 
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                payer_prv_key: "<prv_key>",
                 ram_amt : 8196, 
                 cpu_amount : "100.0000 NCO", 
                 net_amount : "100.0000 NCO", 

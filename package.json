@@ -1,6 +1,6 @@
 {
   "name": "@newcoin-foundation/newcoin-sdk",
-  "version": "1.0.317",
+  "version": "1.0.319",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.cjs",
   "module": "dist/index.mjs",
@@ -33,7 +33,7 @@
     "@types/node": "^16.10.2",
     "@types/node-fetch": "^3.0.3",
     "jest": "^27.3.1",
-    "rollup": "^2.77.3",
+    "rollup": "^2.78.1",
     "ts-jest": "^27.0.7",
     "tslib": "^2.4.0",
     "typedoc": "^0.23.0",
