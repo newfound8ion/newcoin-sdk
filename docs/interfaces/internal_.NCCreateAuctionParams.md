@@ -1,4 +1,4 @@
-[@newcoin-foundation/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / NCCreateAuctionParams
+[@newfound8ion/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / NCCreateAuctionParams
 
 # Interface: NCCreateAuctionParams
 
@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[neftymarket/types/actions.ts:58](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L58)
+[neftymarket/types/actions.ts:58](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L58)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:48](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L48)
+[neftymarket/types/actions.ts:48](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L48)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:49](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L49)
+[neftymarket/types/actions.ts:49](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L49)
 
 ___
 
@@ -69,7 +69,7 @@ optional for standard auctions, required for dutch auctions
 
 #### Defined in
 
-[neftymarket/types/actions.ts:42](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L42)
+[neftymarket/types/actions.ts:42](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L42)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:47](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L47)
+[neftymarket/types/actions.ts:47](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L47)
 
 ___
 
@@ -91,7 +91,7 @@ For standard auctions, set this value to 0
 
 #### Defined in
 
-[neftymarket/types/actions.ts:57](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L57)
+[neftymarket/types/actions.ts:57](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L57)
 
 ___
 
@@ -103,7 +103,7 @@ For standard auctions, set this value to 0
 
 #### Defined in
 
-[neftymarket/types/actions.ts:53](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L53)
+[neftymarket/types/actions.ts:53](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L53)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:46](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L46)
+[neftymarket/types/actions.ts:46](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L46)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:60](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L60)
+[neftymarket/types/actions.ts:60](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L60)
 
 ___
 
@@ -136,7 +136,7 @@ it's the bottom price
 
 #### Defined in
 
-[neftymarket/types/actions.ts:38](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L38)
+[neftymarket/types/actions.ts:38](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L38)
 
 ___
 
@@ -146,7 +146,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:44](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L44)
+[neftymarket/types/actions.ts:44](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L44)
 
 ___
 
@@ -156,7 +156,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:43](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L43)
+[neftymarket/types/actions.ts:43](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L43)
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:59](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L59)
+[neftymarket/types/actions.ts:59](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L59)
 
 ___
 
@@ -176,4 +176,4 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:45](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L45)
+[neftymarket/types/actions.ts:45](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L45)

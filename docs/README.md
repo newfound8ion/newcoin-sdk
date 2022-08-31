@@ -1,4 +1,4 @@
-@newcoin-foundation/newcoin-sdk / [Exports](modules.md)
+@newfound8ion/newcoin-sdk / [Exports](modules.md)
 
 ![Newcoin](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/main/docs/media/newcoin-globe.png?raw=true)
 

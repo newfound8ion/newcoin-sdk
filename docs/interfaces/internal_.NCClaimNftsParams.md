@@ -1,4 +1,4 @@
-[@newcoin-foundation/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / NCClaimNftsParams
+[@newfound8ion/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / NCClaimNftsParams
 
 # Interface: NCClaimNftsParams
 
@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[neftymarket/types/actions.ts:74](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L74)
+[neftymarket/types/actions.ts:74](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L74)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:76](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L76)
+[neftymarket/types/actions.ts:76](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L76)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:75](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/neftymarket/types/actions.ts#L75)
+[neftymarket/types/actions.ts:75](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L75)

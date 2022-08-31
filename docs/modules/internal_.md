@@ -1,4 +1,4 @@
-[@newcoin-foundation/newcoin-sdk](../README.md) / [Exports](../modules.md) / <internal\>
+[@newfound8ion/newcoin-sdk](../README.md) / [Exports](../modules.md) / <internal\>
 
 # Namespace: <internal\>
 
@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[actions.ts:4](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/actions.ts#L4)
+[actions.ts:4](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/actions.ts#L4)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[actions.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/actions.ts#L2)
+[actions.ts:2](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/actions.ts#L2)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[types.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/types.ts#L12)
+[types.ts:12](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/types.ts#L12)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[types.ts:208](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/types.ts#L208)
+[types.ts:208](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/types.ts#L208)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[types.ts:231](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/types.ts#L231)
+[types.ts:231](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/types.ts#L231)
 
 ___
 
@@ -141,4 +141,4 @@ ___
 
 #### Defined in
 
-[types.ts:106](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/88af4a9/src/types.ts#L106)
+[types.ts:106](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/types.ts#L106)

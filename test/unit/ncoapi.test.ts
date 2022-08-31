@@ -50,7 +50,6 @@ const api = new NCO_BlockchainAPI(
 );
 
 
-
 describe("Basic blockchain operations", () => {
     describe("test template", () => {
         it("test template", async () => {
@@ -203,6 +202,9 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_linkPerm).toBe('string');
         }, 60000);
     });
+
+    jest.retryTimes(3);
+
 
     describe("tx NCO transaction", () => {
         it("tx nco balance", async () => {
@@ -412,10 +414,10 @@ describe("Basic blockchain operations", () => {
             };              
             
             //console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
-            let resp = await api.listDaoWhitelistProposals(n);
+            let resp = await api.getDaoWhitelistProposals(n);
             console.log("list of WL proposals " + JSON.stringify(resp));
             // @ts-ignore
-            expect(resp.list[0].id).toBe(0);
+            expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
     });
@@ -558,7 +560,7 @@ describe("Basic blockchain operations", () => {
             
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
             let resp = await api.getDaoProposal(n);
-            console.log(JSON.stringify(resp));
+            console.log("received from DAO proposal search:" + JSON.stringify(resp));
             console.log(
                     "Quantities: " 
                     + " --- Vote YES: " + JSON.stringify(resp.rows[0].vote_yes) 
@@ -575,11 +577,28 @@ describe("Basic blockchain operations", () => {
             };              
             
             //console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
-            let resp = await api.listDaoProposals(n);
-            console.log("list of DAO proposals " + JSON.stringify(resp));
+            //let resp = await api.listDaoProposals(n);
+            //console.log("list of DAO proposals: " + JSON.stringify(resp));
             // @ts-ignore
-            expect(resp.list[0].id).toBe(0);
+            //expect(resp.rows[0].id).toBe(0);
 
+            let resp = await api.getDaoProposals(n);
+            console.log("get DAO proposals " + JSON.stringify(resp));
+            expect(resp.rows[0].id).toBe(0);
+
+           
+
+        }, 60000)
+
+        it("get one proposal for dao", async () => {
+            let n: NCGetDaoProposals = { 
+               dao_owner: name,
+               proposal_id: "0"
+            }; 
+
+            let resp = await api.getDaoProposal(n);
+            console.log("get one DAO proposal" + JSON.stringify(resp));
+            expect(resp.id).toBe(0);
         }, 60000)
     });
 
