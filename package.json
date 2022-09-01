@@ -15,8 +15,8 @@
   "dependencies": {
     "@eoscafe/hyperion": "^3.2.9",
     "@newfound8ion/newcoin.daos-js": "^2.0.4",
-    "@newfound8ion/newcoin.pool-js": "^1.0.3",
-    "@newfound8ion/newcoin.pools-js": "^1.1.5",
+    "@newcoin-foundation/newcoin.pool-js": "^1.0.3",
+    "@newcoin-foundation/newcoin.pools-js": "^1.1.5",
     "cross-fetch": "^3.1.4",
     "eosjs": "^22.1.0",
     "eosjs-ecc-priveos": "^4.0.8"
