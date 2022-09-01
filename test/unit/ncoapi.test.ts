@@ -112,12 +112,16 @@ describe("Basic blockchain operations", () => {
         }, 30000)
     });
 
+    jest.retryTimes(3);
+    
     describe("create collection transaction", () => {
-        it("create default generic user collection", async () => { 
 
-            let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
-            let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
-            let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+        let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
+        let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
+        let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+        let sch_sbt = normalizeUsername(name, "s");
+
+        it("create default generic user collection", async () => { 
             
             let nco_struct : NCCreateCollection = {
                 user: name, 
@@ -144,13 +148,12 @@ describe("Basic blockchain operations", () => {
         }, 60000);
 
         it.skip("create special non-transf collection", async () => { 
-
       
             let nco_struct : NCCreateCollection = {
-                user: "io", 
-                user_prv_active_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                collection_name:"sbtcollctn11",
-                schema_name: "sbtschemaa11",
+                user: name, 
+                user_prv_active_key: prv_key_active,
+                collection_name: col,
+                schema_name: sch_sbt,
                 schema_fields: SBT_NFT_schema,
                 template_name: "-1",
                 template_fields: [], 
@@ -202,8 +205,6 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_linkPerm).toBe('string');
         }, 60000);
     });
-
-    jest.retryTimes(3);
 
 
     describe("tx NCO transaction", () => {
@@ -586,8 +587,6 @@ describe("Basic blockchain operations", () => {
             console.log("get DAO proposals " + JSON.stringify(resp));
             expect(resp.rows[0].id).toBe(0);
 
-           
-
         }, 60000)
 
         it("get one proposal for dao", async () => {
@@ -734,7 +733,6 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    //jest.retryTimes(3);
     describe("get DAO whitelist", () => {
         it("get dao whitelist", async () => {
 
