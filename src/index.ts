@@ -13,8 +13,8 @@ import { JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
 import { ActionGenerator as PoolsActionGenerator, RpcApi as PoolsRpcApi } from '@newcoin-foundation/newcoin.pools-js'
 import { PoolPayload as PoolsPayload } from '@newcoin-foundation/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator } from '@newcoin-foundation/newcoin.pool-js';
-import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from '@newcoin-foundation/newcoin.daos-js'
-import { DAOPayload, GetTableRowsPayload } from "@newcoin-foundation/newcoin.daos-js/dist/interfaces";
+import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from '@newfound8ion/newcoin.daos-js'
+import { DAOPayload, GetTableRowsPayload } from "@newfound8ion/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen, EosioActionObject } from "./actions";
 
 import fetch from 'cross-fetch';
