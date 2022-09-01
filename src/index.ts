@@ -1,7 +1,7 @@
 // EOS imports
 import { Api, JsonRpc, RpcError } from "eosjs";
 import { Transaction, TransactResult } from "eosjs/dist/eosjs-api-interfaces";
-import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';  // development only
+import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig.js';  // development only
 import { PushTransactionArgs } from "eosjs/dist/eosjs-rpc-interfaces";
 
 const ecc = require("eosjs-ecc-priveos");
