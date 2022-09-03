@@ -3,7 +3,7 @@ import typescript from "@rollup/plugin-typescript";
 export default [
   {
     input: "./src/index.ts",
-    external: ['eosjs', 'eosjs/dist/eosjs-jssig', '@eoscafe/hyperion', '@newcoin-foundation/newcoin.pools-js', '@newcoin-foundation/newcoin.pool-js', '@newfound8ion/newcoin.daos-js', 'cross-fetch'],
+    external: ['eosjs', 'eosjs/dist/eosjs-jssig.js', '@eoscafe/hyperion', '@newfound8ion/newcoin.pools-js', '@newfound8ion/newcoin.pool-js', '@newfound8ion/newcoin.daos-js', 'cross-fetch'],
     output: [
       {
       file: "./dist/index.mjs",
