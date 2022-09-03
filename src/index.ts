@@ -595,8 +595,7 @@ export class NCO_BlockchainAPI {
     let r: NCReturnTxs = {};
     r.TxID_createDaoProposal = res.transaction_id;
     r.dao_id = dao_id;
-    let ps = await this.getDaoWhitelistProposals(
-      { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
+    let ps = await this.getDaoWhitelistProposals({...inpt, dao_id });  //  { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
     r.proposal_id = ps.rows[ps.rows.length - 1].id;
     return r;
   }
@@ -854,11 +853,15 @@ async getDaoWhitelistProposals(inpt: NCGetDaoProposals) {
   const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
   if(!dao_id) return { dao_id: null };
 
-  let w;
-  if(inpt.proposal_author || inpt.proposal_id) {
-    w = await (await this.cApi.getWhiteListProposalByProposer({ ...inpt, daoID: dao_id })).json();
-  } else {
-    const opt = {
+  if(inpt.proposal_author && (inpt.proposal_id == undefined))
+  {
+      let w = await this.cApi.getWhiteListProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
+      inpt.proposal_id = await w.json();
+  }
+
+  if(inpt.proposal_id) inpt.lower_bound = inpt.upper_bound = inpt.proposal_id;
+
+  const opt = {
         json: true,
         code: "daos.nco",
         scope: dao_id,
@@ -868,9 +871,9 @@ async getDaoWhitelistProposals(inpt: NCGetDaoProposals) {
         limit: ~~(inpt.limit??"10"),
         reverse: inpt.reverse,
         index_position: "1",
-    } as GetTableRowsPayload;
-    w = await (await this.cApi.getTableRows( opt )).json();
-  }
+  } as GetTableRowsPayload;
+  let w = await (await this.cApi.getTableRows( opt )).json();
+  
   if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
   return { ...w, dao_id };
 }
@@ -881,11 +884,15 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
   const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
   if(!dao_id) return { dao_id: null };
 
-  let w;
-  if(inpt.proposal_author || inpt.proposal_id) {
-    w = await (await this.cApi.getStakeProposalByProposer({ ...inpt, daoID: dao_id })).json();
-  } else {
-    const opt = {
+  if(inpt.proposal_author && (inpt.proposal_id == undefined))
+  {
+      let w = await this.cApi.getProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
+      inpt.proposal_id = await w.json();
+  }
+
+  if(inpt.proposal_id) inpt.lower_bound = inpt.upper_bound = inpt.proposal_id;
+
+  const opt = {
         json: true,
         code: "daos.nco",
         scope: dao_id,
@@ -895,32 +902,14 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
         limit: ~~(inpt.limit??"10"),
         reverse: inpt.reverse,
         index_position: "1",
-    } as GetTableRowsPayload;
-    w = await (await this.cApi.getTableRows( opt )).json();
-  }
+  } as GetTableRowsPayload;
+  
+  let w = await (await this.cApi.getTableRows( opt )).json();
+  
   if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
   return { ...w, dao_id };
 }
 
-/* async getDaoProposal(inpt: NCGetDaoProposals) {
-  if(this.debug) console.log("Get single proposal:", JSON.stringify(inpt));
-  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-  if(!inpt.proposal_id)  throw "Must provide proposal ID";    
-  let w = await (await this.cApi.getProposalByID({ daoID: inpt.dao_id as string, id: inpt.proposal_id })).json();
-  if(this.debug) console.log("received from getProposalByID " + JSON.stringify(w.rows[0]));
-  return { ...w, dao_id };
-}
-
-
-async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-    if (!inpt.proposal_id) throw "Must provide proposal ID";
-    let w = await (await this.cApi.getWhiteListProposal({ daoID: dao_id, id: inpt.proposal_id })).json();
-    if(this.debug) console.log("received from getProposalByID: " + JSON.stringify(w.rows[0]));
-    return { ...w, dao_id: inpt.dao_id };
-  } */
 
   async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
@@ -1209,14 +1198,6 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
     };
 
     const pushTransactionArgs: PushTransactionArgs = await api.signatureProvider.sign(tx);
-    /*
-    let tr  = serializedTransaction.buffer.toString();
-    let eccst = ecc.sign(serializedTransaction, private_keys[0]);
-    let pub_from_prv = ecc.privateToPublic(private_keys[0]);
-    let sig = pushTransactionArgs.signatures[0];
-    let key = ecc.recover(sig, tr);
-    let c = ecc.verify(sig, tr, public_keys[0]);
-    console.log("signature verification: return %d", c)*/
     return api.pushSignedTransaction(pushTransactionArgs);
   };
 
