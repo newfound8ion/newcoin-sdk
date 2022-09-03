@@ -395,7 +395,7 @@ describe("Basic blockchain operations", () => {
             };              
             
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoWhitelistProposal(n);
+            let resp = await api.getDaoWhitelistProposals(n);
             console.log(JSON.stringify(resp));
             console.log(
                     "Quantities: " 
@@ -560,7 +560,7 @@ describe("Basic blockchain operations", () => {
             };              
             
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoProposal(n);
+            let resp = await api.getDaoProposals(n);
             console.log("received from DAO proposal search:" + JSON.stringify(resp));
             console.log(
                     "Quantities: " 
@@ -595,9 +595,9 @@ describe("Basic blockchain operations", () => {
                proposal_id: "0"
             }; 
 
-            let resp = await api.getDaoProposal(n);
+            let resp = await api.getDaoProposals(n);
             console.log("get one DAO proposal" + JSON.stringify(resp));
-            expect(resp.id).toBe(0);
+            expect(resp.rows[0].id).toBe(0);
         }, 60000)
     });
 

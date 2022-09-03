@@ -14,7 +14,7 @@ import { ActionGenerator as PoolsActionGenerator, ChainApi as PoolsRpcApi } from
 import { PoolPayload as PoolsPayload } from '@newfound8ion/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator } from '@newfound8ion/newcoin.pool-js';
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from '@newfound8ion/newcoin.daos-js'
-import { DAOPayload, GetTableRowsPayload } from "@newfound8ion/newcoin.daos-js/dist/interfaces";
+import { DAOPayload, GetTableRowsPayload, ProposalPayload } from "@newfound8ion/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen, EosioActionObject } from "./actions";
 
 import fetch from 'cross-fetch';
@@ -823,11 +823,15 @@ async getDaoProposals(inpt: NCGetDaoProposals) {
   const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
   if(!dao_id) return { dao_id: null };
 
-  let w;
-  if(inpt.proposal_author || inpt.proposal_id) {
-    w = await (await this.cApi.getProposalByProposer({ ...inpt, daoID: dao_id })).json();
-  } else {
-    const opt = {
+  if(inpt.proposal_author && (inpt.proposal_id == undefined))
+  {
+      let w = await this.cApi.getProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
+      inpt.proposal_id = await w.json();
+  }
+
+  if(inpt.proposal_id) inpt.lower_bound = inpt.upper_bound = inpt.proposal_id;
+
+  const opt = {
         json: true,
         code: "daos.nco",
         scope: dao_id,
@@ -838,8 +842,8 @@ async getDaoProposals(inpt: NCGetDaoProposals) {
         reverse: inpt.reverse,
         index_position: "1",
     } as GetTableRowsPayload;
-    w = await (await this.cApi.getTableRows( opt )).json();
-  }
+  let w = await (await this.cApi.getTableRows( opt )).json();
+
   if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
   return { ...w, dao_id };
 }
@@ -898,7 +902,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
   return { ...w, dao_id };
 }
 
-async getDaoProposal(inpt: NCGetDaoProposals) {
+/* async getDaoProposal(inpt: NCGetDaoProposals) {
   if(this.debug) console.log("Get single proposal:", JSON.stringify(inpt));
   const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
 
@@ -916,7 +920,7 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
     let w = await (await this.cApi.getWhiteListProposal({ daoID: dao_id, id: inpt.proposal_id })).json();
     if(this.debug) console.log("received from getProposalByID: " + JSON.stringify(w.rows[0]));
     return { ...w, dao_id: inpt.dao_id };
-  }
+  } */
 
   async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
