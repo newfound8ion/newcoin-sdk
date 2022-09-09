@@ -61,7 +61,8 @@ const CREATE_ACCOUNT_DEFAULTS = {
 export type NCInitUrls = {
   nodeos_url: string,
   hyperion_url: string,
-  atomicassets_url: string
+  atomicassets_url: string,
+  newsafeproxy_url: string
 };
 
 export type NCInitServices = {
@@ -78,7 +79,8 @@ export const devnet_urls: NCInitUrls =
 {
   nodeos_url: "https://nodeos-dev.newcoin.org",
   hyperion_url: "https://hyperion-dev.newcoin.org",
-  atomicassets_url: "https://atomic-dev.newcoin.org/"
+  atomicassets_url: "https://atomic-dev.newcoin.org/",
+  newsafeproxy_url: "https://auth-eu-dev.newsafe.org/v1/tx/newcoin"
 };
 
 export const devnet_services: NCInitServices =
@@ -103,6 +105,8 @@ export const devnet_services: NCInitServices =
 export class NCO_BlockchainAPI {
   private urls: NCInitUrls;
   private services: NCInitServices;
+
+  private isProxy: boolean;
 
   //private aa_api: ExplorerApi;
   private nodeos_rpc: JsonRpc;
@@ -134,7 +138,8 @@ export class NCO_BlockchainAPI {
   constructor(
     urls: NCInitUrls,
     services: NCInitServices,
-    debug: boolean = false
+    debug: boolean = false,
+    isProxy: boolean = false
   ) {
     this.debug = debug;
     this.urls = urls;
@@ -152,6 +157,8 @@ export class NCO_BlockchainAPI {
     this.sdkGen = new sdkActionGen(services.eosio_contract, services.token_contract);
 
     this.services = services;
+
+    this.isProxy = isProxy;
   }
 
   // Native EOS services
@@ -196,7 +203,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log("before create account transaction");
     const tres = await this.SubmitTx(
       [newacc_action, buyram_action, delegatebw_action],
-      [ecc.privateToPublic(payer_prv_key)],
+      [],
       [payer_prv_key]
     ) as TransactResult;// [] contained      
     res.TxID_createAcc = tres.transaction_id;
@@ -210,7 +217,7 @@ export class NCO_BlockchainAPI {
   let buyram_action = this.sdkGen.buyrambytes(inpt.user, inpt.payer, inpt.ram_amt);
   const tres = await this.SubmitTx(
     [buyram_action],
-    [ecc.privateToPublic(inpt.payer_prv_key)],
+    [],
     [inpt.payer_prv_key]
   ) as TransactResult;// [] contained      
   return { TxID_createAcc: tres.transaction_id } as NCReturnTxs;
@@ -232,7 +239,6 @@ export class NCO_BlockchainAPI {
     if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w");
     let sbt_sch_name = normalizeUsername(inpt.user, "s");
 
-    let user_public_active_key = ecc.privateToPublic(inpt.user_prv_active_key);
     let mkt_fee = inpt.mkt_fee ? inpt.mkt_fee : 0.05;
     let allow_notify = inpt.allow_notify ? inpt.allow_notify : true;
 
@@ -247,7 +253,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log(t);
     if(this.debug) console.log("createcol transaction");
     tres = await this.SubmitTx([t],
-      [user_public_active_key],
+      [],
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
@@ -263,7 +269,7 @@ export class NCO_BlockchainAPI {
     
     if(this.debug) console.log("createsch transaction");
     tres = await this.SubmitTx([t],
-      [user_public_active_key],
+      [],
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
@@ -278,7 +284,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("createsch SBT transaction");
     tres = await this.SubmitTx([t1],
-      [user_public_active_key],
+      [],
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
@@ -293,7 +299,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("creating template transaction");
     tres = await this.SubmitTx([t],
-      [user_public_active_key],
+      [],
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
@@ -311,7 +317,7 @@ export class NCO_BlockchainAPI {
   async createPermission(inpt: NCCreatePermission) {
     let t = this.sdkGen.createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
     let res = await this.SubmitTx([t],
-      [ecc.privateToPublic(inpt.author_prv_active_key)],[inpt.author_prv_active_key]                      
+      [],[inpt.author_prv_active_key]                      
     ) as TransactResult;
     let r: NCReturnTxs = {};
     r.TxID_createPerm = res.transaction_id;
@@ -347,7 +353,7 @@ export class NCO_BlockchainAPI {
     };
 
     let res = await this.SubmitTx([action],
-      [ecc.privateToPublic(inpt.author_prv_active_key)],
+      [],
       [inpt.author_prv_active_key]
     ) as TransactResult;
     let r: NCReturnTxs = {};
@@ -375,7 +381,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
     const res = await this.SubmitTx(stakeTx,
-      [ecc.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]) as TransactResult;
+      [], [inpt.payer_prv_key]) as TransactResult;
 
     r.TxID_stakeMainDAO = res.transaction_id;
     return r;
@@ -396,7 +402,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
     const res = await this.SubmitTx(stakeTx,
-      [ecc.privateToPublic(inpt.payer_prv_key)],
+      [],
       [inpt.payer_prv_key]) as TransactResult;
 
     r.TxID_unstakeMainDAO = res.transaction_id;
@@ -418,7 +424,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
     const res = await this.SubmitTx(stakeTx,
-      [ecc.privateToPublic(inpt.payer_prv_key)],
+      [],
       [inpt.payer_prv_key]) as TransactResult;
 
     r.TxID_unstakeMainDAO = res.transaction_id;
@@ -452,7 +458,7 @@ export class NCO_BlockchainAPI {
     );
 
     let res = await this.SubmitTx([t],
-      [ecc.privateToPublic(inpt.owner_prv_active_key)], [inpt.owner_prv_active_key]
+      [], [inpt.owner_prv_active_key]
     ) as TransactResult;
     let r: NCReturnTxs = {};
     r.TxID_createPool = res.transaction_id;
@@ -485,7 +491,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
     const res = await this.SubmitTx(stakeTx,
-      [ecc.privateToPublic(inpt.payer_prv_key)],
+      [],
       [inpt.payer_prv_key]) as TransactResult;
 
     r.TxID_stakePool = res.transaction_id;
@@ -509,7 +515,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("action: " + JSON.stringify(t));
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.payer_prv_key)],
+      [],
       [inpt.payer_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
@@ -530,7 +536,7 @@ export class NCO_BlockchainAPI {
       inpt.descr
     );
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.author_prv_key)], [inpt.author_prv_key]) as TransactResult;
+      [], [inpt.author_prv_key]) as TransactResult;
 
     let p: DAOPayload = { owner: inpt.author };
     if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
@@ -562,7 +568,7 @@ export class NCO_BlockchainAPI {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.proposer_prv_key)], [inpt.proposer_prv_key]) as TransactResult;
+      [], [inpt.proposer_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_createDaoProposal = res.transaction_id;
@@ -589,7 +595,7 @@ export class NCO_BlockchainAPI {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.proposer_prv_key)],
+      [],
       [inpt.proposer_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
@@ -617,7 +623,7 @@ export class NCO_BlockchainAPI {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.proposer_prv_key)],
+      [],
       [inpt.proposer_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
@@ -712,7 +718,7 @@ export class NCO_BlockchainAPI {
       [{ actor: inpt.exec, permission: "active" }], Number(dao_id), inpt.proposal_id
     );
 
-    const res = await this.SubmitTx(t, [ecc.privateToPublic(inpt.exec_prv_key)], [inpt.exec_prv_key]) as TransactResult;
+    const res = await this.SubmitTx(t, [], [inpt.exec_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_executeDaoProposal = res.transaction_id;
@@ -735,7 +741,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("Vote for DAO proposal: ", JSON.stringify(t));
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]) as TransactResult;
+      [], [inpt.voter_prv_key]) as TransactResult;
 
     //if(this.debug) console.log("received from VoteForDaoProposal" + JSON.stringify(res));
     return { TxID_voteDaoProposal: res.transaction_id } as NCReturnTxs;
@@ -751,7 +757,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log("Withdraw vote deposit send action: ", JSON.stringify(t));
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.voter_prv_key)], [inpt.voter_prv_key]) as TransactResult;
+      [], [inpt.voter_prv_key]) as TransactResult;
 
     //if(this.debug) console.log("received from withdraw: " + JSON.stringify(res));
     return { TxID_WithdrawVoteDeposit: res.transaction_id } as NCReturnTxs;
@@ -782,7 +788,7 @@ export class NCO_BlockchainAPI {
       );
   
       let res = await this.SubmitTx([t],
-        [ecc.privateToPublic(inpt.payer_prv_key)],
+        [],
         [inpt.payer_prv_key]
       ) as TransactResult;
       let r: NCReturnTxs = {};
@@ -1079,7 +1085,7 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
       let r: NCReturnTxs = {};
       let tx = this.sdkGen.txBalance(contract, inpt.payer, inpt.to, inpt.amt, inpt.memo ??= "");
       let res = await this.SubmitTx([tx],
-        [ecc.privateToPublic(inpt.payer_prv_key)],
+        [],
         [inpt.payer_prv_key]
       ) as TransactResult;
       r.TxID = res.transaction_id;
@@ -1100,7 +1106,7 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
   private async submitAuctionTx(actions: EosioActionObject[], payer_prv_key: string): Promise<NCReturnTxs> {
     const response = await this.SubmitTx(
       actions, 
-      [ecc.privateToPublic(payer_prv_key)], 
+      [], 
       [payer_prv_key]
     ) as TransactResult;
     return {
@@ -1164,11 +1170,52 @@ async getDaoWhitelistProposal(inpt: NCGetDaoProposals) {
     return this.submitAuctionTx(actions, key);
   }
 
-  async SubmitTx(
+  async SubmitTx (
     actions: any[],
     public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
-    private_keys: string[]  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
+    private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
+    )  {
+    return this[this.isProxy ? "SubmitTxProxy" : "SubmitTxNative"](actions, public_keys, private_keys);
+  }
+  async SubmitTxProxy(
+    actions: any[],
+    public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
+    private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
     ) {
+      const args = JSON.stringify({
+        actions,
+        public_keys,
+        private_keys
+      });
+    
+      try {
+        debugger;
+        const r = await fetch(
+          this.urls.nodeos_url,
+          { method: "POST", body: args, headers: { "Authorization": `newsafe ${private_keys[0]}`, "Content-Type": "application/json" } });
+
+        const txt = await r.text();
+
+        return JSON.parse(txt);
+      } catch(e) {
+        console.log((e as any).message)
+        throw e;
+      }
+  }
+  async SubmitTxNative(
+    actions: any[],
+    public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
+    private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
+    ) {
+  
+    // if(!private_keys?.length)
+    // {
+    private_keys = private_keys instanceof Array ? private_keys : [private_keys];
+    debugger;
+    public_keys = private_keys.map(k => ecc.privateToPublic(k));
+    debugger;
+    // }
+
     const signatureProvider = new JsSignatureProvider(private_keys);
     signatureProvider.availableKeys = public_keys;
 
