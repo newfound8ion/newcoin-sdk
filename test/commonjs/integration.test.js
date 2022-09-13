@@ -1,5 +1,5 @@
 // requires from transpiled code to ensure the build is working as expected
-const { NCO_BlockchainAPI, devnet_services, devnet_urls } = require('../..');
+const { NCO_BlockchainAPI, devnet_services, devnet_urls } = require('../../src/index');
 
 
 test('it should perform a test call correctly', async () => {

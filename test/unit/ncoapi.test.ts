@@ -1,9 +1,9 @@
-import exp from 'constants';
-import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
-import { isObjectBindingPattern } from 'typescript';
+//import exp from 'constants';
+//import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
+//import { isObjectBindingPattern } from 'typescript';
 import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src';
 import { 
-    NCKeyPair,
+    //NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
     NCCreatePermission, NCLinkPerm, 
     NCStakeMainDao, 
@@ -11,41 +11,49 @@ import {
     NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
     NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
-    NCMintAsset, NCTxNcoBal, NCTxBal,
+    NCMintAsset, NCTxNcoBal, //NCTxBal,
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
     default_schema,
-    NCBuyRam,
-    SBT_NFT_schema
+    SBT_NFT_schema,
+    //NCBuyRam
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
 
+const TEST_PROXY = true;
+
 //import * as nco from 'newcoin';
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
-let name = randomname();
+let name = TEST_PROXY ? "dx.io" : randomname();
 console.log(name);
+
+
+const newsafeJwt = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVkZW50aWFsIjp7Im9yaWdpbiI6ImZpcmViYXNlIn0sImlkZW50aXR5Ijp7InVzZXJuYW1lIjoiZHguaW8ifSwicmVxdWVzdG9yIjoibmV3Z3JhcGguaW8iLCJzY29wZXMiOltdLCJjb25maWciOnsiY3JlYXRlZCI6IjIwMjItMDktMDlUMTI6NDc6MDUuMjYyWiIsImV4cGlyZXMiOiIyMDIyLTA5LTA5VDEzOjE3OjA1LjI2MloiLCJyZW5ld2FibGUiOnRydWV9LCJyZXF1ZXN0Ijp7InJlZmVyZXIiOiJkZXYubmV3Z3JhLnBoIiwiYXBwT3duZXIiOiJuZXdncmFwaC5pbyIsInJlZGlyZWN0VXJsIjoiaHR0cHM6Ly9kZXYubmV3Z3JhLnBoIiwic2NvcGVzIjpbXX0sImF1dGhvcml0eSI6ImF1dGgudW5zaWQub3JnIiwidmVyc2lvbiI6IjEiLCJpYXQiOjE2NjI3Mjc2MjV9.YQuqUxIAPUUMhdPTtFd08KdykA4lXfdUCFtY0cAGhlJ1jm_pypSsDLASw6tfEn4ubAzPz3cYfvsViiIfrD6CpIJ2GliK7v1y7R_ti4vwHkcGfVWlqV8PuNAAPirWfptrYKPWacwZH0lRBTKf8hyzYbTmHOegZBi4dGSarZsDpNnfLpDsYVfVvzu-395Geu3OTyz37wAg7Dmzje5bKDWYiizTQ-oL9Gq45CYJDyJ1Y7wYFiAPE4iMnPFhg3ooHde9URsNXLHJ_Dw8qEelquoB48NCQlH0pff-ESDcVmNrgfDXPTtLUA2mgGR_rhkjWkFQV5GZykijxBMurhuERJYbs7qcP_hclrlSOp-mS3TIELbmVwybS5GCivL0XRyw67cew0FNzJD5roLBPcIFPK9gVE-fwNv4D9W9nq7S00W0o2jYiqSbHtkwAKJo9HbpMe3DOyfVzQt6ZmrXan0fQij9HEt8RJu1ETsOvnJ9zGr0njReoCs_OO1O8DETEEPUApsi";
+
 
 //defaults pre-generation
 let pub_key_active = "EOS8KnfBrVCvdWr1JXybAcMvz8NjqB3XLArEAzRm7wLJchWKw6NFM";
-let prv_key_active = "5JLUzZYfMJUim4KPdGw1ipA8i4Std8QM4hunnvwaesqgRfWiD3j";
+let prv_key_active = TEST_PROXY ? newsafeJwt : "5JLUzZYfMJUim4KPdGw1ipA8i4Std8QM4hunnvwaesqgRfWiD3j";
 
 let pub_key_owner = "EOS6j3ATfMaBRM7DnGHqZ8Miqw4ah1awgtpbriq4zubfdhey9pcDx";
+// @ts-ignore
 let prv_key_owner = "5JvR9dzATtTkPPDcUdNZzQ8Grp6w4eKJz4xqomCx9T7M9VCaQgN";
 
 let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
+// @ts-ignore
 let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
 let pool_code: string;
 let dao_id: string = "160";
+// @ts-ignore
 let io_vote_id: string = "100";
 
 //@ts-ignore
 let wait = (t) => new Promise((res) => setTimeout(res, t));
 
 const api = new NCO_BlockchainAPI(
-    devnet_urls, devnet_services, true
+    { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.newsafeproxy_url } : {})  }, devnet_services, true, TEST_PROXY
 );
-
 
 
 describe("Basic blockchain operations", () => {
@@ -71,7 +79,6 @@ describe("Basic blockchain operations", () => {
     
     describe("create key pair", () => {
         it("key pair create", async () => {
-
             let resp = await api.createKeyPair();
             console.log("Keys owner generated: \n Prv: %s \n Pub: %s\n", resp.prv_key, resp.pub_key);
             pub_key_owner =  resp.pub_key;
@@ -110,13 +117,16 @@ describe("Basic blockchain operations", () => {
         }, 30000)
     });
 
+    jest.retryTimes(3);
+    
     describe("create collection transaction", () => {
-        it("create default generic user collection", async () => { 
 
-            let d = 12 - name.length; // short name extension
-            let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
-            let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
-            let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+        let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
+        let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
+        let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+        let sch_sbt = normalizeUsername(name, "s");
+
+        it("create default generic user collection", async () => { 
             
             let nco_struct : NCCreateCollection = {
                 user: name, 
@@ -143,13 +153,12 @@ describe("Basic blockchain operations", () => {
         }, 60000);
 
         it.skip("create special non-transf collection", async () => { 
-
       
             let nco_struct : NCCreateCollection = {
-                user: "io", 
-                user_prv_active_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                collection_name:"sbtcollctn11",
-                schema_name: "sbtschemaa11",
+                user: name, 
+                user_prv_active_key: prv_key_active,
+                collection_name: col,
+                schema_name: sch_sbt,
                 schema_fields: SBT_NFT_schema,
                 template_name: "-1",
                 template_fields: [], 
@@ -202,6 +211,7 @@ describe("Basic blockchain operations", () => {
         }, 60000);
     });
 
+
     describe("tx NCO transaction", () => {
         it("tx nco balance", async () => {
             let n: NCTxNcoBal = { 
@@ -242,7 +252,7 @@ describe("Basic blockchain operations", () => {
                     payer: name,
                     payer_prv_key: prv_key_active
             } ;
-            
+
         let resp : NCReturnTxs = await api.stakeMainDAO(n) ;
         console.log(resp);
         expect(typeof resp.TxID_stakeMainDAO).toBe('string');
@@ -390,7 +400,7 @@ describe("Basic blockchain operations", () => {
             };              
             
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoWhitelistProposal(n);
+            let resp = await api.getDaoWhitelistProposals(n);
             console.log(JSON.stringify(resp));
             console.log(
                     "Quantities: " 
@@ -410,10 +420,10 @@ describe("Basic blockchain operations", () => {
             };              
             
             //console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
-            let resp = await api.listDaoWhitelistProposals(n);
+            let resp = await api.getDaoWhitelistProposals(n);
             console.log("list of WL proposals " + JSON.stringify(resp));
             // @ts-ignore
-            expect(resp.list[0].id).toBe(0);
+            expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
     });
@@ -555,8 +565,8 @@ describe("Basic blockchain operations", () => {
             };              
             
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoProposal(n);
-            console.log(JSON.stringify(resp));
+            let resp = await api.getDaoProposals(n);
+            console.log("received from DAO proposal search:" + JSON.stringify(resp));
             console.log(
                     "Quantities: " 
                     + " --- Vote YES: " + JSON.stringify(resp.rows[0].vote_yes) 
@@ -573,11 +583,26 @@ describe("Basic blockchain operations", () => {
             };              
             
             //console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
-            let resp = await api.listDaoProposals(n);
-            console.log("list of DAO proposals " + JSON.stringify(resp));
+            //let resp = await api.listDaoProposals(n);
+            //console.log("list of DAO proposals: " + JSON.stringify(resp));
             // @ts-ignore
-            expect(resp.list[0].id).toBe(0);
+            //expect(resp.rows[0].id).toBe(0);
 
+            let resp = await api.getDaoProposals(n);
+            console.log("get DAO proposals " + JSON.stringify(resp));
+            expect(resp.rows[0].id).toBe(0);
+
+        }, 60000)
+
+        it("get one proposal for dao", async () => {
+            let n: NCGetDaoProposals = { 
+               dao_owner: name,
+               proposal_id: "0"
+            }; 
+
+            let resp = await api.getDaoProposals(n);
+            console.log("get one DAO proposal" + JSON.stringify(resp));
+            expect(resp.rows[0].id).toBe(0);
         }, 60000)
     });
 
@@ -649,7 +674,7 @@ describe("Basic blockchain operations", () => {
 
 
     // ================= minting ================================================== 
-    describe("mint ERC721 asset", () => {
+    describe.only("mint ERC721 asset", () => {
         it("Mint asset", async () => {
 
             let test = "1".repeat(64);
@@ -681,7 +706,7 @@ describe("Basic blockchain operations", () => {
 
         it("Mint SBT", async () => {
 
-            let test = "1".repeat(64);
+            //let test = "1".repeat(64);
 
             let n: NCMintAsset = { 
             creator: name,
@@ -713,7 +738,6 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    //jest.retryTimes(3);
     describe("get DAO whitelist", () => {
         it("get dao whitelist", async () => {
 

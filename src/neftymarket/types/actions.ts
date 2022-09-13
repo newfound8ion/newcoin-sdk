@@ -19,7 +19,7 @@ export enum CreateActionName {
   dutch = "createduauct",
 }
 
-export interface TransferTokenTransactionParams {
+export interface NCTransferTokenTransactionParams {
   accountName: string;
   requestPermission?: string;
   to: string;
@@ -30,7 +30,7 @@ export interface TransferTokenTransactionParams {
   memo?: string;
 }
 
-export interface CreateAuctionParams {
+export interface NCCreateAuctionParams {
   /**
    * In standard auctions is the initial price. For dutch auctions,
    * it's the bottom price
@@ -60,7 +60,7 @@ export interface CreateAuctionParams {
   marketplace?: string;
 }
 
-export interface PlaceBidParams {
+export interface NCPlaceBidParams {
   accountName: string;
   requestPermission?: string;
   auctionId: string;
@@ -70,16 +70,16 @@ export interface PlaceBidParams {
   marketplace?: string;
 }
 
-export interface ClaimNftsParams {
+export interface NCClaimNftsParams {
   accountName: string;
   requestPermission?: string;
   auctionId: string;
 }
 
-export type ClaimWinBidParams = ClaimNftsParams;
-export type EraseAuctionParams = ClaimNftsParams;
+export type NCClaimWinBidParams = NCClaimNftsParams;
+export type NCEraseAuctionParams = NCClaimNftsParams;
 
-export interface EditAuctionParams extends CreateAuctionParams {
+export interface NCEditAuctionParams extends NCCreateAuctionParams {
   auctionId: string;
 }
 
@@ -90,18 +90,13 @@ export interface NeftyMarketParamsBase {
   atomicassetsContract: string;
 }
 
-export type TransferTokenTransactionActionsParams =
-  TransferTokenTransactionParams & NeftyMarketParamsBase;
-export type CreateAuctionActionsParams = CreateAuctionParams &
-  NeftyMarketParamsBase;
-export type PlaceBidActionsParams = PlaceBidParams & NeftyMarketParamsBase;
-export type ClaimNftsActionsParams = ClaimNftsParams & NeftyMarketParamsBase;
-export type ClaimWinBidActionsParams = ClaimWinBidParams &
-  NeftyMarketParamsBase;
-export type EraseAuctionActionsParams = EraseAuctionParams &
-  NeftyMarketParamsBase;
-export type EditAuctionActionsParams = EditAuctionParams &
-  NeftyMarketParamsBase;
+export type NCTransferTokenTransactionActionsParams = NCTransferTokenTransactionParams & NeftyMarketParamsBase;
+export type NCCreateAuctionActionsParams = NCCreateAuctionParams & NeftyMarketParamsBase;
+export type NCPlaceBidActionsParams = NCPlaceBidParams & NeftyMarketParamsBase;
+export type NCClaimNftsActionsParams = NCClaimNftsParams & NeftyMarketParamsBase;
+export type NCClaimWinBidActionsParams = NCClaimWinBidParams & NeftyMarketParamsBase;
+export type NCEraseAuctionActionsParams = NCEraseAuctionParams & NeftyMarketParamsBase;
+export type NCEditAuctionActionsParams = NCEditAuctionParams & NeftyMarketParamsBase;
 
 // create auction data
 export interface CreateAuctionData {

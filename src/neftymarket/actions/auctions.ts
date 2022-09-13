@@ -1,11 +1,11 @@
 import {
-  ClaimNftsActionsParams,
-  ClaimWinBidActionsParams,
+  NCClaimNftsActionsParams,
+  NCClaimWinBidActionsParams,
   CreateActionName,
-  CreateAuctionActionsParams,
-  EditAuctionActionsParams,
-  EraseAuctionActionsParams,
-  PlaceBidActionsParams,
+  NCCreateAuctionActionsParams,
+  NCEditAuctionActionsParams,
+  NCEraseAuctionActionsParams,
+  NCPlaceBidActionsParams,
   AuctionType,
   CreateAuctionData,
   EosioActionObject,
@@ -14,7 +14,7 @@ import { getNameForTransaction, priceForCurrency } from "../utils";
 import { getTransferTokensActions } from "./atomicassets";
 
 export const getCreateAuctionActions = (
-  params: CreateAuctionActionsParams
+  params: NCCreateAuctionActionsParams
 ): EosioActionObject[] => {
   const {
     accountName,
@@ -98,7 +98,7 @@ export const getCreateAuctionActions = (
 };
 
 export const getPlaceBidActions = (
-  params: PlaceBidActionsParams
+  params: NCPlaceBidActionsParams
 ): EosioActionObject[] => {
   const {
     accountName,
@@ -158,7 +158,7 @@ export const getPlaceBidActions = (
 };
 
 export const getClaimNftsActions = (
-  params: ClaimNftsActionsParams
+  params: NCClaimNftsActionsParams
 ): EosioActionObject[] => {
   const {
     accountName,
@@ -185,7 +185,7 @@ export const getClaimNftsActions = (
 };
 
 export const getClaimWinBidActions = (
-  params: ClaimWinBidActionsParams
+  params: NCClaimWinBidActionsParams
 ): EosioActionObject[] => {
   const {
     accountName,
@@ -212,7 +212,7 @@ export const getClaimWinBidActions = (
 };
 
 export const getEraseAuctionActions = (
-  params: EraseAuctionActionsParams
+  params: NCEraseAuctionActionsParams
 ): EosioActionObject[] => {
   const {
     accountName,
@@ -238,7 +238,7 @@ export const getEraseAuctionActions = (
 };
 
 export const getEditAuctionActions = (
-  params: EditAuctionActionsParams
+  params: NCEditAuctionActionsParams
 ): EosioActionObject[] => {
   const {
     accountName,

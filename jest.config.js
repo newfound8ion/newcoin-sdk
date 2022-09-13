@@ -6,7 +6,8 @@ module.exports = {
   moduleDirectories: [
     "node_modules",
     "<rootDir>/src",
-    "node_modules/jose/types"
+    "node_modulejs/ose/types"
   ],
-  // runner: "jest-serial-runner"
+  //runner: "jest-serial-runner",
+  "verbose": true
 };

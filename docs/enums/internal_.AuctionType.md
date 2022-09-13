@@ -1,4 +1,4 @@
-[@newcoin-foundation/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / AuctionType
+[@newfound8ion/newcoin-sdk](../README.md) / [Exports](../modules.md) / [<internal\>](../modules/internal_.md) / AuctionType
 
 # Enumeration: AuctionType
 
@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[neftymarket/types/actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L14)
+[neftymarket/types/actions.ts:14](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L14)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[neftymarket/types/actions.ts:13](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/acb802e/src/neftymarket/types/actions.ts#L13)
+[neftymarket/types/actions.ts:13](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/0336391/src/neftymarket/types/actions.ts#L13)
