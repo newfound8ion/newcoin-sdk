@@ -28,23 +28,23 @@ import {
   NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, 
   NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
-  NCMintAsset,  NCCreatePermission,
+  NCMintAsset, NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, SBT_NFT_schema
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, SBT_NFT_schema, file_schema, NCKeyValPair
 } from "./types";
 
 export {
-  NCKeyPair,
+  NCKeyPair, NCKeyValPair,
   NCCreateUser, NCCreateCollection,
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, 
   NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
-  NCMintAsset,  NCCreatePermission,
+  NCMintAsset,  NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, file_schema
 };
 
 import { normalizeUsername } from "./utils";
@@ -219,7 +219,7 @@ export class NCO_BlockchainAPI {
     [buyram_action],
     [],
     [inpt.payer_prv_key]
-  ) as TransactResult;// [] contained      
+  ) as TransactResult;// [] contained       
   return { TxID_createAcc: tres.transaction_id } as NCReturnTxs;
 
  }
@@ -795,6 +795,68 @@ export class NCO_BlockchainAPI {
       return r;
     }
   
+   /**
+   * Mint an asset
+   * @param inpt: NCMintAsset
+   * @returns Create Pool transaction id
+   */
+    async mintFile(inpt: NCMintFile) {
+
+      let col_name = normalizeUsername(inpt.creator, "y");
+      let sch_name = normalizeUsername(inpt.creator, "v");
+      let tmpl_id = -1;
+      let immutable_data = [ { 'key': '_' , 'value' : ['string', '']} ];
+      let mutable_data = [
+        {'key': 'name', 'value': ['string', inpt.name]},
+        {'key': 'path','value': ['string', inpt.path]}, 
+        {'key': 'content','value': ['string',  inpt.content]}
+      ];
+
+      const t = this.sdkGen.mintAsset(
+        inpt.creator, col_name, sch_name, tmpl_id,
+        immutable_data, mutable_data 
+      );
+  
+      let res = {} as any;
+      let r: NCReturnTxs = {};
+      try { 
+          res = await this.SubmitTx([t], [ecc.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]) as TransactResult;
+          r.TxID_mintAsset = res.transaction_id;  
+          return r;
+      } catch(e) {
+        let err_no_col = "assertion failure with message: No collection with this name exists";
+        let err = (e as Error).message;
+        console.log("Error message:  " + err);
+        if (err != err_no_col) return;
+
+        let nco_struct : NCCreateCollection = {
+            user: inpt.creator, 
+            collection_name: col_name,
+            schema_name: sch_name,
+            schema_fields: file_schema,
+            template_name: normalizeUsername(inpt.creator, "t"),
+            template_fields: [], 
+            user_prv_active_key: inpt.payer_prv_key,
+            allow_notify: true,
+            mkt_fee    : 0.00,
+            xferable   : false,
+            burnable   : false, // undeletable from ceramic
+            max_supply : 0xffffff 
+        };
+
+        res = await this.createCollection(nco_struct);
+        console.log("created collection " + res);
+        res  = await this.sdkGen.mintAsset(inpt.creator, col_name, 
+          sch_name, tmpl_id,
+          immutable_data, mutable_data as any) ;
+        console.log("minted file: " + res);
+
+      }; 
+
+      r.TxID_mintFile = res.transaction_id;
+      return r;
+
+    }
 
 // Getters 
   

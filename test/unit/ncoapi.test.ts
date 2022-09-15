@@ -1,6 +1,7 @@
 //import exp from 'constants';
 //import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
 //import { isObjectBindingPattern } from 'typescript';
+import { debug } from 'console';
 import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src';
 import { 
     //NCKeyPair,
@@ -11,11 +12,12 @@ import {
     NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
     NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
-    NCMintAsset, NCTxNcoBal, //NCTxBal,
+    NCMintAsset, NCMintFile, NCTxNcoBal, //NCTxBal,
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
     default_schema,
     SBT_NFT_schema,
+    file_schema,
     //NCBuyRam
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
@@ -55,7 +57,6 @@ const api = new NCO_BlockchainAPI(
     { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.newsafeproxy_url } : {})  }, devnet_services, true, TEST_PROXY
 );
 
-
 describe("Basic blockchain operations", () => {
     describe("test template", () => {
         it("test template", async () => {
@@ -66,13 +67,13 @@ describe("Basic blockchain operations", () => {
         }, 1000);
     });
 
-
     describe.skip("custom test", () => {
         it("custom code", async () => {
 
             //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
             //const resp = await api.getDaoWhitelistProposals(n);
             //console.log(JSON.stringify(resp));
+
 
         }, 15000);
     });
@@ -116,8 +117,7 @@ describe("Basic blockchain operations", () => {
 
         }, 30000)
     });
-
-    jest.retryTimes(3);
+    //jest.retryTimes(3);
     
     describe("create collection transaction", () => {
 
@@ -144,7 +144,6 @@ describe("Basic blockchain operations", () => {
             };
 
             let resp : NCReturnTxs = await api.createCollection(nco_struct);
-
             console.log(resp);
             expect(typeof resp.TxID_createCol).toBe('string'); 
             expect(typeof resp.TxID_createSch).toBe('string'); 
@@ -179,7 +178,7 @@ describe("Basic blockchain operations", () => {
         }, 60000);
     });
 
-    describe("create permission for an account under active", () => {
+    describe.skip("Permission management", () => {
         it("create permission", async () => {
             let n: NCCreatePermission = { 
                 author: name, 
@@ -192,9 +191,7 @@ describe("Basic blockchain operations", () => {
             console.log(resp);
             expect(typeof resp.TxID_createPerm).toBe('string');
         }, 60000);
-    });
 
-    describe("link permission for an account under active", () => {
         it("link permission", async () => {
             let n: NCLinkPerm = { 
                 author: name, 
@@ -210,7 +207,6 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_linkPerm).toBe('string');
         }, 60000);
     });
-
 
     describe("tx NCO transaction", () => {
         it("tx nco balance", async () => {
@@ -229,7 +225,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-    describe("'create pool' transaction", () => {
+    describe.skip("pools tests", () => {
         it("create pool", async () => {
 
             let n: NCCreatePool = { 
@@ -242,9 +238,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_createPool).toBe('string');
 
         }, 60000)
-    });
 
-    describe("stake to MainDAO pool transaction", () => {
         it("stake maindao pool", async () => {
         
             let n: NCStakeMainDao = { 
@@ -257,9 +251,7 @@ describe("Basic blockchain operations", () => {
         console.log(resp);
         expect(typeof resp.TxID_stakeMainDAO).toBe('string');
         }, 60000)
-    });
 
-    describe("instant unstake MainDAO pool transaction", () => {
         it("unstake maindao pool", async () => {
             let n: NCStakeMainDao = { 
                 amt: '100.0000 GNCO', 
@@ -271,9 +263,7 @@ describe("Basic blockchain operations", () => {
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
         }, 60000)
-    });
-        
-    describe("delayed unstake MainDAO pool transaction", () => {
+
         it("delayed unstake maindao pool", async () => {
             let n: NCStakeMainDao = { 
                 amt: '100.0000 GNCO', 
@@ -285,10 +275,8 @@ describe("Basic blockchain operations", () => {
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
         }, 60000)
-    });
 
-    describe("stake to pool transaction", () => {
-        it("stake pool", async () => {
+    it("stake pool", async () => {
         let n: NCStakePool = { 
             owner: name, 
             amt: '100.0000 GNCO', 
@@ -304,10 +292,8 @@ describe("Basic blockchain operations", () => {
         expect(typeof resp.TxID_stakePool).toBe('string');
         }, 60000);
         
-    });
 
-    describe("IO stake to pool transaction", () => {
-        it("stake pool", async () => {
+     it("stake pool", async () => {
         let n: NCStakePool = { 
             owner: name, 
             amt: '100.0000 GNCO', 
@@ -323,11 +309,7 @@ describe("Basic blockchain operations", () => {
         expect(typeof resp.TxID_stakePool).toBe('string');
         }, 60000);
         
-    });
-
-
-    describe("unstake from pool transaction", () => {
-        it("withdraw from pool", async () => {
+    it("withdraw from pool", async () => {
         expect(pool_code).toBeDefined();
 
         const n: NCUnstakePool = { 
@@ -342,7 +324,7 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
     
-    describe("'create dao' transaction", () => {
+    describe.skip("'DAO tests", () => {
         it("create dao", async () => {
 
             let n: NCCreateDao = { 
@@ -356,11 +338,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_createDao).toBe('string');
 
         }, 60000)
-    });
-
     
-
-    describe("'create whitelist proposal' transaction", () => {
         it("create whitelist proposal", async () => {
 
             let start = new Date();
@@ -387,11 +365,7 @@ describe("Basic blockchain operations", () => {
             expect(~~dao_id).toBeGreaterThan(0);
             
         }, 60000)
-    });
-
     
-
-    describe("get whitelist proposal by ID", () => {
         it("get proposal by id", async () => {
 
             let n: NCGetDaoProposals = { 
@@ -409,10 +383,7 @@ describe("Basic blockchain operations", () => {
             expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
-    });
-
-   
-    describe("list whitelist proposals", () => {
+    
         it("list whitelist proposals for dao", async () => {
             let n: NCGetDaoProposals = { 
                 dao_owner: name, 
@@ -426,9 +397,7 @@ describe("Basic blockchain operations", () => {
             expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
-    });
-
-    describe("'approve whitelist proposal' transaction", () => {
+    
         it("approve WL proposal", async () => {
 
             let n: NCApproveDaoProposal = { 
@@ -443,9 +412,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_approveDaoProposal).toBe('string');
 
         }, 60000)
-    });
-
-    describe("vote dao whitelist proposal transaction", () => {
+   
         it("vote proposal",async () => {
             let n: NCDaoProposalVote = {
                 voter: name, voter_prv_key: prv_key_active,
@@ -462,9 +429,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
         }, 30000);
-    });
-
-    describe("'execute whitelist proposal' transaction", () => {
+    
         it("execute whitelist proposal", async () => {
 
             console.log("waiting 40 sec .... ");
@@ -483,9 +448,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_executeDaoProposal).toBe('string');
 
         }, 60000)
-    });
-
-    describe("get whitelist by daoID", () => {
+    
         it("get whitelist by daoid", async () => {
 
             let n: NCGetDaoWhiteList = { 
@@ -498,10 +461,7 @@ describe("Basic blockchain operations", () => {
             //expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
-    });
-
-
-    describe("'create dao proposal' transaction", () => {
+  
         it("create dao proposal", async () => {
 
             let start = new Date();
@@ -535,9 +495,7 @@ describe("Basic blockchain operations", () => {
             expect(~~dao_id).toBeGreaterThan(0);
             
         }, 60000)
-    });
-
-    describe("'approve dao proposal' transaction", () => {
+    
         it("approve dao proposal", async () => {
 
             let n: NCApproveDaoProposal = { 
@@ -554,9 +512,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_approveDaoProposal).toBe('string');
 
         }, 60000)
-    });
-
-    describe("get DAO proposal by ID", () => {
+    
         it("get proposal by id", async () => {
 
             let n: NCGetDaoProposals = { 
@@ -574,9 +530,7 @@ describe("Basic blockchain operations", () => {
             expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
-    });
-
-    describe("list proposals", () => {
+   
         it("list proposals for dao", async () => {
             let n: NCGetDaoProposals = { 
                dao_owner: name
@@ -604,9 +558,7 @@ describe("Basic blockchain operations", () => {
             console.log("get one DAO proposal" + JSON.stringify(resp));
             expect(resp.rows[0].id).toBe(0);
         }, 60000)
-    });
-
-    describe("vote dao proposal transaction", () => {
+   
         it("vote DAO proposal",async () => {
             let n: NCDaoProposalVote = {
                 voter: name,
@@ -624,11 +576,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
         }, 45000);
-    });
 
-    
-
-    describe(" whitelisted IO vote dao proposal transaction", () => {
         it("IO vote proposal",async () => {
             let n: NCDaoProposalVote = {
                 voter: "io",
@@ -646,9 +594,7 @@ describe("Basic blockchain operations", () => {
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
         }, 45000);
-    });
 
-    describe("'execute dao proposal' transaction", () => {
         it("execute dao proposal", async () => {
 
             console.log("waiting 25 sec .... ");
@@ -669,9 +615,6 @@ describe("Basic blockchain operations", () => {
 
         }, 60000)
     });
-
-
-
 
     // ================= minting ================================================== 
     describe.only("mint ERC721 asset", () => {
@@ -704,10 +647,85 @@ describe("Basic blockchain operations", () => {
         expect(typeof resp.TxID_mintAsset).toBe('string');
         }, 60000);
 
-        it("Mint SBT", async () => {
+        it("mint file",async () => {
+            let test = "test string 0xcafefeed ".repeat(10);
+
+            let n: NCMintFile = { 
+                creator: name,
+                payer: name,  
+                payer_prv_key: prv_key_active, 
+                name: name+'_'+(new Date()).getTime(),
+                path: 'demo/file', 
+                content: test
+            };
+            
+            let resp : NCReturnTxs = await api.mintFile(n) as NCReturnTxs;
+            console.log(resp);
+        }, 30000);
+
+        it.skip("Mint file (old experiment)", async () => {
+
+            let test = "2".repeat(64);
+            let n: NCMintAsset = { 
+                creator: name,
+                col_name: normalizeUsername(name, "y"),
+                sch_name: normalizeUsername(name, "v"),
+                payer: name,  
+                payer_prv_key: prv_key_active, 
+                immutable_data: [
+                    {'key': 'name', 'value': ['string', name+'_'+(new Date()).getTime()]},
+                    {'key': 'path','value': ['string', 'demo/file']}, 
+                    {'key': 'content','value': ['string',  test]},
+                ],
+                mutable_data: [
+                    //{'key': 'storage', 'value': ['string', test]}
+                ]
+            };
+            
+            let resp : NCReturnTxs = {};
+            try {
+                let resp :NCReturnTxs = await api.mintAsset(n) ;
+                console.log(resp);
+            } catch(e) {
+                debug;;
+                let m = (e as Error).message;
+                console.log("Error message:  " + m );
+                console.log("type " + typeof(e));
+                //console.log(e);
+
+                let nco_struct : NCCreateCollection = {
+                    user: name, 
+                    collection_name: normalizeUsername(name, "y"),
+                    schema_name: normalizeUsername(name, "v"),
+                    schema_fields: file_schema,
+                    template_name: normalizeUsername(name, "t"),
+                    template_fields: [], 
+                    user_prv_active_key: prv_key_active,
+                    allow_notify: true,
+                    mkt_fee    : 0.00,
+                    xferable   : false,
+                    burnable   : false, // undeletable from ceramic
+                    max_supply : 0xffffff 
+                };
+
+                resp = await api.createCollection(nco_struct);
+                console.log("created collection " + resp);
+
+                resp  = await api.mintAsset(n) ;
+                console.log("minted file: " + resp);
+
+        }
+        
+        expect(typeof resp.TxID_mintAsset).toBe('string');
+
+        //resp  = await api.createCollection(nco_struct);
+        //console.log("error text: " + resp);
+
+        }, 60000);
+
+        it.skip("Mint SBT", async () => {
 
             //let test = "1".repeat(64);
-
             let n: NCMintAsset = { 
             creator: name,
             //col_name: "sbtcollctn11",
@@ -738,7 +756,7 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    describe("get DAO whitelist", () => {
+    describe.skip("Votes tests", () => {
         it("get dao whitelist", async () => {
 
             let n: NCGetDaoWhiteList = { 
@@ -750,9 +768,7 @@ describe("Basic blockchain operations", () => {
             expect(resp.rows.length).toBe(2);
 
         }, 60000)
-    });
 
-    describe("list votes", () => {
         it("list votes for a proposer", async () => {
 
             let n: NCGetVotes = { 
@@ -768,9 +784,7 @@ describe("Basic blockchain operations", () => {
             expect(resp.rows[0].id).toBe(0);
 
         }, 60000)
-    });
 
-    describe("get vote deposit back", () => {
         it("vote deposit back", async () => {
 
             let n: NCDaoWithdrawVoteDeposit = { 
@@ -789,7 +803,7 @@ describe("Basic blockchain operations", () => {
     });
 
 
-    describe("get account pools balances", () => {
+    describe.skip("get account pools balances", () => {
         it("get pool balances", async () => {
             
             let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;

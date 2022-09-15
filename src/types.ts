@@ -244,6 +244,15 @@ export type NCMintAsset = {
   payer_prv_key: string
 };
 
+export type NCMintFile = {
+  creator: string,
+  payer: string,
+  payer_prv_key: string,
+  name: string, 
+  path: string,
+  content: string  
+};
+
 export type NCGetAccInfo = {
   owner: string,
   contract?: string,
@@ -282,6 +291,7 @@ export type NCReturnTxs = {
   TxID_unstakeMainDAO?: string;
 
   TxID_mintAsset?: string;
+  TxID_mintFile?: string;
   TxID_txNcoBalance?: string;
 
   TxID?: string;
@@ -299,6 +309,14 @@ export const default_schema = [
   { name: 'content_type', type: 'string' },
   { name: 'content', type: 'string' },
   { name: 'license', type: 'string' }
+];
+
+export const file_schema = [
+  { name: 'name', type: 'string' }, 
+  { name: 'path', type: "string" }, 
+  { name: 'image', type: "string"},  // optional icon
+  { name: 'content', type: 'string' },
+  { name: 'date', type: 'string' }
 ];
 
 export const SBT_NFT_schema = [
