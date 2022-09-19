@@ -1,4 +1,4 @@
-import { TxData } from "./nftTypes";
+import { TxData } from "./atomicTypes";
 
 const { ExplorerApi } = require("atomicassets");
 const nfetch = require("node-fetch");
