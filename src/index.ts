@@ -801,7 +801,6 @@ export class NCO_BlockchainAPI {
    * @returns Create Pool transaction id
    */
     async mintFile(inpt: NCMintFile) {
-
       let col_name = normalizeUsername(inpt.creator, "y");
       let sch_name = normalizeUsername(inpt.creator, "v");
       let tmpl_id = -1;
@@ -827,7 +826,7 @@ export class NCO_BlockchainAPI {
         let err_no_col = "assertion failure with message: No collection with this name exists";
         let err = (e as Error).message;
         console.log("Error message:  " + err);
-        if (err != err_no_col) return;
+        if (err != err_no_col) throw e;
 
         let nco_struct : NCCreateCollection = {
             user: inpt.creator, 
