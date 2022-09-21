@@ -2,7 +2,7 @@
 //import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
 //import { isObjectBindingPattern } from 'typescript';
 import { debug } from 'console';
-import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src';
+import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src/';
 import { 
     //NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
@@ -18,11 +18,12 @@ import {
     default_schema,
     SBT_NFT_schema,
     file_schema,
+    NCChangeFile,
     //NCBuyRam
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
 
-const TEST_PROXY = true;
+const TEST_PROXY = false;
 
 //import * as nco from 'newcoin';
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
@@ -31,7 +32,7 @@ console.log(name);
 
 
 const newsafeJwt = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVkZW50aWFsIjp7Im9yaWdpbiI6ImZpcmViYXNlIn0sImlkZW50aXR5Ijp7InVzZXJuYW1lIjoiZHguaW8ifSwicmVxdWVzdG9yIjoibmV3Z3JhcGguaW8iLCJzY29wZXMiOltdLCJjb25maWciOnsiY3JlYXRlZCI6IjIwMjItMDktMDlUMTI6NDc6MDUuMjYyWiIsImV4cGlyZXMiOiIyMDIyLTA5LTA5VDEzOjE3OjA1LjI2MloiLCJyZW5ld2FibGUiOnRydWV9LCJyZXF1ZXN0Ijp7InJlZmVyZXIiOiJkZXYubmV3Z3JhLnBoIiwiYXBwT3duZXIiOiJuZXdncmFwaC5pbyIsInJlZGlyZWN0VXJsIjoiaHR0cHM6Ly9kZXYubmV3Z3JhLnBoIiwic2NvcGVzIjpbXX0sImF1dGhvcml0eSI6ImF1dGgudW5zaWQub3JnIiwidmVyc2lvbiI6IjEiLCJpYXQiOjE2NjI3Mjc2MjV9.YQuqUxIAPUUMhdPTtFd08KdykA4lXfdUCFtY0cAGhlJ1jm_pypSsDLASw6tfEn4ubAzPz3cYfvsViiIfrD6CpIJ2GliK7v1y7R_ti4vwHkcGfVWlqV8PuNAAPirWfptrYKPWacwZH0lRBTKf8hyzYbTmHOegZBi4dGSarZsDpNnfLpDsYVfVvzu-395Geu3OTyz37wAg7Dmzje5bKDWYiizTQ-oL9Gq45CYJDyJ1Y7wYFiAPE4iMnPFhg3ooHde9URsNXLHJ_Dw8qEelquoB48NCQlH0pff-ESDcVmNrgfDXPTtLUA2mgGR_rhkjWkFQV5GZykijxBMurhuERJYbs7qcP_hclrlSOp-mS3TIELbmVwybS5GCivL0XRyw67cew0FNzJD5roLBPcIFPK9gVE-fwNv4D9W9nq7S00W0o2jYiqSbHtkwAKJo9HbpMe3DOyfVzQt6ZmrXan0fQij9HEt8RJu1ETsOvnJ9zGr0njReoCs_OO1O8DETEEPUApsi";
-
+//jest. retryTimes(3);
 
 //defaults pre-generation
 let pub_key_active = "EOS8KnfBrVCvdWr1JXybAcMvz8NjqB3XLArEAzRm7wLJchWKw6NFM";
@@ -45,10 +46,19 @@ let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
 // @ts-ignore
 let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
+
+let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
+let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
+let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+// @ts-ignore
+let sch_sbt = normalizeUsername(name, "s");
+
 let pool_code: string;
 let dao_id: string = "160";
+let asset_id: string = "";
+
 // @ts-ignore
-let io_vote_id: string = "100";
+//let io_vote_id: string = "100";
 
 //@ts-ignore
 let wait = (t) => new Promise((res) => setTimeout(res, t));
@@ -58,16 +68,13 @@ const api = new NCO_BlockchainAPI(
 );
 
 describe("Basic blockchain operations", () => {
-    describe("test template", () => {
+
         it("test template", async () => {
             let resp = "test template shows tests are running" ;
             console.log(resp);
 
             return resp;
         }, 1000);
-    });
-
-    describe.skip("custom test", () => {
         it("custom code", async () => {
 
             //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
@@ -76,9 +83,6 @@ describe("Basic blockchain operations", () => {
 
 
         }, 15000);
-    });
-    
-    describe("create key pair", () => {
         it("key pair create", async () => {
             let resp = await api.createKeyPair();
             console.log("Keys owner generated: \n Prv: %s \n Pub: %s\n", resp.prv_key, resp.pub_key);
@@ -95,9 +99,6 @@ describe("Basic blockchain operations", () => {
             
             return resp;
         }, 60000);
-    });
-
-    describe("open account transaction", () => {
         it("create acc", async () => {
 
             let nco_struct : NCCreateUser = {
@@ -115,19 +116,12 @@ describe("Basic blockchain operations", () => {
             console.log(resp);
             expect(typeof resp.TxID_createAcc).toBe('string');
 
-        }, 30000)
-    });
-    //jest.retryTimes(3);
-    
-    describe("create collection transaction", () => {
-
-        let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
-        let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
-        let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
-        let sch_sbt = normalizeUsername(name, "s");
-
+        }, 30000);
+ 
         it("create default generic user collection", async () => { 
-            
+
+
+
             let nco_struct : NCCreateCollection = {
                 user: name, 
                 collection_name: col,
@@ -617,8 +611,8 @@ describe("Basic blockchain operations", () => {
     });
 
     // ================= minting ================================================== 
-    describe.only("mint ERC721 asset", () => {
-        it("Mint asset", async () => {
+    describe("NFT stuff", () => {
+        it("Mint asset basic", async () => {
 
             let test = "1".repeat(64);
 
@@ -647,7 +641,7 @@ describe("Basic blockchain operations", () => {
         expect(typeof resp.TxID_mintAsset).toBe('string');
         }, 60000);
 
-        it("mint file",async () => {
+        it("create file",async () => {
             let test = "test string 0xcafefeed ".repeat(10);
 
             let n: NCMintFile = { 
@@ -656,12 +650,37 @@ describe("Basic blockchain operations", () => {
                 payer_prv_key: prv_key_active, 
                 name: name+'_'+(new Date()).getTime(),
                 path: 'demo/file', 
-                content: test
+                content: test,
+                image: 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/12.png'
             };
             
-            let resp : NCReturnTxs = await api.mintFile(n) as NCReturnTxs;
+            let resp : NCReturnTxs = await api.createFile(n) as NCReturnTxs;
+            asset_id = resp.asset_id as string;
             console.log(resp);
-        }, 30000);
+            expect(typeof resp.TxID_mintFile).toBe('string');
+        }, 60000);
+
+        it("modify and read file",async () => {
+            
+            let test = "new test string 0xcafefeed ".repeat(3);
+
+            let n: NCChangeFile = { 
+                asset_id: asset_id,
+                editor: name,
+                owner: name,
+                payer_prv_key: prv_key_active, 
+                new_name: name+'_'+(new Date()).getTime(),
+                new_path: 'demo/file', 
+                new_content: test,
+                new_image: 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/11.png'
+            };
+            
+            let resp : NCReturnTxs = await api.changeFile(n) as NCReturnTxs;
+            console.log(resp);
+            expect(typeof resp.TxID_changeFile).toBe('string');
+
+
+        },30000);
 
         it.skip("Mint file (old experiment)", async () => {
 
@@ -822,4 +841,3 @@ describe("Basic blockchain operations", () => {
         }, 60000)
     });
 
-});

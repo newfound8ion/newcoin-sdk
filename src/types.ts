@@ -1,3 +1,5 @@
+//import { type } from "os";
+
 
 export type NCKeyPair = {
   pub_key: string;
@@ -244,13 +246,35 @@ export type NCMintAsset = {
   payer_prv_key: string
 };
 
+export type NCModifyAsset = {
+  editor: string, 
+  owner: string,
+  asset_id: string,
+  new_data: NCKeyValPair[], // mutable data
+  payer: string,
+  payer_prv_key: string
+}
+
 export type NCMintFile = {
   creator: string,
-  payer: string,
-  payer_prv_key: string,
   name: string, 
   path: string,
-  content: string  
+  image: string,
+  content: string,
+  payer: string,
+  payer_prv_key: string
+};
+
+export type NCChangeFile = {
+  editor: string, 
+  owner: string,
+  asset_id: string,
+  new_name?: string,
+  new_path?: string,
+  new_content?: string,
+  new_image?: string,
+  payer?: string,
+  payer_prv_key: string
 };
 
 export type NCGetAccInfo = {
@@ -290,10 +314,12 @@ export type NCReturnTxs = {
   TxID_stakeMainDAO?: string;
   TxID_unstakeMainDAO?: string;
 
-  TxID_mintAsset?: string;
-  TxID_mintFile?: string;
-  TxID_txNcoBalance?: string;
+  TxID_mintAsset?: string; asset_id?: string;
+  TxID_modifyAsset?: string;
+  TxID_mintFile?: string; 
+  TxID_changeFile?: string;
 
+  TxID_txNcoBalance?: string;
   TxID?: string;
 };
 
@@ -315,8 +341,7 @@ export const file_schema = [
   { name: 'name', type: 'string' }, 
   { name: 'path', type: "string" }, 
   { name: 'image', type: "string"},  // optional icon
-  { name: 'content', type: 'string' },
-  { name: 'date', type: 'string' }
+  { name: 'content', type: 'string' }
 ];
 
 export const SBT_NFT_schema = [

@@ -9,5 +9,5 @@ module.exports = {
     "node_modulejs/ose/types"
   ],
   //runner: "jest-serial-runner",
-  "verbose": true
+  verbose: true
 };
