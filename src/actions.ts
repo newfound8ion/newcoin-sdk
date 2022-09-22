@@ -1,4 +1,5 @@
-import { NCNameType } from "./types"; 
+// @ts-ignore
+import { NCKeyValPair, NCNameType } from "./types"; 
 export type EosioAuthorizationObject = { actor: string; permission: string };
 
 export type EosioActionObject = {
@@ -246,6 +247,28 @@ export class ActionGenerator {
         authorization: [
           { actor: author, permission: 'active' } 
         ]
+      };
+      return action;
+    }
+
+    modifyAsset = (
+      editor : string,
+      owner: string,
+      asset_id: string,
+      new_mutable_data: any[]
+    ) => {
+      const action: any = {
+        account: 'atomicassets',
+        name: 'setassetdata',
+        data: {
+          authorized_editor: editor, 
+          asset_owner: owner,
+          asset_id: asset_id,
+          new_mutable_data: new_mutable_data
+        },
+        authorization: [
+          { actor: editor, permission: 'active' } 
+        ]  
       };
       return action;
     }

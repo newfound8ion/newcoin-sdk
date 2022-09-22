@@ -16,11 +16,15 @@ import { ActionGenerator as MainDAOActionGenerator } from '@newfound8ion/newcoin
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from '@newfound8ion/newcoin.daos-js'
 import { DAOPayload, GetTableRowsPayload, ProposalPayload } from "@newfound8ion/newcoin.daos-js/dist/interfaces";
 import { ActionGenerator as sdkActionGen, EosioActionObject } from "./actions";
+import { RpcApi as AaRpcApi } from "atomicassets";
+//import { AssetParams } from "atomicassets/build/API/Explorer/Types";
 
 import fetch from 'cross-fetch';
 
+
+//@ts-ignore
 import {
-  NCKeyPair,
+  NCKeyPair, 
   NCCreateUser, NCCreateCollection,
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, NCBuyRam,
@@ -31,7 +35,7 @@ import {
   NCMintAsset, NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, SBT_NFT_schema, file_schema, NCKeyValPair
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, file_schema, NCKeyValPair, NCChangeFile, NCModifyAsset
 } from "./types";
 
 export {
@@ -44,55 +48,17 @@ export {
   NCMintAsset,  NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, file_schema
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, file_schema,
+  devnet_services, devnet_urls
 };
 
 import { normalizeUsername } from "./utils";
+
 import { getClaimNftsActions, getClaimWinBidActions, getCreateAuctionActions, getEditAuctionActions, getEraseAuctionActions, getPlaceBidActions } from "./neftymarket";
 import { NCClaimNftsParams, NCClaimWinBidParams, NCCreateAuctionParams, NCEditAuctionParams, NCEraseAuctionParams, NeftyMarketParamsBase, NCPlaceBidParams } from "./neftymarket/types";
 
-const CREATE_ACCOUNT_DEFAULTS = {
-  ram_amt: 8192,
-  cpu_amount: '100.0000 NCO',
-  net_amount: '100.0000 NCO',
-  xfer: false,
-};
-
-export type NCInitUrls = {
-  nodeos_url: string,
-  hyperion_url: string,
-  atomicassets_url: string,
-  newsafeproxy_url: string
-};
-
-export type NCInitServices = {
-  eosio_contract: string,
-  token_contract: string,
-  maindao_contract: string,
-  staking_contract: string,
-  daos_contract: string;
-  neftymarket_contract: string;
-  atomicassets_contract: string;
-};
-
-export const devnet_urls: NCInitUrls =
-{
-  nodeos_url: "https://nodeos-dev.newcoin.org",
-  hyperion_url: "https://hyperion-dev.newcoin.org",
-  atomicassets_url: "https://atomic-dev.newcoin.org/",
-  newsafeproxy_url: "https://auth-eu-dev.newsafe.org/v1/tx/newcoin"
-};
-
-export const devnet_services: NCInitServices =
-{
-  eosio_contract: "eosio",
-  token_contract: "eosio.token",
-  maindao_contract: "pool.nco",
-  staking_contract: "pools2.nco",
-  daos_contract: "daos.nco",
-  neftymarket_contract: "market.nefty",
-  atomicassets_contract: "atomicassets"
-};
+import { atomicTxToAssetId, readAsset } from "./io/nft";
+import { NCInitUrls, NCInitServices, devnet_urls, devnet_services } from "./io/system";
 
 
 /**
@@ -108,7 +74,8 @@ export class NCO_BlockchainAPI {
 
   private isProxy: boolean;
 
-  //private aa_api: ExplorerApi;
+  // @ts-ignore
+  private aa_api: AaRpcApi;
   private nodeos_rpc: JsonRpc;
   private hrpc: HJsonRpc;
   private poolsRpcApi: PoolsRpcApi;
@@ -144,7 +111,9 @@ export class NCO_BlockchainAPI {
     this.debug = debug;
     this.urls = urls;
     if(this.debug) console.log("Init URLS " + JSON.stringify(urls));
-    //this.aa_api = new ExplorerApi(this.urls.atomicassets_url, "atomicassets", { fetch: node_fetch });
+
+    // this.aa_api  = new AaRpcApi(this.urls.atomicassets_url, "atomicassets", {fetch, rateLimit: 4} as any);
+    //this.aa_api = new ExplorerApi(, urls_, { fetch });
     this.nodeos_rpc = new JsonRpc(this.urls.nodeos_url, { fetch });
     this.hrpc = new HJsonRpc(this.urls.hyperion_url, { fetch } as any);
     this.cApi = new DaosChainApi(this.urls.nodeos_url, services.daos_contract, fetch);
@@ -186,6 +155,13 @@ export class NCO_BlockchainAPI {
    * @returns NCReturnTxs
    */
   async createUser(inpt: NCCreateUser) {
+
+    const CREATE_ACCOUNT_DEFAULTS = {
+      ram_amt: 8192,
+      cpu_amount: '100.0000 NCO',
+      net_amount: '100.0000 NCO',
+      xfer: false,
+    };
 
     const {
       newUser, newacc_pub_active_key, newacc_pub_owner_key,
@@ -237,6 +213,8 @@ export class NCO_BlockchainAPI {
 
     if (inpt.collection_name == undefined) inpt.collection_name = normalizeUsername(inpt.user, "z");
     if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w");
+    
+    // @ts-ignore
     let sbt_sch_name = normalizeUsername(inpt.user, "s");
 
     let mkt_fee = inpt.mkt_fee ? inpt.mkt_fee : 0.05;
@@ -259,7 +237,7 @@ export class NCO_BlockchainAPI {
     res.TxID_createCol = tres.transaction_id;
     if(this.debug) console.log(tres);
 
-    if(this.debug) console.log("creating default schema ");
+    if(this.debug) console.log("creating schema ");
     let schema_fields = inpt.schema_fields ? inpt.schema_fields : default_schema;
     t = this.sdkGen.createSchema(
       inpt.user,
@@ -275,7 +253,7 @@ export class NCO_BlockchainAPI {
     res.TxID_createSch = tres.transaction_id;
     if(this.debug) console.log(tres);
 
-    if(this.debug) console.log("creating SBT schema");
+    /*if(this.debug) console.log("creating SBT schema");
     let t1 = this.sdkGen.createSchema(
       inpt.user,
       inpt.collection_name, sbt_sch_name,
@@ -288,7 +266,7 @@ export class NCO_BlockchainAPI {
       [inpt.user_prv_active_key]
     ) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
-    if(this.debug) console.log(tres);
+    if(this.debug) console.log(tres);*/
 
     if(this.debug) console.log("creating template");
     let template = inpt.template_fields ? inpt.template_fields : [];
@@ -774,54 +752,106 @@ export class NCO_BlockchainAPI {
       if (inpt.tmpl_id == undefined) inpt.tmpl_id = -1;
   
       if (inpt.immutable_data == undefined)
-        inpt.immutable_data = [
-          { key: 'name', value: ['string', inpt.creator + '_' + (new Date()).getTime()] }
-        ];
+        inpt.immutable_data = [{ key: 'name', value: ['string', inpt.creator + '_' + (new Date()).getTime()] }];
   
-      if (inpt.mutable_data == undefined)
-        inpt.mutable_data = [];
+      if (inpt.mutable_data == undefined) inpt.mutable_data = [];
   
       const t = this.sdkGen.mintAsset(
         inpt.creator, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
         inpt.immutable_data, inpt.mutable_data
       );
   
-      let res = await this.SubmitTx([t],
-        [],
-        [inpt.payer_prv_key]
-      ) as TransactResult;
+      let res = await this.SubmitTx([t], [], [inpt.payer_prv_key]) as TransactResult;
+
       let r: NCReturnTxs = {};
       r.TxID_mintAsset = res.transaction_id;
+      r.asset_id = "asset default ID";
+      r.asset_id = (await atomicTxToAssetId(res.transaction_id))[0];
+      console.log("minted asset tx " + res.transaction_id + " asset id: " + r.asset_id);
       return r;
+
+      // another option is by search via asset id
+      /*let p: DAOPayload = { owner: inpt.author };
+      if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
+      let q = await this.cApi.getDAOByOwner(p);
+      let w = await q.json();
+      if(this.debug) console.log("received from getDaoByOwner" + JSON.stringify(w));
+  
+      let r: NCReturnTxs = {};
+      r.TxID_createDao = res.transaction_id;
+      r.dao_id = w.rows[0].id.toString();
+      // r.dao_id = r.dao_id.toString() ;*/
     }
   
+    async modifyAsset(inpt: NCModifyAsset) {
+      
+      const t = this.sdkGen.modifyAsset(inpt.editor, inpt.owner, inpt.asset_id, inpt.new_data);
+      console.log("modify asset: " + JSON.stringify(t));
+      let res = await this.SubmitTx([t], [], [inpt.payer_prv_key]) as TransactResult;
+      let r: NCReturnTxs = {};
+      r.TxID_modifyAsset = res.transaction_id;
+      r.asset_id = inpt.asset_id;
+      return r;    
+    }
+
+/*
+  async findAssetId(inpt: NCGetAsset)
+  {
+    let opt : AssetParams = { name: "",};
+    //async getAssets(options, page: number = 1, limit: number = 100, data = {}): Promise<ApiAsset[]> options
+    this.aa_api.getAssets(opt, page, limit: number = 100, {}): Promise<ApiAsset[]> options
+    const exampleAsset = {
+      owner: 'pink.gg',
+      id: '1099511628276'
+  };
+      const asset = await api.getAsset(exampleAsset.owner, exampleAsset.id);
+      const result = await asset.toObject();
+
+  }
+  
+  async findAssets(author) : Promise<string>
+  {
+      // time: today
+      // author: name
+  }
+*/
+
    /**
-   * Mint an asset
-   * @param inpt: NCMintAsset
-   * @returns Create Pool transaction id
+   * Create File
+   * @param inpt: NCMintFile
+   * @returns Create file transaction id
    */
-    async mintFile(inpt: NCMintFile) {
+    async createFile(inpt: NCMintFile) {
+
       let col_name = normalizeUsername(inpt.creator, "y");
       let sch_name = normalizeUsername(inpt.creator, "v");
       let tmpl_id = -1;
-      let immutable_data = [ { 'key': '_' , 'value' : ['string', '']} ];
+      let immutable_data : any[] = [ ];
       let mutable_data = [
         {'key': 'name', 'value': ['string', inpt.name]},
         {'key': 'path','value': ['string', inpt.path]}, 
-        {'key': 'content','value': ['string',  inpt.content]}
+        {'key': 'content','value': ['string',  inpt.content]},
+        {'key': 'image','value': ['string',  inpt.image??"emptystring" ]}
       ];
 
-      const t = this.sdkGen.mintAsset(
-        inpt.creator, col_name, sch_name, tmpl_id,
-        immutable_data, mutable_data 
-      );
-  
-      let res = {} as any;
-      let r: NCReturnTxs = {};
+      let n : NCMintAsset = {
+        creator: inpt.creator,
+        payer: inpt.payer,
+        immutable_data: immutable_data,
+        mutable_data: mutable_data,
+        col_name: col_name,
+        sch_name: sch_name,
+        tmpl_id: tmpl_id,
+        payer_prv_key: inpt.payer_prv_key  
+      } 
+
       try { 
-          res = await this.SubmitTx([t], [ecc.privateToPublic(inpt.payer_prv_key)], [inpt.payer_prv_key]) as TransactResult;
-          r.TxID_mintAsset = res.transaction_id;  
-          return r;
+        let mint_res  = await this.mintAsset(n) ;
+        mint_res.TxID_mintFile = mint_res.TxID_mintAsset;
+        console.log("minted file: ");
+        console.log(mint_res); 
+        return mint_res;
+
       } catch(e) {
         let err_no_col = "assertion failure with message: No collection with this name exists";
         let err = (e as Error).message;
@@ -843,24 +873,57 @@ export class NCO_BlockchainAPI {
             max_supply : 0xffffff 
         };
 
-        res = await this.createCollection(nco_struct);
-        console.log("created collection " + res);
-        res  = await this.sdkGen.mintAsset(inpt.creator, col_name, 
-          sch_name, tmpl_id,
-          immutable_data, mutable_data as any) ;
-        console.log("minted file: " + res);
+        let res = await this.createCollection(nco_struct);
+        if(this.debug) console.log("createcollection of files result: ")
+        if(this.debug) console.log(res);
+        
+
+        try { 
+          let mint_res  = await this.mintAsset(n) ;
+          mint_res.TxID_mintFile = mint_res.TxID_mintAsset;
+          console.log("minted file ");
+          return mint_res;
+        } catch(e) {
+          let err = (e as Error).message;
+          console.log("Second Minting error message:  " + err);
+        }
+
+        return -1;
 
       }; 
 
-      r.TxID_mintFile = res.transaction_id;
-      return r;
-
     }
 
-// Getters 
+    async changeFile(inpt: NCChangeFile) 
+    {
+      const old = await readAsset(inpt.asset_id);
+      console.log("changing file : ... " + JSON.stringify(old.mutable_data));
+      let data = { 
+        name:    inpt.new_name ?? old.mutable_data.name,
+        path:    inpt.new_path?? old.mutable_data.path,
+        content: inpt.new_content?? old.mutable_data.content,
+        image:   inpt.new_image??old.mutable_data.image
+      };
+
+      let n : NCModifyAsset = {
+        editor: inpt.editor,
+        owner: inpt.editor,
+        asset_id: inpt.asset_id,
+        new_data: data as any,
+        payer: inpt.payer??inpt.editor,
+        payer_prv_key: inpt.payer_prv_key
+
+      };
+      let res = await this.modifyAsset(n);
+      res.TxID_changeFile=res.TxID_modifyAsset;
+      console.log("modify asset res: "+ JSON.stringify(res));
+      return res;
+    }
+
+// Getters 2
   
 /**
- * @param inpt : NCCreateDao
+ * @param inpt : getDaoIdByOwner
  * @returns NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
  */
  async getDaoIdByOwner(owner?: string, noFail?: boolean) : Promise<string> {
@@ -1116,6 +1179,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     ``
   }
 
+
   /**
    * Get trasaction data
    * @returns Tx data
@@ -1131,7 +1195,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
    * Transfer NCO between accounts
    * @returns Transfer transaction id
    */
-     async _txBalance(contract: string, inpt: NCTxBal): Promise<NCReturnTxs> {
+    async _txBalance(contract: string, inpt: NCTxBal): Promise<NCReturnTxs> {
       let r: NCReturnTxs = {};
       let tx = this.sdkGen.txBalance(contract, inpt.payer, inpt.to, inpt.amt, inpt.memo ??= "");
       let res = await this.SubmitTx([tx],
@@ -1220,6 +1284,8 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     return this.submitAuctionTx(actions, key);
   }
 
+
+
   async SubmitTx (
     actions: any[],
     public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
@@ -1227,6 +1293,8 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     )  {
     return this[this.isProxy ? "SubmitTxProxy" : "SubmitTxNative"](actions, public_keys, private_keys);
   }
+
+
   async SubmitTxProxy(
     actions: any[],
     public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
@@ -1239,7 +1307,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
       });
     
       try {
-        debugger;
+  
         const r = await fetch(
           this.urls.nodeos_url,
           { method: "POST", body: args, headers: { "Authorization": `newsafe ${private_keys[0]}`, "Content-Type": "application/json" } });
@@ -1252,6 +1320,8 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
         throw e;
       }
   }
+
+
   async SubmitTxNative(
     actions: any[],
     public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
@@ -1286,7 +1356,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
       ref_block_num: lastBlockInfo.block_num & 0xffff, // 22774
     };
 
-    if (this.debug) console.log("actions before serialization: " + JSON.stringify(transactionObj.actions));
+    //if (this.debug) console.log("actions before serialization: " + JSON.stringify(transactionObj.actions));
     
     const a = await api.serializeActions(transactionObj.actions);
     const transaction = { ...transactionObj, actions: a };
