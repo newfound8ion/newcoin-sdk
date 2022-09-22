@@ -892,31 +892,31 @@ export class NCO_BlockchainAPI {
           throw e;
         }
       }; 
-
     }
 
     async changeFile(inpt: NCChangeFile) 
     {
       const old = await readAsset(inpt.asset_id);
       console.log("changing file : ... " + JSON.stringify(old.mutable_data));
-      let data = { 
-        name:    inpt.new_name ?? old.mutable_data.name,
-        path:    inpt.new_path?? old.mutable_data.path,
-        content: inpt.new_content?? old.mutable_data.content,
-        image:   inpt.new_image??old.mutable_data.image
-      };
+      let data = [
+        {'key': 'name', 'value': ['string', inpt.new_name ?? old.mutable_data.name]},
+        {'key': 'path','value': ['string', inpt.new_path?? old.mutable_data.path]}, 
+        {'key': 'content','value': ['string',  inpt.new_content?? old.mutable_data.content]},
+        {'key': 'image','value': ['string',  inpt.new_image??old.mutable_data.image ]}
+    ];
 
       let n : NCModifyAsset = {
         editor: inpt.editor,
         owner: inpt.editor,
         asset_id: inpt.asset_id,
-        new_data: data as any,
+        new_data: data,
         payer: inpt.payer??inpt.editor,
         payer_prv_key: inpt.payer_prv_key
 
       };
       let res = await this.modifyAsset(n);
       res.TxID_changeFile=res.TxID_modifyAsset;
+      res.asset_id = inpt.asset_id;
       console.log("modify asset res: "+ JSON.stringify(res));
       return res;
     }

@@ -22,6 +22,7 @@ import {
     //NCBuyRam
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
+import { readAsset } from '../../src/io/nft';
 
 const TEST_PROXY = false;
 
@@ -67,7 +68,7 @@ const api = new NCO_BlockchainAPI(
     { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.newsafeproxy_url } : {})  }, devnet_services, true, TEST_PROXY
 );
 
-describe("Basic blockchain operations", () => {
+    describe("Basic blockchain operations", () => {
 
         it("test template", async () => {
             let resp = "test template shows tests are running" ;
@@ -76,12 +77,9 @@ describe("Basic blockchain operations", () => {
             return resp;
         }, 1000);
         it("custom code", async () => {
-
             //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
             //const resp = await api.getDaoWhitelistProposals(n);
             //console.log(JSON.stringify(resp));
-
-
         }, 15000);
         it("key pair create", async () => {
             let resp = await api.createKeyPair();
@@ -119,8 +117,6 @@ describe("Basic blockchain operations", () => {
         }, 30000);
  
         it("create default generic user collection", async () => { 
-
-
 
             let nco_struct : NCCreateCollection = {
                 user: name, 
@@ -677,6 +673,10 @@ describe("Basic blockchain operations", () => {
             
             let resp : NCReturnTxs = await api.changeFile(n) as NCReturnTxs;
             console.log(resp);
+
+            const file = await readAsset(resp.asset_id as string);
+            console.log("asset: ... " + JSON.stringify(file.mutable_data));
+
             expect(typeof resp.TxID_changeFile).toBe('string');
 
 
