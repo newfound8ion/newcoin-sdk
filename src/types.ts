@@ -243,7 +243,8 @@ export type NCMintAsset = {
   immutable_data: NCKeyValPair[],
   mutable_data: NCKeyValPair[],
   payer: string,
-  payer_prv_key: string
+  payer_prv_key: string,
+  user_prv_active_key: string 
 };
 
 export type NCModifyAsset = {
@@ -262,7 +263,8 @@ export type NCMintFile = {
   image: string,
   content: string,
   payer: string,
-  payer_prv_key: string
+  payer_prv_key: string,
+  user_prv_active_key: string
 };
 
 export type NCChangeFile = {

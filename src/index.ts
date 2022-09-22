@@ -761,7 +761,8 @@ export class NCO_BlockchainAPI {
         inpt.immutable_data, inpt.mutable_data
       );
   
-      let res = await this.SubmitTx([t], [], [inpt.payer_prv_key]) as TransactResult;
+      const keys = [inpt.payer_prv_key,inpt.user_prv_active_key].filter(Boolean);
+      let res = await this.SubmitTx([t], [], keys) as TransactResult;
 
       let r: NCReturnTxs = {};
       r.TxID_mintAsset = res.transaction_id;
@@ -833,7 +834,7 @@ export class NCO_BlockchainAPI {
         {'key': 'content','value': ['string',  inpt.content]},
         {'key': 'image','value': ['string',  inpt.image??"emptystring" ]}
       ];
-
+      debugger;
       let n : NCMintAsset = {
         creator: inpt.creator,
         payer: inpt.payer,
@@ -842,7 +843,8 @@ export class NCO_BlockchainAPI {
         col_name: col_name,
         sch_name: sch_name,
         tmpl_id: tmpl_id,
-        payer_prv_key: inpt.payer_prv_key  
+        payer_prv_key: inpt.payer_prv_key ,
+        user_prv_active_key: inpt.user_prv_active_key
       } 
 
       try { 
@@ -865,12 +867,12 @@ export class NCO_BlockchainAPI {
             schema_fields: file_schema,
             template_name: normalizeUsername(inpt.creator, "t"),
             template_fields: [], 
-            user_prv_active_key: inpt.payer_prv_key,
+            user_prv_active_key: inpt.user_prv_active_key,
             allow_notify: true,
             mkt_fee    : 0.00,
             xferable   : false,
             burnable   : false, // undeletable from ceramic
-            max_supply : 0xffffff 
+            max_supply : 0xffffff
         };
 
         let res = await this.createCollection(nco_struct);
@@ -886,10 +888,9 @@ export class NCO_BlockchainAPI {
         } catch(e) {
           let err = (e as Error).message;
           console.log("Second Minting error message:  " + err);
+
+          throw e;
         }
-
-        return -1;
-
       }; 
 
     }
