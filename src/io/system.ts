@@ -20,7 +20,7 @@ export type NCInitUrls = {
     nodeos_url:       "https://nodeos-dev.newcoin.org",
     hyperion_url:     "https://hyperion-dev.newcoin.org",
     atomicassets_url: "https://atomic-nefty-devnet.newcoin.org/",
-    newsafeproxy_url: "https://auth-eu-dev.newsafe.org/v1/tx/newcoin"
+    nodeos_proxy_url: "https://auth-eu-dev.newsafe.org/v1/tx/newcoin"
   };
   
   export const devnet_services: NCInitServices =
