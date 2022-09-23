@@ -10,7 +10,7 @@ export const readTx = async (txId: string) => {
 }
 
 export const getActions = (txData: TxData, filterActionNames: string[]) => 
-  txData.actions.filter(
+  (txData.actions || []).filter(
     action => filterActionNames.includes(action.act.name)
   );
 
