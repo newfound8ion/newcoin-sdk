@@ -242,8 +242,8 @@ export type NCMintAsset = {
   tmpl_id?: number,
   immutable_data: NCKeyValPair[],
   mutable_data: NCKeyValPair[],
-  payer: string,
-  payer_prv_key: string,
+  payer?: string,
+  payer_prv_key?: string,
   user_prv_active_key: string 
 };
 

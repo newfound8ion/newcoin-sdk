@@ -758,16 +758,22 @@ export class NCO_BlockchainAPI {
   
       const t = this.sdkGen.mintAsset(
         inpt.creator, inpt.col_name, inpt.sch_name, inpt.tmpl_id,
-        inpt.immutable_data, inpt.mutable_data
+        inpt.immutable_data, inpt.mutable_data, inpt.payer
       );
   
-      const keys = [inpt.payer_prv_key,inpt.user_prv_active_key].filter(Boolean);
+      const keys = [inpt.payer_prv_key,inpt.user_prv_active_key].filter(Boolean) as string[];
       let res = await this.SubmitTx([t], [], keys) as TransactResult;
 
       let r: NCReturnTxs = {};
       r.TxID_mintAsset = res.transaction_id;
       r.asset_id = "asset default ID";
-      r.asset_id = (await atomicTxToAssetId(res.transaction_id))[0];
+      try {
+        r.asset_id = (await atomicTxToAssetId(res.transaction_id))[0];
+      } catch (ex) {
+        // asset may not be ready. polling is one solution to wait but if implemented must be optional
+        console.log((ex as any).message);
+        throw ex;
+      }
       console.log("minted asset tx " + res.transaction_id + " asset id: " + r.asset_id);
       return r;
 
@@ -1292,6 +1298,8 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
     private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
     )  {
+      console.log(JSON.stringify({ actions, public_keys, private_keys }))
+
     return this[this.isProxy ? "SubmitTxProxy" : "SubmitTxNative"](actions, public_keys, private_keys);
   }
 

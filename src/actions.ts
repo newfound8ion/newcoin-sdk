@@ -224,22 +224,24 @@ export class ActionGenerator {
     
     
     mintAsset = (
-      author: string,
+      owner: string,
       col_name: string,
       sch_name: string,
       tmpl_id: number,
       immutable_data: any[],
-      mutable_data: any[]
+      mutable_data: any[],
+      author?: string
     ) => {
       const action: any = {
         account: 'atomicassets',
         name: 'mintasset',
         data: {
-          authorized_minter: author,
+          authorized_minter: author || owner,
+          new_asset_owner: owner,
           collection_name: col_name,
           schema_name: sch_name,
           template_id: tmpl_id,  //template id 
-          new_asset_owner: author,//new owner 
+          // new_asset_owner: author,//new owner 
           immutable_data: immutable_data,//immutable data {key: 'name', value:[ 'string', '1testasset12']}
           mutable_data: mutable_data,  //mutable data  
           tokens_to_back: []//tokens to back 
