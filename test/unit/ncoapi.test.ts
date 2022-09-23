@@ -65,7 +65,7 @@ let asset_id: string = "";
 let wait = (t) => new Promise((res) => setTimeout(res, t));
 
 const api = new NCO_BlockchainAPI(
-    { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.newsafeproxy_url } : {})  }, devnet_services, true, TEST_PROXY
+    { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.nodeos_proxy_url } : {})  }, devnet_services, true, TEST_PROXY
 );
 
     describe("Basic blockchain operations", () => {

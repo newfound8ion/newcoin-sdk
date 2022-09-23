@@ -2,7 +2,7 @@ export type NCInitUrls = {
     nodeos_url: string,
     hyperion_url: string,
     atomicassets_url: string,
-    newsafeproxy_url: string
+    nodeos_proxy_url: string
   };
   
   export type NCInitServices = {

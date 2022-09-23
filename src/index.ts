@@ -1318,7 +1318,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
       try {
   
         const r = await fetch(
-          this.urls.nodeos_url,
+          this.urls.nodeos_proxy_url || this.urls.nodeos_url,
           { method: "POST", body: args, headers: { "Authorization": `newsafe ${private_keys[0]}`, "Content-Type": "application/json" } });
 
         const txt = await r.text();
