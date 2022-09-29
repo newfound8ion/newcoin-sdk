@@ -89,6 +89,9 @@ export class NCO_BlockchainAPI {
 
   private debug: boolean = false;
 
+  static devnet_urls = devnet_urls;
+  static devnet_services = devnet_services;
+  
   static defaults = {
     devnet_services,
     devnet_urls,
@@ -1299,7 +1302,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
     )  {
       console.log(JSON.stringify({ actions, public_keys, private_keys }))
-
+      debugger;
     return this[this.isProxy ? "SubmitTxProxy" : "SubmitTxNative"](actions, public_keys, private_keys);
   }
 

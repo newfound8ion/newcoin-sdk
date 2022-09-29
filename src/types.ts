@@ -244,7 +244,7 @@ export type NCMintAsset = {
   mutable_data: NCKeyValPair[],
   payer?: string,
   payer_prv_key?: string,
-  user_prv_active_key: string 
+  user_prv_active_key?: string 
 };
 
 export type NCModifyAsset = {

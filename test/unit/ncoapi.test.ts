@@ -643,6 +643,7 @@ const api = new NCO_BlockchainAPI(
             let n: NCMintFile = { 
                 creator: name,
                 payer: name,  
+                user_prv_active_key: prv_key_active, 
                 payer_prv_key: prv_key_active, 
                 name: name+'_'+(new Date()).getTime(),
                 path: 'demo/file', 
