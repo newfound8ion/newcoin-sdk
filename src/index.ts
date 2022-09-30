@@ -199,7 +199,7 @@ export class NCO_BlockchainAPI {
     [],
     [inpt.payer_prv_key]
   ) as TransactResult;// [] contained       
-  return { TxID_createAcc: tres.transaction_id } as NCReturnTxs;
+  return { TxID_createAcc: tres.transaction_id, TxID: tres.transaction_id, originalResponse: tres } as NCReturnTxs;
 
  }
 
