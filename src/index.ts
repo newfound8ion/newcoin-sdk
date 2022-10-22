@@ -58,7 +58,7 @@ import { getClaimNftsActions, getClaimWinBidActions, getCreateAuctionActions, ge
 import { NCClaimNftsParams, NCClaimWinBidParams, NCCreateAuctionParams, NCEditAuctionParams, NCEraseAuctionParams, NeftyMarketParamsBase, NCPlaceBidParams } from "./neftymarket/types";
 
 import { atomicTxToAssetId, readAsset } from "./io/nft";
-import { NCInitUrls, NCInitServices, devnet_urls, devnet_services } from "./io/system";
+import { NCInitUrls, NCInitServices, devnet_urls, devnet_urls_prod, devnet_services } from "./io/system";
 
 
 /**
@@ -95,6 +95,7 @@ export class NCO_BlockchainAPI {
   static defaults = {
     devnet_services,
     devnet_urls,
+    devnet_urls_prod,
     default_schema
   }
 
@@ -192,7 +193,6 @@ export class NCO_BlockchainAPI {
   }
 
  async buyRam(inpt: NCBuyRam) {
-
   let buyram_action = this.sdkGen.buyrambytes(inpt.user, inpt.payer, inpt.ram_amt);
   const tres = await this.SubmitTx(
     [buyram_action],
