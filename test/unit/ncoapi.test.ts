@@ -12,13 +12,14 @@ import {
     NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
     NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
-    NCMintAsset, NCMintFile, NCTxNcoBal, //NCTxBal,
+    NCMintAsset, NCMintFile, NCTxNcoBal, NCTxBal,
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
     default_schema,
     SBT_NFT_schema,
     file_schema,
     NCChangeFile,
+    NCBuyRam,
     //NCBuyRam
 } from "../../src/types";
 import { normalizeUsername } from '../../src/utils';
@@ -115,6 +116,21 @@ const api = new NCO_BlockchainAPI(
             expect(typeof resp.TxID_createAcc).toBe('string');
 
         }, 30000);
+
+
+        it("buy ram", async () => {
+
+            let br : NCBuyRam = {
+                user: name, 
+                payer: "io", 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                ram_amt: 1024*16
+            };
+            let  resp : NCReturnTxs = await api.buyRam(br);
+            console.log(resp);
+            expect(typeof resp.TxID).toBe('string');
+
+        }, 15000);
  
         it("create default generic user collection", async () => { 
 
@@ -198,7 +214,7 @@ const api = new NCO_BlockchainAPI(
         }, 60000);
     });
 
-    describe("tx NCO transaction", () => {
+    describe("tx NCO transactions", () => {
         it("tx nco balance", async () => {
             let n: NCTxNcoBal = { 
                 to:   name, 
@@ -209,6 +225,20 @@ const api = new NCO_BlockchainAPI(
             };
             
             let resp :NCReturnTxs = await api.txNCOBalance(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID).toBe('string');
+
+        }, 60000);
+        it("tx gnco balance", async () => {
+            let n: NCTxBal = { 
+                to:   name, 
+                amt: '1000.0000 GNCO', 
+                payer:'io',
+                memo: 'gnco', 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+            };
+            
+            let resp :NCReturnTxs = await api.txGNCOBalance(n) ;
             console.log(resp);
             expect(typeof resp.TxID).toBe('string');
 
