@@ -15,13 +15,17 @@ import {
     NCMintAsset, NCMintFile, NCTxNcoBal, NCTxBal,
     NCGetAccInfo, 
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
-    default_schema,
-    SBT_NFT_schema,
-    file_schema,
     NCChangeFile,
     NCBuyRam,
+    NCBindCollection
     //NCBuyRam
 } from "../../src/types";
+
+import {
+    default_schema,
+    file_schema
+} from "../../src/schemas"
+
 import { normalizeUsername } from '../../src/utils';
 import { readAsset } from '../../src/io/nft';
 
@@ -49,11 +53,11 @@ let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
 let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
 
 
-let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
-let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
-let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
-// @ts-ignore
-let sch_sbt = normalizeUsername(name, "s");
+// let col = normalizeUsername(name, "z"); // name.replace(/\./g, 'z' + 'z'.repeat(d));
+// let sch = normalizeUsername(name, "w"); // name.replace(/\./g, 'w' + 'w'.repeat(d));
+// let tpn = normalizeUsername(name, "t"); // name.replace(/\./g, 't' + 't'.repeat(d));
+// // @ts-ignore
+// let sch_sbt = normalizeUsername(name, "s");
 
 let pool_code: string;
 let dao_id: string = "160";
@@ -81,6 +85,21 @@ const api = new NCO_BlockchainAPI(
             //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
             //const resp = await api.getDaoWhitelistProposals(n);
             //console.log(JSON.stringify(resp));
+            /*console.log("transefrring some NCO to resp");
+            let n: NCTxNcoBal = { 
+                to:   "donjaviertst",
+                amt: '10000.0000 NCO', 
+                payer:'io',
+                memo: 'NCO transfer', 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+            };*/
+            
+            //let resp :NCReturnTxs = await api.txNCOBalance(n) ;
+            //console.log(resp);
+            //expect(typeof resp.TxID).toBe('string');
+
+            //console.log(api.a());
+
         }, 15000);
         it("key pair create", async () => {
             let resp = await api.createKeyPair();
@@ -116,8 +135,7 @@ const api = new NCO_BlockchainAPI(
             expect(typeof resp.TxID_createAcc).toBe('string');
 
         }, 30000);
-
-
+ 
         it("buy ram", async () => {
 
             let br : NCBuyRam = {
@@ -131,15 +149,16 @@ const api = new NCO_BlockchainAPI(
             expect(typeof resp.TxID).toBe('string');
 
         }, 15000);
- 
-        it("create default generic user collection", async () => { 
+
+
+        it("create collection with schemas", async () => { 
 
             let nco_struct : NCCreateCollection = {
                 user: name, 
-                collection_name: col,
-                schema_name: sch,
+                collection_name: normalizeUsername(name, "a"),
+                schema_name: normalizeUsername(name, "b"),
                 schema_fields: default_schema,
-                template_name: tpn,
+                template_name: normalizeUsername(name, "c"),
                 template_fields: [], 
                 user_prv_active_key: prv_key_active,
                 allow_notify: true,
@@ -157,34 +176,21 @@ const api = new NCO_BlockchainAPI(
 
         }, 60000);
 
-        it.skip("create special non-transf collection", async () => { 
-      
-            let nco_struct : NCCreateCollection = {
-                user: name, 
-                user_prv_active_key: prv_key_active,
-                collection_name: col,
-                schema_name: sch_sbt,
-                schema_fields: SBT_NFT_schema,
-                template_name: "-1",
-                template_fields: [], 
-                allow_notify: true,
-                mkt_fee    : 0.00,
-                xferable   : false,
-                burnable   : false,
-                max_supply : 0xffffff 
-            };
 
-            let resp : NCReturnTxs = await api.createCollection(nco_struct);
+        it("create ROOT user collection with schemas", async () => { 
 
+
+            let resp : NCReturnTxs = await api.createRootCollection(name, prv_key_active);
             console.log(resp);
             expect(typeof resp.TxID_createCol).toBe('string'); 
             expect(typeof resp.TxID_createSch).toBe('string'); 
             //expect(typeof resp.TxID_createTpl).toBe('string');
 
         }, 60000);
+
     });
 
-    describe.skip("Permission management", () => {
+    describe("Permission management", () => {
         it("create permission", async () => {
             let n: NCCreatePermission = { 
                 author: name, 
@@ -216,11 +222,12 @@ const api = new NCO_BlockchainAPI(
 
     describe("tx NCO transactions", () => {
         it("tx nco balance", async () => {
+            console.log("transefrring some NCO to resp");
             let n: NCTxNcoBal = { 
                 to:   name, 
                 amt: '1000.0000 NCO', 
                 payer:'io',
-                memo: 'initial balance transfer', 
+                memo: 'NCO balance transfer', 
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
             };
             
@@ -245,7 +252,7 @@ const api = new NCO_BlockchainAPI(
         }, 60000)
     });
 
-    describe.skip("pools tests", () => {
+    describe("pools tests", () => {
         it("create pool", async () => {
 
             let n: NCCreatePool = { 
@@ -344,7 +351,7 @@ const api = new NCO_BlockchainAPI(
         }, 60000)
     });
     
-    describe.skip("'DAO tests", () => {
+    describe("'DAO tests", () => {
         it("create dao", async () => {
 
             let n: NCCreateDao = { 
@@ -710,8 +717,28 @@ const api = new NCO_BlockchainAPI(
 
             expect(typeof resp.TxID_changeFile).toBe('string');
 
-
         },30000);
+
+
+        it("bind collection",async () => {
+            //let test = "test string 0xcafefeed ".repeat(10);
+            let randomcolname = normalizeUsername(  randomname(), "x" );
+
+            let n: NCBindCollection = { 
+                creator: name,
+                payer: name,  
+                payer_prv_key: prv_key_active, 
+                col_name: randomcolname,
+                description: "random description ",
+                image: 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/12.png'
+            };
+            
+            let resp : NCReturnTxs = await api.bindCollection(n) as NCReturnTxs;
+            asset_id = resp.asset_id as string;
+            console.log(resp);
+            expect(typeof resp.TxID_bindCollection).toBe('string');
+        }, 60000);
+
 
         it.skip("Mint file (old experiment)", async () => {
 

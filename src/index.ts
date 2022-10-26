@@ -32,11 +32,16 @@ import {
   NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, 
   NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
-  NCMintAsset, NCMintFile, NCCreatePermission,
+  NCMintAsset, NCBindCollection, NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, file_schema, NCKeyValPair, NCChangeFile, NCModifyAsset
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, NCKeyValPair, NCChangeFile, NCModifyAsset, 
 } from "./types";
+
+import {
+  default_schema, SBT_NFT_schema, bind_schema, file_schema
+} from "./schemas"
+
 
 export {
   NCKeyPair, NCKeyValPair,
@@ -45,12 +50,14 @@ export {
   NCStakeMainDao, 
   NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
-  NCMintAsset,  NCMintFile, NCCreatePermission,
+  NCMintAsset,  NCBindCollection, NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, default_schema, file_schema,
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal,
   devnet_services, devnet_urls
 };
+
+export { default_schema, SBT_NFT_schema, bind_schema, file_schema };
 
 import { normalizeUsername } from "./utils";
 
@@ -60,6 +67,7 @@ import { NCClaimNftsParams, NCClaimWinBidParams, NCCreateAuctionParams, NCEditAu
 import { atomicTxToAssetId, readAsset } from "./io/nft";
 import { NCInitUrls, NCInitServices, devnet_urls, devnet_services } from "./io/system";
 
+//import { NCO_daos_API } from "./daos";
 
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -96,6 +104,11 @@ export class NCO_BlockchainAPI {
     devnet_services,
     devnet_urls,
     default_schema
+  };
+
+
+  static system_names = {
+
   }
 
   /**
@@ -111,6 +124,9 @@ export class NCO_BlockchainAPI {
     debug: boolean = false,
     isProxy: boolean = false
   ) {
+
+    //super();
+
     this.debug = debug;
     this.urls = urls;
     if(this.debug) console.log("Init URLS " + JSON.stringify(urls));
@@ -203,23 +219,20 @@ export class NCO_BlockchainAPI {
 
  }
 
+
   /**
    * Create default collection for the account
    * @param  NCCreateCollection
    * @returns Create Collection and template transactions' ids
    */
-  async createCollection(inpt: NCCreateCollection) {
+   async createCollection(inpt: NCCreateCollection) {
 
     let t: any;
     let res: NCReturnTxs = {};
     let tres: TransactResult;
 
-    if (inpt.collection_name == undefined) inpt.collection_name = normalizeUsername(inpt.user, "z");
-    if (inpt.schema_name == undefined) inpt.schema_name = normalizeUsername(inpt.user, "w");
-    
-    // @ts-ignore
-    let sbt_sch_name = normalizeUsername(inpt.user, "s");
-
+    if (inpt.collection_name == undefined) throw "must supply collection name";
+    if (inpt.schema_name == undefined) throw "must supply schema name";
     let mkt_fee = inpt.mkt_fee ? inpt.mkt_fee : 0.05;
     let allow_notify = inpt.allow_notify ? inpt.allow_notify : true;
 
@@ -231,45 +244,23 @@ export class NCO_BlockchainAPI {
       mkt_fee,
       allow_notify
     );
+
     if(this.debug) console.log(t);
     if(this.debug) console.log("createcol transaction");
-    tres = await this.SubmitTx([t],
-      [],
-      [inpt.user_prv_active_key]
-    ) as TransactResult;
+    tres = await this.SubmitTx([t], [],[inpt.user_prv_active_key]) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
     if(this.debug) console.log(tres);
 
+    // Schemas --- 
     if(this.debug) console.log("creating schema ");
     let schema_fields = inpt.schema_fields ? inpt.schema_fields : default_schema;
-    t = this.sdkGen.createSchema(
-      inpt.user,
-      inpt.collection_name, inpt.schema_name,
-      schema_fields);
-    if(this.debug) console.log(t);
+    let t1 = this.sdkGen.createSchema(inpt.user, inpt.collection_name, inpt.schema_name, schema_fields);
+    if(this.debug) console.log(t1);
     
     if(this.debug) console.log("createsch transaction");
-    tres = await this.SubmitTx([t],
-      [],
-      [inpt.user_prv_active_key]
-    ) as TransactResult;
+    tres = await this.SubmitTx([t1],[],[inpt.user_prv_active_key]) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
     if(this.debug) console.log(tres);
-
-    /*if(this.debug) console.log("creating SBT schema");
-    let t1 = this.sdkGen.createSchema(
-      inpt.user,
-      inpt.collection_name, sbt_sch_name,
-      SBT_NFT_schema);
-    if(this.debug) console.log(t1);
-
-    if(this.debug) console.log("createsch SBT transaction");
-    tres = await this.SubmitTx([t1],
-      [],
-      [inpt.user_prv_active_key]
-    ) as TransactResult;
-    res.TxID_createSch = tres.transaction_id;
-    if(this.debug) console.log(tres);*/
 
     if(this.debug) console.log("creating template");
     let template = inpt.template_fields ? inpt.template_fields : [];
@@ -279,15 +270,83 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log(t);
 
     if(this.debug) console.log("creating template transaction");
-    tres = await this.SubmitTx([t],
-      [],
-      [inpt.user_prv_active_key]
-    ) as TransactResult;
+    tres = await this.SubmitTx([t], [], [inpt.user_prv_active_key] ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
     if(this.debug) console.log(tres);
 
     return res;
   }
+
+  /**
+   * Create default collection for the account
+   * @param  NCCreateCollection
+   * @returns Create Collection and template transactions' ids
+   */
+  async createRootCollection(name: string, key: string) {
+
+    let t: any;
+    let res: NCReturnTxs = {};
+    let tres: TransactResult;
+
+    const collection_name = normalizeUsername(name, "z");
+    const def_schema_name = normalizeUsername(name, "w");
+    const sbt_sch_name = normalizeUsername(name, "s");
+    const bind_sch_name = normalizeUsername(name, "b");
+
+    let mkt_fee = 0.05;
+    let allow_notify = true;
+
+    t = this.sdkGen.createCollection( name, collection_name, [name], [name], mkt_fee, allow_notify );
+    if(this.debug) console.log(t);
+    if(this.debug) console.log("createcol transaction");
+    tres = await this.SubmitTx([t], [], [key] ) as TransactResult;
+    res.TxID_createCol = tres.transaction_id;
+    if(this.debug) console.log(tres);
+
+    // ---- Schemas --- 
+    if(this.debug) console.log("creating schema ");
+    let schema_fields = default_schema;
+    let t1 = this.sdkGen.createSchema(name, collection_name, def_schema_name, schema_fields);
+    if(this.debug) console.log(t1);
+    
+    if(this.debug) console.log("createsch transaction");
+    tres = await this.SubmitTx([t1],[],[key]) as TransactResult;
+    res.TxID_createSch = tres.transaction_id;
+    if(this.debug) console.log(tres);
+
+    if(this.debug) console.log("creating SBT schema");
+    let t2 = this.sdkGen.createSchema(name,collection_name, sbt_sch_name, SBT_NFT_schema);
+    if(this.debug) console.log(t2);
+
+    if(this.debug) console.log("createsch SBT transaction");
+    tres = await this.SubmitTx([t2],[],[key]) as TransactResult;
+    res.TxID_createSch = tres.transaction_id;
+    if(this.debug) console.log(tres);
+
+    if(this.debug) console.log("creating collection bind schema");
+    let t3 = this.sdkGen.createSchema(name, collection_name, bind_sch_name, bind_schema);
+    if(this.debug) console.log(t3);
+    if(this.debug) console.log("createsch collection bind transaction");
+    tres = await this.SubmitTx([t3],[],[key]) as TransactResult;
+    res.TxID_createSch = tres.transaction_id;
+    if(this.debug) console.log(tres);
+
+    if(this.debug) console.log("creating template");
+    let template : any[] = [];
+    let xferable = false;
+    let burnable = false;
+    t = this.sdkGen.createTemplate(name, collection_name, def_schema_name, xferable, burnable, template);
+    if(this.debug) console.log(t);
+
+    if(this.debug) console.log("creating template transaction");
+    tres = await this.SubmitTx([t], [], [key] ) as TransactResult;
+    res.TxID_createTpl = res.TxID_createTpl;
+    if(this.debug) console.log(tres);
+
+    return res;
+  }
+
+
 
   /**
    * Create a new permission subordinate to the Active permission. 
@@ -297,9 +356,7 @@ export class NCO_BlockchainAPI {
    */
   async createPermission(inpt: NCCreatePermission) {
     let t = this.sdkGen.createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
-    let res = await this.SubmitTx([t],
-      [],[inpt.author_prv_active_key]                      
-    ) as TransactResult;
+    let res = await this.SubmitTx([t],[],[inpt.author_prv_active_key]) as TransactResult;
     let r: NCReturnTxs = {};
     r.TxID_createPerm = res.transaction_id;
     return r;
@@ -744,6 +801,11 @@ export class NCO_BlockchainAPI {
   }
 
 
+  // Collection rules: 
+  // Root collection: with Z instead of dot in name
+  // schema name for assets: with W
+  // Files collection: with 
+
    /**
    * Mint an asset
    * @param inpt: NCMintAsset
@@ -793,6 +855,12 @@ export class NCO_BlockchainAPI {
       // r.dao_id = r.dao_id.toString() ;*/
     }
   
+    
+  /**
+   * Modify existing asset in an asset mutable data
+   * @param inpt: NCModifyAsset
+   * @returns asset id
+   */
     async modifyAsset(inpt: NCModifyAsset) {
       
       const t = this.sdkGen.modifyAsset(inpt.editor, inpt.owner, inpt.asset_id, inpt.new_data);
@@ -803,6 +871,36 @@ export class NCO_BlockchainAPI {
       r.asset_id = inpt.asset_id;
       return r;    
     }
+
+  /**
+   * Bind collection to root collection
+   * @param inpt: NCAddCollection
+   * @returns Create NFT in the root collection referring to 
+   */
+   async bindCollection(inpt: NCBindCollection) {
+      
+
+    // todo if no schema then create it
+
+
+    let s : NCMintAsset = {
+      creator: inpt.creator,
+      col_name: normalizeUsername(inpt.creator, "z"), // root collection
+      sch_name: normalizeUsername(inpt.creator, "d"), // directory style schema
+      tmpl_id: -1,
+      immutable_data: [    
+          {'key': 'name', 'value': ['string', inpt.col_name]},
+          {'key': 'description','value': ['string', inpt.description]}, 
+          {'key': 'image','value': ['string', inpt.image]}
+      ],
+      mutable_data: [],
+      payer: inpt.payer,
+      payer_prv_key: inpt.payer
+    };
+    let resp = await this.mintAsset(s);      
+    resp.TxID_bindCollection =  resp.TxID_mintAsset;
+    return resp;
+  }
 
 /*
   async findAssetId(inpt: NCGetAsset)
