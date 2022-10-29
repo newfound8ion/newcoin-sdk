@@ -17,7 +17,8 @@ import {
     NCReturnTxs, NCReturnInfo,NCGetDaoWhiteList,
     NCChangeFile,
     NCBuyRam,
-    NCBindCollection
+    NCBindCollection,
+    NCSwapNCOtoCC
     //NCBuyRam
 } from "../../src/types";
 
@@ -30,6 +31,7 @@ import { normalizeUsername } from '../../src/utils';
 import { readAsset } from '../../src/io/nft';
 
 const TEST_PROXY = false;
+const DEBUG = false;
 
 //import * as nco from 'newcoin';
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
@@ -70,7 +72,7 @@ let asset_id: string = "";
 let wait = (t) => new Promise((res) => setTimeout(res, t));
 
 const api = new NCO_BlockchainAPI(
-    { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.nodeos_proxy_url } : {})  }, devnet_services, true, TEST_PROXY
+    { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.nodeos_proxy_url } : {})  }, devnet_services, DEBUG, TEST_PROXY
 );
 
     describe("Basic blockchain operations", () => {
@@ -78,29 +80,10 @@ const api = new NCO_BlockchainAPI(
         it("test template", async () => {
             let resp = "test template shows tests are running" ;
             console.log(resp);
-
             return resp;
         }, 1000);
-        it("custom code", async () => {
-            //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
-            //const resp = await api.getDaoWhitelistProposals(n);
-            //console.log(JSON.stringify(resp));
-            /*console.log("transefrring some NCO to resp");
-            let n: NCTxNcoBal = { 
-                to:   "donjaviertst",
-                amt: '10000.0000 NCO', 
-                payer:'io',
-                memo: 'NCO transfer', 
-                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
-            };*/
-            
-            //let resp :NCReturnTxs = await api.txNCOBalance(n) ;
-            //console.log(resp);
-            //expect(typeof resp.TxID).toBe('string');
 
-            //console.log(api.a());
 
-        }, 15000);
         it("key pair create", async () => {
             let resp = await api.createKeyPair();
             console.log("Keys owner generated: \n Prv: %s \n Pub: %s\n", resp.prv_key, resp.pub_key);
@@ -116,7 +99,42 @@ const api = new NCO_BlockchainAPI(
             prv_key_comm =  resp.prv_key;
             
             return resp;
-        }, 60000);
+        }, 10000);
+
+
+        it.skip("custom code", async () => {
+            //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
+            //const resp = await api.getDaoWhitelistProposals(n);
+            //console.log(JSON.stringify(resp));
+            console.log("transeferring 1000 NCO in a loop");
+            
+            let resp :NCReturnTxs = {};
+            for(let i = 0; i < 10; i++)
+            {
+                let n: NCTxNcoBal = { 
+                        to:   "vitalyrue.io",
+                        amt: '1.0000 NCO', 
+                        payer:'io',
+                        memo: 'NCO transfer', 
+                        payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+                    };
+                    
+                try{
+                    resp  = await api.txNCOBalance(n) ;
+                } catch {
+                    console.log("got to i =  " + i);
+                }
+                               
+                //expect(typeof resp.TxID).toBe('string');
+            }
+            console.log(resp);
+
+        }, 50000);
+       
+    });
+    
+    
+    describe("Basic blockchain operations", () => {
         it("create acc", async () => {
 
             let nco_struct : NCCreateUser = {
@@ -134,7 +152,7 @@ const api = new NCO_BlockchainAPI(
             console.log(resp);
             expect(typeof resp.TxID_createAcc).toBe('string');
 
-        }, 30000);
+        }, 60000);
  
         it("buy ram", async () => {
 
@@ -225,7 +243,7 @@ const api = new NCO_BlockchainAPI(
             console.log("transefrring some NCO to resp");
             let n: NCTxNcoBal = { 
                 to:   name, 
-                amt: '1000.0000 NCO', 
+                amt: '1500.0000 NCO', 
                 payer:'io',
                 memo: 'NCO balance transfer', 
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
@@ -236,7 +254,15 @@ const api = new NCO_BlockchainAPI(
             expect(typeof resp.TxID).toBe('string');
 
         }, 60000);
+
+        it("wait 10 sec", async () => {
+            await wait(10000);
+            expect(true);
+        }, 11000);
+
         it("tx gnco balance", async () => {
+
+
             let n: NCTxBal = { 
                 to:   name, 
                 amt: '1000.0000 GNCO', 
@@ -289,7 +315,7 @@ const api = new NCO_BlockchainAPI(
         let resp : NCReturnTxs = await api.instUnstakeMainDAO(n) ;
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
-        }, 60000)
+        }, 70000)
 
         it("delayed unstake maindao pool", async () => {
             let n: NCStakeMainDao = { 
@@ -348,7 +374,25 @@ const api = new NCO_BlockchainAPI(
         let resp : NCReturnTxs = await api.unstakePool(n) ;
         console.log(resp);
         expect(typeof resp.TxID_unstakePool).toBe('string');
-        }, 60000)
+        }, 60000);
+
+    
+    it("nco to creator coin", async () => {
+
+            const n: NCSwapNCOtoCC = { 
+                    amt: '200.0000 NCO',  
+                    payer: "io",
+                    payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                    creator_to: name
+            };
+           
+            let resp = await api.swapNcoToCreatorCoin(n) ;
+            console.log(resp);
+            expect(resp.TxID_stakePool).toBeDefined();
+
+           //expect(typeof resp.TxID_unstakePool).toBe('string');
+            }, 60000);
+
     });
     
     describe("'DAO tests", () => {
@@ -833,7 +877,7 @@ const api = new NCO_BlockchainAPI(
     });
 
 
-    describe.skip("Votes tests", () => {
+    describe("Votes tests", () => {
         it("get dao whitelist", async () => {
 
             let n: NCGetDaoWhiteList = { 
@@ -880,7 +924,7 @@ const api = new NCO_BlockchainAPI(
     });
 
 
-    describe.skip("get account pools balances", () => {
+    describe("get account pools balances", () => {
         it("get pool balances", async () => {
             
             let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;

@@ -34,7 +34,7 @@ import {
   NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
   NCMintAsset, NCBindCollection, NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
-  NCPoolsInfo, NCNameType,
+  NCPoolsInfo, NCNameType, NCSwapNCOtoCC,
   NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, NCKeyValPair, NCChangeFile, NCModifyAsset, 
 } from "./types";
 
@@ -66,6 +66,7 @@ import { NCClaimNftsParams, NCClaimWinBidParams, NCCreateAuctionParams, NCEditAu
 
 import { atomicTxToAssetId, readAsset } from "./io/nft";
 import { NCInitUrls, NCInitServices, devnet_urls, devnet_services } from "./io/system";
+//import { TransactionBuilder } from "eosjs/dist/eosjs-api";
 
 //import { NCO_daos_API } from "./daos";
 
@@ -412,16 +413,12 @@ export class NCO_BlockchainAPI {
   async stakeMainDAO(inpt: NCStakeMainDao) {
     let r: NCReturnTxs = {};
 
-    const stakeTx = await this.mGen.stake(
-      [{ actor: inpt.payer, permission: "active" }],
-      inpt.payer,
-      inpt.amt);
-
+    const stakeTx = await this.mGen.stake( [{ actor: inpt.payer, permission: "active" }], inpt.payer, inpt.amt);
     if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
-    const res = await this.SubmitTx(stakeTx,
-      [], [inpt.payer_prv_key]) as TransactResult;
+    const res = await this.SubmitTx(stakeTx, [], [inpt.payer_prv_key]) as TransactResult;
 
     r.TxID_stakeMainDAO = res.transaction_id;
+    r.tx = res;
     return r;
   }
 
@@ -560,6 +557,46 @@ export class NCO_BlockchainAPI {
     r.TxID_unstakePool = res.transaction_id;
     return r;
   }
+
+
+  async swapNcoToCreatorCoin( inpt: NCSwapNCOtoCC ) { 
+
+
+    console.log("trying to swap to GNCO :  " + inpt.amt);
+    this.debug = true;
+
+    let n: NCStakeMainDao = { 
+      amt: inpt.amt, 
+      payer: inpt.payer,
+      payer_prv_key: inpt.payer_prv_key
+    };
+
+    let resp1  = await this.stakeMainDAO(n) as NCReturnTxs;
+    if(this.debug) console.log(resp1);
+    //@ts-ignore
+    let gnco_amt= resp1.tx.processed.action_traces[0].inline_traces[3].act.data.quantity ;
+    
+    //@ts-ignore
+    /*let t = resp.tx.processed.action_traces[0].inline_traces ? resp.tx.processed.action_traces[0].inline_traces : [];
+    console.log(t[0]?t[0]:"undef");console.log("*");
+    console.log(t[1]?t[1]:"undef");console.log("*");
+    console.log(t[2]?t[2]:"undef");console.log("*");
+    console.log(t[3]?t[3]:"undef");console.log("*");*/
+    
+    // get how much GNCO was received
+    console.log("trying to swap to CC :  " + gnco_amt);
+    let m: NCStakePool = { 
+      owner: inpt.creator_to, 
+      amt:  gnco_amt, 
+      payer: inpt.payer,//'io',  
+      payer_prv_key: inpt.payer_prv_key
+    };      
+     
+    let resp2 = await this.stakePool(m);
+    if(this.debug) console.log(resp2);
+    
+    return resp2;
+}
 
 /**
  * DAO creation. One per account.
@@ -1398,10 +1435,10 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     actions: any[],
     public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
     private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
-    )  {
-      console.log(JSON.stringify({ actions, public_keys, private_keys }))
-      debugger;
-    return this[this.isProxy ? "SubmitTxProxy" : "SubmitTxNative"](actions, public_keys, private_keys);
+    )  
+    {
+      if(this.debug) console.log("Submitted transaction: " + JSON.stringify({ actions, public_keys, private_keys }));
+      return this[this.isProxy ? "SubmitTxProxy" : "SubmitTxNative"](actions, public_keys, private_keys);
   }
 
 
@@ -1486,6 +1523,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     };
 
     const pushTransactionArgs: PushTransactionArgs = await api.signatureProvider.sign(tx);
+    //console.log(pushTransactionArgs);
     return api.pushSignedTransaction(pushTransactionArgs);
   };
 

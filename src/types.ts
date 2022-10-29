@@ -1,5 +1,7 @@
 //import { type } from "os";
 
+import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
+
 
 export type NCKeyPair = {
   pub_key: string;
@@ -123,6 +125,13 @@ export type NCPoolsInfo = {
   rows: NCPoolInfo[];
   more: boolean;
   next_key: string;
+}
+
+export type NCSwapNCOtoCC = {
+  amt: string,  
+  payer: string,
+  payer_prv_key: string,
+  creator_to: string
 }
 
 
@@ -335,6 +344,7 @@ export type NCReturnTxs = {
 
   TxID_txNcoBalance?: string;
   TxID?: string;
+  tx?: TransactResult;
 };
 
 export type NCReturnInfo = {
