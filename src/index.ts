@@ -622,21 +622,35 @@ export class NCO_BlockchainAPI {
  * @returns NCReturnTxs.TxID_approveDaoProposal
  */
   async approveDaoProposal(inpt: NCApproveDaoProposal) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+    try {
+      const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+      
+      console.log(`dao_owner: ${inpt.dao_owner}, dao_id: ${dao_id}`)
+      
+      if (inpt.proposal_id == undefined) throw ("Proposal undefined ID");
 
-    if (inpt.proposal_id == undefined) throw ("Proposal undefined ID");
+      console.log("Got dao_id: ", dao_id, " number: ", Number(dao_id));
 
-    const t = await this.aGen.approveProposal(
-      [{ actor: inpt.approver, permission: "active" }],
-      Number(dao_id), inpt.proposal_id
-    );
+      const t = await this.aGen.approveProposal(
+        [{ actor: inpt.approver, permission: "active" }],
+        Number(dao_id), inpt.proposal_id
+      );
 
-    const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+      console.log("Got action:", JSON.stringify(t));
+  
+      const res = await this.SubmitTx(t,
+        [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+  
+      let r: NCReturnTxs = {};
+      r.TxID_approveDaoProposal = res.transaction_id;
+      return r;
 
-    let r: NCReturnTxs = {};
-    r.TxID_approveDaoProposal = res.transaction_id;
-    return r;
+    } catch (ex) {
+      console.log((ex as any).message);
+      console.log(JSON.stringify(ex));
+      throw ex;
+    }
+
   }
 
 /**
