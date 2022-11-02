@@ -77,29 +77,14 @@ import { NCInitUrls, NCInitServices, devnet_urls, devnet_urls_prod, devnet_servi
  * See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
  */
 export class NCO_BlockchainAPI {
+
+  private isProxy: boolean = false;
+  private debug: boolean = false;
   private urls: NCInitUrls;
   private services: NCInitServices;
-
-  private isProxy: boolean;
-
-  // @ts-ignore
-  private aa_api: AaRpcApi;
-  private nodeos_rpc: JsonRpc;
-  private hrpc: HJsonRpc;
-  private poolsRpcApi: PoolsRpcApi;
-  // private poolRpcApi: PoolRpcApi;
-  private cApi: DaosChainApi;
-
-  private aGen: DaosAG;
-  private mGen: MainDAOActionGenerator;
-  private pGen: PoolsActionGenerator;
-  private sdkGen: sdkActionGen;
-
-  private debug: boolean = false;
-
   static devnet_urls = devnet_urls;
   static devnet_services = devnet_services;
-  
+
   static defaults = {
     devnet_services,
     devnet_urls,
@@ -109,8 +94,20 @@ export class NCO_BlockchainAPI {
 
 
   static system_names = {
-
   }
+
+  // @ts-ignore
+  private aa_api: AaRpcApi;
+  private nodeos_rpc: JsonRpc;
+  private hrpc: HJsonRpc;
+  private poolsRpcApi: PoolsRpcApi;
+  // private poolRpcApi: PoolRpcApi;
+
+  private mGen: MainDAOActionGenerator;
+  private cApi: DaosChainApi;
+  private aGen: DaosAG;
+  private pGen: PoolsActionGenerator;
+  private sdkGen: sdkActionGen;
 
   /**
    * Init the api
@@ -128,26 +125,29 @@ export class NCO_BlockchainAPI {
 
     //super();
 
-    this.debug = debug;
-    this.urls = urls;
-    if(this.debug) console.log("Init URLS " + JSON.stringify(urls));
+    //this.debug = debug;
+    //if(this.debug) console.log("Init URLS " + JSON.stringify(urls));
 
-    // this.aa_api  = new AaRpcApi(this.urls.atomicassets_url, "atomicassets", {fetch, rateLimit: 4} as any);
+    this.urls = urls;
+    this.services = services;
+    this.isProxy = isProxy;
+    this.debug = debug;
+
+    //this.aa_api  = new AaRpcApi(this.urls.atomicassets_url, "atomicassets", {fetch, rateLimit: 4} as any);
     //this.aa_api = new ExplorerApi(, urls_, { fetch });
     this.nodeos_rpc = new JsonRpc(this.urls.nodeos_url, { fetch });
     this.hrpc = new HJsonRpc(this.urls.hyperion_url, { fetch } as any);
-    this.cApi = new DaosChainApi(this.urls.nodeos_url, services.daos_contract, fetch);
-    this.poolsRpcApi = new PoolsRpcApi(this.urls.nodeos_url, services.staking_contract, fetch);
-    // this.poolRpcApi = new PoolRpcApi(this.urls.nodeos_url, services.maindao_contract, fetch)
-
-    this.aGen = new DaosAG(services.daos_contract, services.staking_contract);
-    this.mGen = new MainDAOActionGenerator(services.maindao_contract, services.token_contract);
-    this.pGen = new PoolsActionGenerator(services.staking_contract, services.maindao_contract);
     this.sdkGen = new sdkActionGen(services.eosio_contract, services.token_contract);
 
-    this.services = services;
 
-    this.isProxy = isProxy;
+    this.cApi = new DaosChainApi(this.urls.nodeos_url, services.daos_contract, fetch);
+    this.aGen = new DaosAG(services.daos_contract, services.staking_contract);
+
+    // this.poolRpcApi = new PoolRpcApi(this.urls.nodeos_url, services.maindao_contract, fetch)
+    this.mGen = new MainDAOActionGenerator(services.maindao_contract, services.token_contract);
+    this.poolsRpcApi = new PoolsRpcApi(this.urls.nodeos_url, services.staking_contract, fetch);
+    this.pGen = new PoolsActionGenerator(services.staking_contract, services.maindao_contract);
+    
   }
 
   // Native EOS services
@@ -936,7 +936,7 @@ export class NCO_BlockchainAPI {
     let s : NCMintAsset = {
       creator: inpt.creator,
       col_name: normalizeUsername(inpt.creator, "z"), // root collection
-      sch_name: normalizeUsername(inpt.creator, "d"), // directory style schema
+      sch_name: normalizeUsername(inpt.creator, "b"), // bind schema
       tmpl_id: -1,
       immutable_data: [    
           {'key': 'name', 'value': ['string', inpt.col_name]},
@@ -945,7 +945,7 @@ export class NCO_BlockchainAPI {
       ],
       mutable_data: [],
       payer: inpt.payer,
-      payer_prv_key: inpt.payer
+      payer_prv_key: inpt.payer_prv_key
     };
     let resp = await this.mintAsset(s);      
     resp.TxID_bindCollection =  resp.TxID_mintAsset;
