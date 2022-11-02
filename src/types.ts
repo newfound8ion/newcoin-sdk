@@ -1,5 +1,7 @@
 //import { type } from "os";
 
+import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
+
 
 export type NCKeyPair = {
   pub_key: string;
@@ -123,6 +125,13 @@ export type NCPoolsInfo = {
   rows: NCPoolInfo[];
   more: boolean;
   next_key: string;
+}
+
+export type NCSwapNCOtoCC = {
+  amt: string,  
+  payer: string,
+  payer_prv_key: string,
+  creator_to: string
 }
 
 
@@ -256,6 +265,17 @@ export type NCModifyAsset = {
   payer_prv_key: string
 }
 
+
+export type NCBindCollection = {
+  creator:  string,
+  col_name: string,
+  description: string,
+  image: string,
+  payer: string,
+  payer_prv_key: string
+};
+
+
 export type NCMintFile = {
   creator: string,
   name: string, 
@@ -320,52 +340,14 @@ export type NCReturnTxs = {
   TxID_modifyAsset?: string;
   TxID_mintFile?: string; 
   TxID_changeFile?: string;
+  TxID_bindCollection?: string;
 
   TxID_txNcoBalance?: string;
   TxID?: string;
+  tx?: TransactResult;
 };
 
 export type NCReturnInfo = {
   acc_balances?: string[]
 };
 
-export const default_schema = [
-  { name: 'name', type: "string" },
-  { name: 'description', type: "string" },
-  { name: 'image', type: 'string' },
-  { name: 'external_url', type: 'string' },
-  { name: 'content_type', type: 'string' },
-  { name: 'content', type: 'string' },
-  { name: 'license', type: 'string' }
-];
-
-export const file_schema = [
-  { name: 'name', type: 'string' }, 
-  { name: 'path', type: "string" }, 
-  { name: 'image', type: "string"},  // optional icon
-  { name: 'content', type: 'string' }
-];
-
-export const SBT_NFT_schema = [
-  { name: 'name', type: "string" },
-  { name: 'description', type: "string" },
-  { name: 'image', type: 'string' },
-  { name: 'type', type: 'string' },
-  { name: 'issuer', type: 'string' },
-  { name: 'recipient', type: 'string' },
-  { name: 'quantifiers', type: 'string' },
-  { name: 'signature', type: 'string' },
-  { name: 'content', type: 'string' },
-  { name: 'version', type: 'string' }
-];
-
-// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
-export const ERC721_schema = [
-  { name: 'name', type: "string" },
-  { name: 'description', type: "string" },
-  { name: 'image', type: 'string' },
-];
-
-  // https://docs.opensea.io/docs/metadata-standards
-  // export const OpenSea_schema = [
-  //]
