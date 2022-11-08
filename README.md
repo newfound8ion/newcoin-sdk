@@ -1,4 +1,4 @@
-![Newcoin](https://github.com/Newcoin-Foundation/newcoin-sdk/blob/main/docs/media/newcoin-globe.png?raw=true)
+![Newcoin](https://github.com/newfound8ion/newcoin-sdk/blob/main/docs/media/newcoin-globe.png?raw=true)
 
 # newcoin-sdk
 
