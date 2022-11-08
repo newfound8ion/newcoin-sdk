@@ -5,7 +5,7 @@
 This is the newcoin sdk, a starting point for a tooling environment that will make it easy to build applications on top of [https://newcoin.org](newcoin.org).
 
 ```
-npm install --save @newcoin-foundation/newcoin-sdk
+npm install --save @newfound8ion/newcoin-sdk
 ```
 
 See [https://docs.newcoin.org/](https://docs.newcoin.org/) for an overview of the newcoin ecosystem.
