@@ -1,4 +1,5 @@
-import typescript from "@rollup/plugin-typescript";
+import nodeResolve from '@rollup/plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript2'
 
 export default [
   {
@@ -15,6 +16,9 @@ export default [
       format: "cjs",
       sourcemap: true,
     }],
-    plugins: [typescript()],
+    plugins: [
+      nodeResolve(),
+      typescript()
+    ],
   },
 ];

@@ -13,8 +13,10 @@ import { JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
 import { ActionGenerator as PoolsActionGenerator, ChainApi as PoolsRpcApi } from '@newfound8ion/newcoin.pools-js'
 import { PoolPayload as PoolsPayload } from '@newfound8ion/newcoin.pools-js/dist/interfaces/pool.interface';
 import { ActionGenerator as MainDAOActionGenerator } from '@newfound8ion/newcoin.pool-js';
-import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from '@newfound8ion/newcoin.daos-js'
-import { DAOPayload, GetTableRowsPayload, ProposalPayload } from "@newfound8ion/newcoin.daos-js/dist/interfaces";
+
+import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from  '@newfound8ion/newcoin.daos-js'
+import { DAOPayload, GetTableRowsPayload, ProposalPayload } from  "@newfound8ion/newcoin.daos-js/dist/interfaces";
+
 import { ActionGenerator as sdkActionGen, EosioActionObject } from "./actions";
 import { RpcApi as AaRpcApi } from "atomicassets";
 //import { AssetParams } from "atomicassets/build/API/Explorer/Types";
@@ -69,6 +71,14 @@ import { NCInitUrls, NCInitServices, devnet_urls, devnet_urls_prod, devnet_servi
 
 //import { NCO_daos_API } from "./daos";
 
+export class A {
+  private a :boolean = false;
+  constructor() { this.a = true; }
+  async geta() {
+    return this.a;
+  }
+}
+
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
  * 
@@ -82,8 +92,7 @@ export class NCO_BlockchainAPI {
   private debug: boolean = false;
   private urls: NCInitUrls;
   private services: NCInitServices;
-  static devnet_urls = devnet_urls;
-  static devnet_services = devnet_services;
+
 
   static defaults = {
     devnet_services,
@@ -92,21 +101,27 @@ export class NCO_BlockchainAPI {
     default_schema
   };
 
-
   static system_names = {
+
+    
+
   }
 
   // @ts-ignore
   private aa_api: AaRpcApi;
   private nodeos_rpc: JsonRpc;
   private hrpc: HJsonRpc;
-  private poolsRpcApi: PoolsRpcApi;
-  // private poolRpcApi: PoolRpcApi;
+
 
   private mGen: MainDAOActionGenerator;
   private cApi: DaosChainApi;
   private aGen: DaosAG;
+
+ // private poolRpcApi: PoolRpcApi;
+
+  private poolsRpcApi: PoolsRpcApi;
   private pGen: PoolsActionGenerator;
+
   private sdkGen: sdkActionGen;
 
   /**
@@ -127,11 +142,11 @@ export class NCO_BlockchainAPI {
 
     //this.debug = debug;
     //if(this.debug) console.log("Init URLS " + JSON.stringify(urls));
+    this.isProxy = isProxy;
+    this.debug = debug;
 
     this.urls = urls;
     this.services = services;
-    this.isProxy = isProxy;
-    this.debug = debug;
 
     //this.aa_api  = new AaRpcApi(this.urls.atomicassets_url, "atomicassets", {fetch, rateLimit: 4} as any);
     //this.aa_api = new ExplorerApi(, urls_, { fetch });
@@ -638,7 +653,7 @@ export class NCO_BlockchainAPI {
       [{ actor: inpt.proposer, permission: "active" }],
       inpt.proposer, Number(dao_id),
       inpt.title, inpt.summary,
-      inpt.url, inpt.vote_start, inpt.vote_end
+      inpt.url, inpt.pass_rate, inpt.vote_start, inpt.vote_end
     );
 
     const res = await this.SubmitTx(t,
@@ -664,7 +679,8 @@ export class NCO_BlockchainAPI {
 
     const t = await this.aGen.createWhiteListProposal(
       [{ actor: inpt.proposer, permission: "active" }],
-      inpt.proposer, Number(dao_id), inpt.user,
+      inpt.proposer, Number(dao_id), inpt.user, 
+      inpt.type, inpt.pass_rate,
       inpt.vote_start, inpt.vote_end
     );
 
@@ -691,7 +707,7 @@ export class NCO_BlockchainAPI {
     const t = await this.aGen.createStakeProposal(
       [{ actor: inpt.proposer, permission: "active" }],
       inpt.proposer, Number(dao_id), 
-      inpt.to, inpt.quantity,
+      inpt.to, inpt.quantity,inpt.pass_rate,
       inpt.vote_start, inpt.vote_end
     );
 
@@ -726,6 +742,7 @@ export class NCO_BlockchainAPI {
 
       const t = await this.aGen.approveProposal(
         [{ actor: inpt.approver, permission: "active" }],
+        inpt.approver,
         Number(dao_id), inpt.proposal_id
       );
 
@@ -758,6 +775,7 @@ export class NCO_BlockchainAPI {
 
     const t = await this.aGen.approveWhiteListProposal(
       [{ actor: inpt.approver, permission: "active" }],
+      inpt.approver,
       Number(dao_id), inpt.proposal_id
     );
 

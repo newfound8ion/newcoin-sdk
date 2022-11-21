@@ -150,6 +150,7 @@ export type NCCreateDaoProposal = {
   title: string,
   summary: string,
   url: string,
+  pass_rate: number,
   vote_start: string,
   vote_end: string
 };
@@ -160,6 +161,8 @@ export type NCCreateDaoUserWhitelistProposal = {
   dao_id?: string,
   dao_owner: string,
   user: string,
+  type: string,
+  pass_rate: number,
   vote_start: string,
   vote_end: string
 };
@@ -171,6 +174,7 @@ export type NCCreateDaoStakeProposal = {
   dao_owner: string,
   to: string,
   quantity: string,
+  pass_rate: number,
   vote_start: string,
   vote_end: string
 };

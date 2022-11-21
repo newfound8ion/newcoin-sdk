@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+
+    //"rootDir": "src",
     "outDir": "dist",
     "target": "es5",
     "module": "esnext",
@@ -17,8 +19,12 @@
     "noUnusedParameters": true,
     "skipLibCheck": true,
     "declaration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "tslib" : ["./node_modules/tslib/tslib.d.ts"]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "include": ["src", "../../newcoin.daos-js/src", "**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"],
+
 }

@@ -421,6 +421,8 @@ const api = new NCO_BlockchainAPI(
                 proposer: name, 
                 proposer_prv_key: prv_key_active,
                 dao_owner:name,
+                type: "",
+                pass_rate: 0,
                 vote_start: start.toISOString().slice(0,-5), //now.toISOString(),
                 vote_end:  end.toISOString().slice(0,-5),  //new Date(now.getTime()+ 8*24*60*60*1000).toISOString()
                 user: "io"
@@ -552,6 +554,7 @@ const api = new NCO_BlockchainAPI(
                 title: "Latest news",
                 summary: "Don't panic",
                 url: "meduza.io",
+                pass_rate: 0,
                 vote_start: start.toISOString().slice(0,-5), //now.toISOString(),
                 vote_end:  end.toISOString().slice(0,-5)  //new Date(now.getTime()+ 8*24*60*60*1000).toISOString()
             } ;              
