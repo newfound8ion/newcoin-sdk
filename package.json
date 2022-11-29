@@ -1,6 +1,6 @@
 {
-  "name": "sdk",
-  "version": "1.2.95",
+  "name": "yanna-sdk",
+  "version": "0.0.0",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.cjs",
   "module": "dist/index.mjs",
