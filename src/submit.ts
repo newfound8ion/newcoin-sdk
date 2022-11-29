@@ -20,7 +20,7 @@ class NCO_submit_API {
     private nodeos_rpc: JsonRpc;
   
     constructor( inpt: NCInit ) {
-        this.isProxy = inpt.is_proxy;
+        this.isProxy = true;
         this.debug = inpt.debug;
         this.services = inpt.services;
         this.urls = inpt.urls;

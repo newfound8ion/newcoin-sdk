@@ -80,6 +80,7 @@ import { NCInit, NCInitUrls, NCInitServices, devnet_urls, devnet_urls_prod, devn
 export class NCO_BlockchainAPI {
 
   private debug: boolean = false;
+  private isProxy: boolean = true;
   private urls: NCInitUrls;
   private services: NCInitServices;
 
