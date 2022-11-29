@@ -856,8 +856,7 @@ export class NCO_BlockchainAPI {
     const actions = getEditAuctionActions(this.getActionParams(params));
     return this.submitAuctionTx(actions, key);
   }
-
-
+  
 // to be deprecated
  async stakeMainDAO(inpt: NCStakeMainDao) { return this.pools.stakeMainDAO(inpt); }
  async instUnstakeMainDAO(inpt: NCStakeMainDao) { return this.pools.stakeMainDAO(inpt); }

@@ -1,15 +1,16 @@
 {
   "name": "@newfound8ion/newcoin-sdk",
-  "version": "1.2.94",
+  "version": "1.2.95",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "./dist/index.d.ts",
+  
   "scripts": {
     "test": "npm run build && jest --bail",
     "docs": "typedoc --out docs src/index.ts --excludeExternals --excludePrivate --excludeProtected --emit docs",
     "build": "npm run dist",
-    "dist": "rollup -c"
+    "dist": "rollup -c --bundleConfigAsCjs"
   },
   "author": "vitalyrue",
   "license": "MIT",
