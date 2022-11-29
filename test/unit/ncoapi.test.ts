@@ -72,7 +72,11 @@ let asset_id: string = "";
 let wait = (t) => new Promise((res) => setTimeout(res, t));
 
 const api = new NCO_BlockchainAPI(
-    { ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.nodeos_proxy_url } : {})  }, devnet_services, DEBUG, TEST_PROXY
+    //{ ...devnet_urls, ...(TEST_PROXY ? { nodeos_url: devnet_urls.nodeos_proxy_url } : {})  }, 
+    {urls: devnet_urls,
+    services: devnet_services, 
+    debug: DEBUG, 
+    is_proxy: TEST_PROXY}
 );
 
     describe("Basic blockchain operations", () => {
@@ -286,7 +290,7 @@ const api = new NCO_BlockchainAPI(
                 owner_prv_active_key: prv_key_active
             } ;
             
-            let resp :NCReturnTxs = await api.createPool(n) ;
+            let resp :NCReturnTxs = await api.pools.createPool(n) ;
             console.log(resp);
             expect(typeof resp.TxID_createPool).toBe('string');
 
@@ -300,7 +304,7 @@ const api = new NCO_BlockchainAPI(
                     payer_prv_key: prv_key_active
             } ;
 
-        let resp : NCReturnTxs = await api.stakeMainDAO(n) ;
+        let resp : NCReturnTxs = await api.pools.stakeMainDAO(n) ;
         console.log(resp);
         expect(typeof resp.TxID_stakeMainDAO).toBe('string');
         }, 60000)
@@ -312,7 +316,7 @@ const api = new NCO_BlockchainAPI(
                 payer_prv_key: prv_key_active
         } ;
         // check balance?
-        let resp : NCReturnTxs = await api.instUnstakeMainDAO(n) ;
+        let resp : NCReturnTxs = await api.pools.instUnstakeMainDAO(n) ;
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
         }, 70000)
@@ -324,7 +328,7 @@ const api = new NCO_BlockchainAPI(
                 payer_prv_key: prv_key_active
         } ;
             
-        let resp : NCReturnTxs = await api.dldUnstakeMainDAO(n) ;
+        let resp : NCReturnTxs = await api.pools.dldUnstakeMainDAO(n) ;
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
         }, 60000)
@@ -337,7 +341,7 @@ const api = new NCO_BlockchainAPI(
             payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
-        let resp : NCReturnTxs = await api.stakePool(n) ;
+        let resp : NCReturnTxs = await api.pools.stakePool(n) ;
         console.log(resp);
         pool_code = resp.pool_code as string;
         
@@ -354,7 +358,7 @@ const api = new NCO_BlockchainAPI(
             payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
         } ;
             
-        let resp : NCReturnTxs = await api.stakePool(n) ;
+        let resp : NCReturnTxs = await api.pools.stakePool(n) ;
         console.log(resp);
         pool_code = resp.pool_code as string;
         
@@ -371,7 +375,7 @@ const api = new NCO_BlockchainAPI(
                 payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
         } ;
         console.log("unstake action: "+ JSON.stringify(n));
-        let resp : NCReturnTxs = await api.unstakePool(n) ;
+        let resp : NCReturnTxs = await api.pools.unstakePool(n) ;
         console.log(resp);
         expect(typeof resp.TxID_unstakePool).toBe('string');
         }, 60000);
@@ -404,7 +408,7 @@ const api = new NCO_BlockchainAPI(
                 descr: "test DAO by "+ name
             } ;
             
-            let resp :NCReturnTxs = await api.createDao(n) ;
+            let resp :NCReturnTxs = await api.daos.createDao(n) ;
             console.log(resp);
             expect(typeof resp.TxID_createDao).toBe('string');
 
@@ -429,7 +433,7 @@ const api = new NCO_BlockchainAPI(
             } ;              
             
             console.log("Arguments for whitelist user proposal creation : " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.createDaoUserWhitelistProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.createDaoUserWhitelistProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_createDaoProposal).toBe('string');
             // @ts-ignore
@@ -447,7 +451,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoWhitelistProposals(n);
+            let resp = await api.daos.getDaoWhitelistProposals(n);
             console.log(JSON.stringify(resp));
             console.log(
                     "Quantities: " 
@@ -464,7 +468,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             //console.log("Arguments for DAO proposal list: " + JSON.stringify(n));
-            let resp = await api.getDaoWhitelistProposals(n);
+            let resp = await api.daos.getDaoWhitelistProposals(n);
             console.log("list of WL proposals " + JSON.stringify(resp));
             // @ts-ignore
             expect(resp.rows[0].id).toBe(0);
@@ -480,7 +484,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for DAO proposal approval: " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.approveDaoWhitelistProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.approveDaoWhitelistProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_approveDaoProposal).toBe('string');
 
@@ -497,7 +501,7 @@ const api = new NCO_BlockchainAPI(
             };
 
             console.log("Arguments for Voting whitelist: " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.voteOnProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.voteOnProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
@@ -516,7 +520,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for WL proposal execution: " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.executeDaoWhitelistProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.executeDaoWhitelistProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_executeDaoProposal).toBe('string');
 
@@ -529,7 +533,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for whitelist search: " + JSON.stringify(n));
-            let resp = await api.getDaoWhitelist(n);
+            let resp = await api.daos.getDaoWhitelist(n);
             console.log(JSON.stringify(resp));
             //expect(resp.rows[0].id).toBe(0);
 
@@ -560,7 +564,7 @@ const api = new NCO_BlockchainAPI(
             } ;              
             
             console.log("Arguments for DAO proposal creation : " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.createDaoProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.createDaoProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_createDaoProposal).toBe('string');
             // @ts-ignore
@@ -581,7 +585,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for DAO proposal approval: " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.approveDaoProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.approveDaoProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_approveDaoProposal).toBe('string');
 
@@ -595,7 +599,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for DAO proposal search: " + JSON.stringify(n));
-            let resp = await api.getDaoProposals(n);
+            let resp = await api.daos.getDaoProposals(n);
             console.log("received from DAO proposal search:" + JSON.stringify(resp));
             console.log(
                     "Quantities: " 
@@ -616,7 +620,7 @@ const api = new NCO_BlockchainAPI(
             // @ts-ignore
             //expect(resp.rows[0].id).toBe(0);
 
-            let resp = await api.getDaoProposals(n);
+            let resp = await api.daos.getDaoProposals(n);
             console.log("get DAO proposals " + JSON.stringify(resp));
             expect(resp.rows[0].id).toBe(0);
 
@@ -628,7 +632,7 @@ const api = new NCO_BlockchainAPI(
                proposal_id: "0"
             }; 
 
-            let resp = await api.getDaoProposals(n);
+            let resp = await api.daos.getDaoProposals(n);
             console.log("get one DAO proposal" + JSON.stringify(resp));
             expect(resp.rows[0].id).toBe(0);
         }, 60000)
@@ -645,7 +649,7 @@ const api = new NCO_BlockchainAPI(
             };
 
             console.log("Arguments for Voting: " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.voteOnProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.voteOnProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
@@ -663,7 +667,7 @@ const api = new NCO_BlockchainAPI(
             };
 
             console.log("Arguments for Voting: " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.voteOnProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.voteOnProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_voteDaoProposal).toBe('string');
 
@@ -682,7 +686,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for DAO proposal execution: " + JSON.stringify(n));
-            let resp :NCReturnTxs = await api.executeDaoProposal(n) ;
+            let resp :NCReturnTxs = await api.daos.executeDaoProposal(n) ;
             console.log(resp);
             expect(typeof resp.TxID_executeDaoProposal).toBe('string');
             
@@ -887,7 +891,7 @@ const api = new NCO_BlockchainAPI(
                 dao_id: "97"
             };              
             
-            let resp = await api.getDaoWhitelist(n);
+            let resp = await api.daos.getDaoWhitelist(n);
             console.log(JSON.stringify(resp));
             expect(resp.rows.length).toBe(2);
 
@@ -902,7 +906,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for DAO votes list: " + JSON.stringify(n));
-            let resp = await api.getVotes(n);
+            let resp = await api.daos.getVotes(n);
             console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
             expect(resp.rows[0].id).toBe(0);
@@ -918,7 +922,7 @@ const api = new NCO_BlockchainAPI(
             };              
             
             console.log("Arguments for get vote depost back : " + JSON.stringify(n));
-            let resp = await api.withdrawVoteDeposit(n);
+            let resp = await api.daos.withdrawVoteDeposit(n);
             //console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
             expect(typeof resp.TxID_WithdrawVoteDeposit).toBe('string');

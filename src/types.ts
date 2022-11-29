@@ -2,7 +2,6 @@
 
 import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 
-
 export type NCKeyPair = {
   pub_key: string;
   prv_key: string;

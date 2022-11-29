@@ -1,3 +1,11 @@
+
+export type NCInit = {
+    services: NCInitServices,
+    urls: NCInitUrls,
+    is_proxy: boolean,
+    debug: boolean
+  };
+
 export type NCInitUrls = {
     nodeos_url: string,
     hyperion_url: string,

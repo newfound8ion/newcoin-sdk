@@ -1,25 +1,23 @@
 // EOS imports
-import { Api, JsonRpc, RpcError } from "eosjs";
-import { Transaction, TransactResult } from "eosjs/dist/eosjs-api-interfaces";
-import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig.js';  // development only
-import { PushTransactionArgs } from "eosjs/dist/eosjs-rpc-interfaces";
-
+import { RpcError } from "eosjs";
+import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
+//import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig.js';  // development only
+//import { PushTransactionArgs } from "eosjs/dist/eosjs-rpc-interfaces";
 const ecc = require("eosjs-ecc-priveos");
 
 // Extra backend services
 import { JsonRpc as HJsonRpc } from "@eoscafe/hyperion";
 
 // Newcoin services  
+//@ts-ignore
 import { ActionGenerator as PoolsActionGenerator, ChainApi as PoolsRpcApi } from '@newfound8ion/newcoin.pools-js'
-import { PoolPayload as PoolsPayload } from '@newfound8ion/newcoin.pools-js/dist/interfaces/pool.interface';
-import { ActionGenerator as MainDAOActionGenerator } from '@newfound8ion/newcoin.pool-js';
-
-import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from  '@newfound8ion/newcoin.daos-js'
-import { DAOPayload, GetTableRowsPayload, ProposalPayload } from  "@newfound8ion/newcoin.daos-js/dist/interfaces";
 
 import { ActionGenerator as sdkActionGen, EosioActionObject } from "./actions";
 import { RpcApi as AaRpcApi } from "atomicassets";
 //import { AssetParams } from "atomicassets/build/API/Explorer/Types";
+import { NCO_daos_API } from "./daos";
+import { NCO_submit_API } from "./submit";
+import { NCO_pools_API } from "./pools";
 
 import fetch from 'cross-fetch';
 
@@ -51,11 +49,11 @@ export {
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, 
   NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
-  NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote,
+  NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
   NCMintAsset,  NCBindCollection, NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
   NCPoolsInfo, NCNameType,
-  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal,
+  NCReturnTxs, NCReturnInfo, NCTxBal, NCTxNcoBal, NCChangeFile, NCModifyAsset, 
   devnet_services, devnet_urls
 };
 
@@ -67,17 +65,10 @@ import { getClaimNftsActions, getClaimWinBidActions, getCreateAuctionActions, ge
 import { NCClaimNftsParams, NCClaimWinBidParams, NCCreateAuctionParams, NCEditAuctionParams, NCEraseAuctionParams, NeftyMarketParamsBase, NCPlaceBidParams } from "./neftymarket/types";
 
 import { atomicTxToAssetId, readAsset } from "./io/nft";
-import { NCInitUrls, NCInitServices, devnet_urls, devnet_urls_prod, devnet_services } from "./io/system";
+import { NCInit, NCInitUrls, NCInitServices, devnet_urls, devnet_urls_prod, devnet_services } from "./io/system";
+
 
 //import { NCO_daos_API } from "./daos";
-
-export class A {
-  private a :boolean = false;
-  constructor() { this.a = true; }
-  async geta() {
-    return this.a;
-  }
-}
 
 /**
  * The primary tool to interact with [https://newcoin.org](newcoin.org).
@@ -88,11 +79,12 @@ export class A {
  */
 export class NCO_BlockchainAPI {
 
-  private isProxy: boolean = false;
   private debug: boolean = false;
   private urls: NCInitUrls;
   private services: NCInitServices;
 
+  public daos: NCO_daos_API;
+  public pools: NCO_pools_API;
 
   static defaults = {
     devnet_services,
@@ -102,27 +94,22 @@ export class NCO_BlockchainAPI {
   };
 
   static system_names = {
-
-    
-
   }
 
   // @ts-ignore
   private aa_api: AaRpcApi;
-  private nodeos_rpc: JsonRpc;
   private hrpc: HJsonRpc;
+  private submitter: NCO_submit_API;
 
-
-  private mGen: MainDAOActionGenerator;
-  private cApi: DaosChainApi;
-  private aGen: DaosAG;
+//  private mGen: MainDAOActionGenerator;
 
  // private poolRpcApi: PoolRpcApi;
 
-  private poolsRpcApi: PoolsRpcApi;
-  private pGen: PoolsActionGenerator;
-
+//  private poolsRpcApi: PoolsRpcApi;
+  //private pGen: PoolsActionGenerator;
   private sdkGen: sdkActionGen;
+
+  
 
   /**
    * Init the api
@@ -131,37 +118,27 @@ export class NCO_BlockchainAPI {
    * @param services 
    * @returns a Newcoin API instance
    */
-  constructor(
-    urls: NCInitUrls,
-    services: NCInitServices,
-    debug: boolean = false,
-    isProxy: boolean = false
-  ) {
+  constructor( n: NCInit )
+  {
 
     //super();
 
     //this.debug = debug;
     //if(this.debug) console.log("Init URLS " + JSON.stringify(urls));
-    this.isProxy = isProxy;
-    this.debug = debug;
+    //this.isProxy = n.is_proxy;
+    this.debug = n.debug;
+    this.urls = n.urls;
+    this.services = n.services;
+    this.daos = new NCO_daos_API(n);
+    this.pools = new NCO_pools_API(n);
+    this.submitter = new NCO_submit_API(n);
 
-    this.urls = urls;
-    this.services = services;
 
     //this.aa_api  = new AaRpcApi(this.urls.atomicassets_url, "atomicassets", {fetch, rateLimit: 4} as any);
     //this.aa_api = new ExplorerApi(, urls_, { fetch });
-    this.nodeos_rpc = new JsonRpc(this.urls.nodeos_url, { fetch });
+    //this.nodeos_rpc = new JsonRpc(this.urls.nodeos_url, { fetch });
     this.hrpc = new HJsonRpc(this.urls.hyperion_url, { fetch } as any);
-    this.sdkGen = new sdkActionGen(services.eosio_contract, services.token_contract);
-
-
-    this.cApi = new DaosChainApi(this.urls.nodeos_url, services.daos_contract, fetch);
-    this.aGen = new DaosAG(services.daos_contract, services.staking_contract);
-
-    // this.poolRpcApi = new PoolRpcApi(this.urls.nodeos_url, services.maindao_contract, fetch)
-    this.mGen = new MainDAOActionGenerator(services.maindao_contract, services.token_contract);
-    this.poolsRpcApi = new PoolsRpcApi(this.urls.nodeos_url, services.staking_contract, fetch);
-    this.pGen = new PoolsActionGenerator(services.staking_contract, services.maindao_contract);
+    this.sdkGen = new sdkActionGen(this.services.eosio_contract, this.services.token_contract);
     
   }
 
@@ -206,13 +183,12 @@ export class NCO_BlockchainAPI {
 
     let res: NCReturnTxs = {};
   
-
     let newacc_action = this.sdkGen.newaccount(newUser, payer, newacc_pub_active_key, newacc_pub_owner_key);
     let buyram_action = this.sdkGen.buyrambytes(newUser, payer, ram_amt);
     let delegatebw_action = this.sdkGen.delegateBw(newUser, payer, net_amount, cpu_amount, xfer);
 
     if(this.debug) console.log("before create account transaction");
-    const tres = await this.SubmitTx(
+    const tres = await this.submitter.SubmitTx(
       [newacc_action, buyram_action, delegatebw_action],
       [],
       [payer_prv_key]
@@ -225,7 +201,7 @@ export class NCO_BlockchainAPI {
 
  async buyRam(inpt: NCBuyRam) {
   let buyram_action = this.sdkGen.buyrambytes(inpt.user, inpt.payer, inpt.ram_amt);
-  const tres = await this.SubmitTx(
+  const tres = await this.submitter.SubmitTx(
     [buyram_action],
     [],
     [inpt.payer_prv_key]
@@ -233,7 +209,6 @@ export class NCO_BlockchainAPI {
   return { TxID_createAcc: tres.transaction_id, TxID: tres.transaction_id, originalResponse: tres } as NCReturnTxs;
 
  }
-
 
   /**
    * Create default collection for the account
@@ -262,7 +237,7 @@ export class NCO_BlockchainAPI {
 
     if(this.debug) console.log(t);
     if(this.debug) console.log("createcol transaction");
-    tres = await this.SubmitTx([t], [],[inpt.user_prv_active_key]) as TransactResult;
+    tres = await this.submitter.SubmitTx([t], [],[inpt.user_prv_active_key]) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
     if(this.debug) console.log(tres);
 
@@ -273,7 +248,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log(t1);
     
     if(this.debug) console.log("createsch transaction");
-    tres = await this.SubmitTx([t1],[],[inpt.user_prv_active_key]) as TransactResult;
+    tres = await this.submitter.SubmitTx([t1],[],[inpt.user_prv_active_key]) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
     if(this.debug) console.log(tres);
 
@@ -285,7 +260,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log(t);
 
     if(this.debug) console.log("creating template transaction");
-    tres = await this.SubmitTx([t], [], [inpt.user_prv_active_key] ) as TransactResult;
+    tres = await this.submitter.SubmitTx([t], [], [inpt.user_prv_active_key] ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
     if(this.debug) console.log(tres);
 
@@ -314,7 +289,7 @@ export class NCO_BlockchainAPI {
     t = this.sdkGen.createCollection( name, collection_name, [name], [name], mkt_fee, allow_notify );
     if(this.debug) console.log(t);
     if(this.debug) console.log("createcol transaction");
-    tres = await this.SubmitTx([t], [], [key] ) as TransactResult;
+    tres = await this.submitter.SubmitTx([t], [], [key] ) as TransactResult;
     res.TxID_createCol = tres.transaction_id;
     if(this.debug) console.log(tres);
 
@@ -325,7 +300,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log(t1);
     
     if(this.debug) console.log("createsch transaction");
-    tres = await this.SubmitTx([t1],[],[key]) as TransactResult;
+    tres = await this.submitter.SubmitTx([t1],[],[key]) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
     if(this.debug) console.log(tres);
 
@@ -334,7 +309,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log(t2);
 
     if(this.debug) console.log("createsch SBT transaction");
-    tres = await this.SubmitTx([t2],[],[key]) as TransactResult;
+    tres = await this.submitter.SubmitTx([t2],[],[key]) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
     if(this.debug) console.log(tres);
 
@@ -342,7 +317,7 @@ export class NCO_BlockchainAPI {
     let t3 = this.sdkGen.createSchema(name, collection_name, bind_sch_name, bind_schema);
     if(this.debug) console.log(t3);
     if(this.debug) console.log("createsch collection bind transaction");
-    tres = await this.SubmitTx([t3],[],[key]) as TransactResult;
+    tres = await this.submitter.SubmitTx([t3],[],[key]) as TransactResult;
     res.TxID_createSch = tres.transaction_id;
     if(this.debug) console.log(tres);
 
@@ -354,7 +329,7 @@ export class NCO_BlockchainAPI {
     if(this.debug) console.log(t);
 
     if(this.debug) console.log("creating template transaction");
-    tres = await this.SubmitTx([t], [], [key] ) as TransactResult;
+    tres = await this.submitter.SubmitTx([t], [], [key] ) as TransactResult;
     res.TxID_createTpl = res.TxID_createTpl;
     if(this.debug) console.log(tres);
 
@@ -371,7 +346,7 @@ export class NCO_BlockchainAPI {
    */
   async createPermission(inpt: NCCreatePermission) {
     let t = this.sdkGen.createPermission(inpt.author, inpt.perm_name, inpt.perm_pub_key);
-    let res = await this.SubmitTx([t],[],[inpt.author_prv_active_key]) as TransactResult;
+    let res = await this.submitter.SubmitTx([t],[],[inpt.author_prv_active_key]) as TransactResult;
     let r: NCReturnTxs = {};
     r.TxID_createPerm = res.transaction_id;
     return r;
@@ -405,7 +380,7 @@ export class NCO_BlockchainAPI {
       }]
     };
 
-    let res = await this.SubmitTx([action],
+    let res = await this.submitter.SubmitTx([action],
       [],
       [inpt.author_prv_active_key]
     ) as TransactResult;
@@ -415,163 +390,7 @@ export class NCO_BlockchainAPI {
   }
 
 
-  /* =====================================================================================
-   * Main DAO service: common staking pool transfrming NCO (external convertible currency) 
-   * into internal GNCO currency. 
-   * 
-   * Staked amount is subject to a staking fee, redemption delay and/or 
-   * instant unstaking fee.  
-   * @param   NCStakeMainDao 
-   * @returns NCReturnTxs
-   */
-  async stakeMainDAO(inpt: NCStakeMainDao) {
-    let r: NCReturnTxs = {};
-
-    const stakeTx = await this.mGen.stake( [{ actor: inpt.payer, permission: "active" }], inpt.payer, inpt.amt);
-    if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
-    const res = await this.SubmitTx(stakeTx, [], [inpt.payer_prv_key]) as TransactResult;
-
-    r.TxID_stakeMainDAO = res.transaction_id;
-    r.tx = res;
-    return r;
-  }
-
-  /**
-  * Instant UnStake mainDAO with penalty
-  * @param NCStakeMainDao 
-  * @returns NCReturnTxs
-  */
-  async instUnstakeMainDAO(inpt: NCStakeMainDao) {
-    let r: NCReturnTxs = {};
-
-    const stakeTx = await this.mGen.instunstake(
-      [{ actor: inpt.payer, permission: "active" }],
-      inpt.payer,
-      inpt.amt);
-
-    if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
-    const res = await this.SubmitTx(stakeTx,
-      [],
-      [inpt.payer_prv_key]) as TransactResult;
-
-    r.TxID_unstakeMainDAO = res.transaction_id;
-    return r;
-
-  }
-
-  /**
-   * Delayed UnStake mainDAO delay without penalty
-   * @param NCStakeMainDao 
-   * @returns NCReturnTxs
-   */
-  async dldUnstakeMainDAO(inpt: NCStakeMainDao) {
-    let r: NCReturnTxs = {};
-    const stakeTx = await this.mGen.dldunstake(
-      [{ actor: inpt.payer, permission: "active" }],
-      inpt.payer,
-      inpt.amt);
-
-    if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
-    const res = await this.SubmitTx(stakeTx,
-      [],
-      [inpt.payer_prv_key]) as TransactResult;
-
-    r.TxID_unstakeMainDAO = res.transaction_id;
-    return r;
-
-  }
-
-
-  // ========================================================================
-  /** Staking pools service, issuing social tokens
-   *
-   * Create a staking pool for an account. 
-   * Selection of ticker and inflation/deflation optionality
-   * @param   NCCreatePool
-   * @returns Create Pool transaction id
-   */
-   async createPool(inpt: NCCreatePool) {
-    inpt.ticker = (inpt.ticker || inpt.owner.substring(0, 5)).toUpperCase();
-    inpt.is_inflatable ??= true;
-    inpt.is_deflatable ??= true;
-    inpt.is_treasury ??= false;
-
-    if(this.debug) console.log("Creating pool: " + JSON.stringify(inpt));
-    let t = this.sdkGen.createPool(
-      inpt.owner,
-      inpt.ticker,
-      inpt.is_inflatable,
-      inpt.is_deflatable,
-      inpt.is_treasury,
-      "test pool for " + inpt.owner
-    );
-
-    let res = await this.SubmitTx([t],
-      [], [inpt.owner_prv_active_key]
-    ) as TransactResult;
-    let r: NCReturnTxs = {};
-    r.TxID_createPool = res.transaction_id;
-    return r;
-  }
-
-  /**
-   * Stake to creator pool 
-   * @param 
-   * @returns Create Pool transaction id
-   */
-  async stakePool(inpt: NCStakePool) {
-
-    let p: PoolsPayload = { owner: inpt.owner };
-    let r: NCReturnTxs = {};
-    type RetT = { rows: PoolsPayload[] };
-
-    if(this.debug) console.log("Get poolbyowner: ", JSON.stringify(p));
-    let q = await this.poolsRpcApi.getPoolByOwner(p);
-    let t = await q.json() as RetT;
-
-    const pool_id = t.rows[0].id as string;
-    const pool_code = t.rows[0].code as string;
-
-    if(this.debug) console.log("pool:" + JSON.stringify(t));
-
-    const stakeTx = await this.pGen.stakeToPool(
-      [{ actor: inpt.payer, permission: "active" }],
-      inpt.payer, inpt.amt, pool_id);
-
-    if(this.debug) console.log("action: " + JSON.stringify(stakeTx));
-    const res = await this.SubmitTx(stakeTx,
-      [],
-      [inpt.payer_prv_key]) as TransactResult;
-
-    r.TxID_stakePool = res.transaction_id;
-    r.pool_id = pool_id;
-    r.pool_code = pool_code;
-    return r;
-  }
   
-  // DAO functionality
-  /**
-   * Unstake creator pool
-   * @param   NCUnstakePool
-   * @returns Create Pool transaction id
-   */
-  async unstakePool(inpt: NCUnstakePool) {
-
-    const t = await this.pGen.withdrawFromPool(
-      [{ actor: inpt.payer, permission: "active" }], //{ actor: "io", permission: "active"}
-      inpt.payer,
-      inpt.amt);
-
-    if(this.debug) console.log("action: " + JSON.stringify(t));
-    const res = await this.SubmitTx(t,
-      [],
-      [inpt.payer_prv_key]) as TransactResult;
-
-    let r: NCReturnTxs = {};
-    r.TxID_unstakePool = res.transaction_id;
-    return r;
-  }
-
 
   async swapNcoToCreatorCoin( inpt: NCSwapNCOtoCC ) { 
 
@@ -585,7 +404,7 @@ export class NCO_BlockchainAPI {
       payer_prv_key: inpt.payer_prv_key
     };
 
-    let resp1  = await this.stakeMainDAO(n) as NCReturnTxs;
+    let resp1  = await this.pools.stakeMainDAO(n) as NCReturnTxs;
     if(this.debug) console.log(resp1);
     //@ts-ignore
     let gnco_amt= resp1.tx.processed.action_traces[0].inline_traces[3].act.data.quantity ;
@@ -606,270 +425,14 @@ export class NCO_BlockchainAPI {
       payer_prv_key: inpt.payer_prv_key
     };      
      
-    let resp2 = await this.stakePool(m);
+    let resp2 = await this.pools.stakePool(m);
     if(this.debug) console.log(resp2);
     
     return resp2;
 }
+ 
 
-/**
- * DAO creation. One per account.
- * @param inpt : NCCreateDao
- * @returns NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
- */
-  async createDao(inpt: NCCreateDao) {
-
-    const t = await this.aGen.createDao(
-      [{ actor: inpt.author, permission: "active" }],
-      inpt.author,
-      inpt.descr
-    );
-    const res = await this.SubmitTx(t,
-      [], [inpt.author_prv_key]) as TransactResult;
-
-    let p: DAOPayload = { owner: inpt.author };
-    if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
-    let q = await this.cApi.getDAOByOwner(p);
-    let w = await q.json();
-    if(this.debug) console.log("received from getDaoByOwner" + JSON.stringify(w));
-
-    let r: NCReturnTxs = {};
-    r.TxID_createDao = res.transaction_id;
-    r.dao_id = w.rows[0].id.toString();
-    // r.dao_id = r.dao_id.toString() ; 
-    return r;
-  }
-  
-
-/**
- * 
- * @param inpt : NCCreateDaoProposal
- * @returns NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
- */
-  async createDaoProposal(inpt: NCCreateDaoProposal) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-    const t = await this.aGen.createProposal(
-      [{ actor: inpt.proposer, permission: "active" }],
-      inpt.proposer, Number(dao_id),
-      inpt.title, inpt.summary,
-      inpt.url, inpt.pass_rate, inpt.vote_start, inpt.vote_end
-    );
-
-    const res = await this.SubmitTx(t,
-      [], [inpt.proposer_prv_key]) as TransactResult;
-
-    let r: NCReturnTxs = {};
-    r.TxID_createDaoProposal = res.transaction_id;
-    r.dao_id = dao_id;
-
-    const ps = await this.getDaoProposals({...inpt, dao_id }); // r.dao_id, inpt.proposer
-    r.proposal_id = ps.rows[ps.rows.length-1].id;
-    return r;
-  }
-
-
-/**
- * 
- * @param inpt : NCCreateDaoUserWhitelistProposal
- * @returns NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
- */
-  async createDaoUserWhitelistProposal(inpt: NCCreateDaoUserWhitelistProposal) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-    const t = await this.aGen.createWhiteListProposal(
-      [{ actor: inpt.proposer, permission: "active" }],
-      inpt.proposer, Number(dao_id), inpt.user, 
-      inpt.type, inpt.pass_rate,
-      inpt.vote_start, inpt.vote_end
-    );
-
-    const res = await this.SubmitTx(t,
-      [],
-      [inpt.proposer_prv_key]) as TransactResult;
-
-    let r: NCReturnTxs = {};
-    r.TxID_createDaoProposal = res.transaction_id;
-    r.dao_id = dao_id;
-    let ps = await this.getDaoWhitelistProposals({...inpt, dao_id });  //  { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
-    r.proposal_id = ps.rows[ps.rows.length - 1].id;
-    return r;
-  }
-
-  /**
- * 
- * @param inpt : NCCreateDaoUserWhitelistProposal
- * @returns NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
- */
-   async createDaoStakeProposal(inpt: NCCreateDaoStakeProposal) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-    const t = await this.aGen.createStakeProposal(
-      [{ actor: inpt.proposer, permission: "active" }],
-      inpt.proposer, Number(dao_id), 
-      inpt.to, inpt.quantity,inpt.pass_rate,
-      inpt.vote_start, inpt.vote_end
-    );
-
-    const res = await this.SubmitTx(t,
-      [],
-      [inpt.proposer_prv_key]) as TransactResult;
-
-    let r: NCReturnTxs = {};
-    r.TxID_createDaoProposal = res.transaction_id;
-    r.dao_id = dao_id;
-    let ps = await this.getDaoStakeProposals(
-      { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
-    r.proposal_id = ps.rows[ps.rows.length - 1].id;
-    return r;
-  }
-
-
-  /**
- * 
- * @param inpt : NCApproveDaoProposal
- * @returns NCReturnTxs.TxID_approveDaoProposal
- */
-  async approveDaoProposal(inpt: NCApproveDaoProposal) {
-    try {
-      const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-      
-      console.log(`dao_owner: ${inpt.dao_owner}, dao_id: ${dao_id}`)
-      
-      if (inpt.proposal_id == undefined) throw ("Proposal undefined ID");
-
-      console.log("Got dao_id: ", dao_id, " number: ", Number(dao_id));
-
-      const t = await this.aGen.approveProposal(
-        [{ actor: inpt.approver, permission: "active" }],
-        inpt.approver,
-        Number(dao_id), inpt.proposal_id
-      );
-
-      console.log("Got action:", JSON.stringify(t));
-  
-      const res = await this.SubmitTx(t,
-        [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
-  
-      let r: NCReturnTxs = {};
-      r.TxID_approveDaoProposal = res.transaction_id;
-      return r;
-
-    } catch (ex) {
-      console.log((ex as any).message);
-      console.log(JSON.stringify(ex));
-      throw ex;
-    }
-
-  }
-
-/**
- * 
- * @param inpt : NCApproveDaoProposal
- * @returns NCReturnTxs.TxID_approveDaoProposal
- */
-  async approveDaoWhitelistProposal(inpt: NCApproveDaoProposal) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-    if (inpt.proposal_id == undefined) throw ("Proposal undefined ID");
-
-    const t = await this.aGen.approveWhiteListProposal(
-      [{ actor: inpt.approver, permission: "active" }],
-      inpt.approver,
-      Number(dao_id), inpt.proposal_id
-    );
-
-    const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
-
-    let r: NCReturnTxs = {};
-    r.TxID_approveDaoProposal = res.transaction_id;
-    return r;
-  }
-
-/**
- * 
- * @param inpt : NCExecuteDaoProposal
- * @returns NCReturnTxs.TxID_executeDaoProposal
- */
-  async executeDaoProposal(inpt: NCExecuteDaoProposal) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-    if (inpt.proposal_id == undefined) throw ("Proposal ID undefined");
-
-    const t = await this.aGen.executeProposal(
-      [{ actor: inpt.exec, permission: "active" }],
-      Number(dao_id), inpt.proposal_id
-    );
-
-    const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.exec_prv_key)], [inpt.exec_prv_key]) as TransactResult;
-
-    let r: NCReturnTxs = {};
-    r.TxID_executeDaoProposal = res.transaction_id;
-    return r;
-  }
-
-/**
- * @param inpt : NCExecuteDaoProposal
- * @returns NCReturnTxs.TxID_executeDaoProposal
- */
-  async executeDaoWhitelistProposal(inpt: NCExecuteDaoProposal) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-
-    if (inpt.proposal_id == undefined) throw ("Proposal ID undefined");
-
-    const t = await this.aGen.executeWhiteListProposal(
-      [{ actor: inpt.exec, permission: "active" }], Number(dao_id), inpt.proposal_id
-    );
-
-    const res = await this.SubmitTx(t, [], [inpt.exec_prv_key]) as TransactResult;
-
-    let r: NCReturnTxs = {};
-    r.TxID_executeDaoProposal = res.transaction_id;
-    return r;
-  }
-
-/**
- * @param inpt : NCCreateDao
- * @returns NCReturnTxs.TxID_voteDaoProposal
- */
-  async voteOnProposal(inpt: NCDaoProposalVote) {
-
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-    //if(this.debug) console.log("Vote for DAO proposal", JSON.stringify(inpt));
-    const t = await this.aGen.vote(
-      [{ actor: inpt.voter, permission: "active" }],
-      inpt.voter, inpt.quantity, inpt.proposal_type || "standart",
-      dao_id, inpt.proposal_id, inpt.option
-    );
-
-    if(this.debug) console.log("Vote for DAO proposal: ", JSON.stringify(t));
-    const res = await this.SubmitTx(t,
-      [], [inpt.voter_prv_key]) as TransactResult;
-
-    //if(this.debug) console.log("received from VoteForDaoProposal" + JSON.stringify(res));
-    return { TxID_voteDaoProposal: res.transaction_id } as NCReturnTxs;
-  }
-
-  async withdrawVoteDeposit(inpt: NCDaoWithdrawVoteDeposit) {
-    //const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-    if(this.debug) console.log("withdraw vote deposit make action", JSON.stringify(inpt));
-    const t = await this.aGen.withdraw(
-      [{ actor: inpt.voter, permission: "active" }],
-      inpt.voter, +inpt.vote_id
-    );
-
-    if(this.debug) console.log("Withdraw vote deposit send action: ", JSON.stringify(t));
-    const res = await this.SubmitTx(t,
-      [], [inpt.voter_prv_key]) as TransactResult;
-
-    //if(this.debug) console.log("received from withdraw: " + JSON.stringify(res));
-    return { TxID_WithdrawVoteDeposit: res.transaction_id } as NCReturnTxs;
-  }
-
-
-  // Collection rules: 
+ // Collection rules: 
   // Root collection: with Z instead of dot in name
   // schema name for assets: with W
   // Files collection: with 
@@ -895,7 +458,7 @@ export class NCO_BlockchainAPI {
       );
   
       const keys = [inpt.payer_prv_key,inpt.user_prv_active_key].filter(Boolean) as string[];
-      let res = await this.SubmitTx([t], [], keys) as TransactResult;
+      let res = await this.submitter.SubmitTx([t], [], keys) as TransactResult;
 
       let r: NCReturnTxs = {};
       r.TxID_mintAsset = res.transaction_id;
@@ -933,7 +496,7 @@ export class NCO_BlockchainAPI {
       
       const t = this.sdkGen.modifyAsset(inpt.editor, inpt.owner, inpt.asset_id, inpt.new_data);
       console.log("modify asset: " + JSON.stringify(t));
-      let res = await this.SubmitTx([t], [], [inpt.payer_prv_key]) as TransactResult;
+      let res = await this.submitter.SubmitTx([t], [], [inpt.payer_prv_key]) as TransactResult;
       let r: NCReturnTxs = {};
       r.TxID_modifyAsset = res.transaction_id;
       r.asset_id = inpt.asset_id;
@@ -947,10 +510,7 @@ export class NCO_BlockchainAPI {
    */
    async bindCollection(inpt: NCBindCollection) {
       
-
     // todo if no schema then create it
-
-
     let s : NCMintAsset = {
       creator: inpt.creator,
       col_name: normalizeUsername(inpt.creator, "z"), // root collection
@@ -1096,171 +656,8 @@ export class NCO_BlockchainAPI {
       return res;
     }
 
-// Getters 2
-  
-/**
- * @param inpt : getDaoIdByOwner
- * @returns NCReturnTxs.TxID_createDao, NCReturnTxs.dao_id
- */
- async getDaoIdByOwner(owner?: string, noFail?: boolean) : Promise<string> {
-  if (!owner)
-    throw new Error("DAO undefined");
-
-  let p: DAOPayload = { owner: owner }
-  if(this.debug) console.log("Get dao by owner: ", JSON.stringify(p));
-  let q = await this.cApi.getDAOByOwner(p);
-  let w = await q.json();
-  
-  if(this.debug) console.log("received from getDaoByOwner" + JSON.stringify(w));
-  if (!w.rows.length && !noFail)
-    throw new Error('User has no dao');
-
-  const r: string = w.rows[0]?.id?.toString();
-  if(!r && !noFail)
-    throw new Error("DAO undefined");
-  
-  return r;
-}
-
-async getDaoProposals(inpt: NCGetDaoProposals) {
-  
-  if(this.debug) console.log("Get proposal list: ", JSON.stringify(inpt));
-  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
-  if(!dao_id) return { dao_id: null };
-
-  if(inpt.proposal_author && (inpt.proposal_id == undefined))
-  {
-      let w = await this.cApi.getProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
-      inpt.proposal_id = await w.json();
-  }
-
-  if(inpt.proposal_id) inpt.lower_bound = inpt.upper_bound = inpt.proposal_id;
-
-  const opt = {
-        json: true,
-        code: "daos.nco",
-        scope: dao_id,
-        table: "proposals",
-        lower_bound: inpt.lower_bound,
-        upper_bound: inpt.upper_bound,
-        limit: ~~(inpt.limit??"10"),
-        reverse: inpt.reverse,
-        index_position: "1",
-    } as GetTableRowsPayload;
-  let w = await (await this.cApi.getTableRows( opt )).json();
-
-  if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
-  return { ...w, dao_id };
-}
-
-async getDaoWhitelistProposals(inpt: NCGetDaoProposals) {
-  
-  if(this.debug) console.log("Get whitelist proposal list: ", JSON.stringify(inpt));
-  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
-  if(!dao_id) return { dao_id: null };
-
-  if(inpt.proposal_author && (inpt.proposal_id == undefined))
-  {
-      let w = await this.cApi.getWhiteListProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
-      inpt.proposal_id = await w.json();
-  }
-
-  if(inpt.proposal_id) inpt.lower_bound = inpt.upper_bound = inpt.proposal_id;
-
-  const opt = {
-        json: true,
-        code: "daos.nco",
-        scope: dao_id,
-        table: "whlistprpls",
-        lower_bound: inpt.lower_bound,
-        upper_bound: inpt.upper_bound,
-        limit: ~~(inpt.limit??"10"),
-        reverse: inpt.reverse,
-        index_position: "1",
-  } as GetTableRowsPayload;
-  let w = await (await this.cApi.getTableRows( opt )).json();
-  
-  if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
-  return { ...w, dao_id };
-}
-
-async getDaoStakeProposals(inpt: NCGetDaoProposals) {
-  
-  if(this.debug) console.log("Get stake proposal list: ", JSON.stringify(inpt));
-  const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
-  if(!dao_id) return { dao_id: null };
-
-  if(inpt.proposal_author && (inpt.proposal_id == undefined))
-  {
-      let w = await this.cApi.getProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
-      inpt.proposal_id = await w.json();
-  }
-
-  if(inpt.proposal_id) inpt.lower_bound = inpt.upper_bound = inpt.proposal_id;
-
-  const opt = {
-        json: true,
-        code: "daos.nco",
-        scope: dao_id,
-        table: "stakeprpls",
-        lower_bound: inpt.lower_bound,
-        upper_bound: inpt.upper_bound,
-        limit: ~~(inpt.limit??"10"),
-        reverse: inpt.reverse,
-        index_position: "1",
-  } as GetTableRowsPayload;
-  
-  let w = await (await this.cApi.getTableRows( opt )).json();
-  
-  if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
-  return { ...w, dao_id };
-}
 
 
-  async getDaoWhitelist(inpt: NCGetDaoWhiteList) {
-    const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
-    //let q = await this.cApi.getDAOWhiteList({ id: inpt.dao_id as string });
-    //let w = await q.json();
-    const opt = {
-        json: true,
-        code: "daos.nco",
-        scope: dao_id,
-        table: "whitelist",
-        key_type: "name",
-        lower_bound: inpt.lower_bound,
-        upper_bound: inpt.upper_bound,
-        limit: ~~(inpt.limit??"10"),
-        reverse: inpt.reverse,
-        index_position: "1",
-    } as GetTableRowsPayload;
-    let w = await (await this.cApi.getTableRows( opt )).json();
-    if(this.debug) console.log("received white list" + JSON.stringify(w)); 
-    return { ...w, dao_id };
-  }
-    
-
-  async getVotes(inpt: NCGetVotes) {
-    let w;
-
-    const opt = {
-      json: true,
-      code: "daos.nco",
-      scope: inpt.voter,
-      table: "votes",
-      key_type: "i64",
-      lower_bound: inpt.lower_bound,
-      upper_bound: inpt.upper_bound,
-      limit: ~~(inpt.limit??"10"),
-      reverse: inpt.reverse,
-      index_position: "1",
-    } as GetTableRowsPayload;
-
-    w = await (await this.cApi.getTableRows(opt)).json();
-    if(this.debug) console.log("received from getVotes " + JSON.stringify(w.rows));
-    return w;
-  }
-
- 
   /**
    * Get account balance
    * @param acc: NCGetAccInfo
@@ -1374,7 +771,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
     async _txBalance(contract: string, inpt: NCTxBal): Promise<NCReturnTxs> {
       let r: NCReturnTxs = {};
       let tx = this.sdkGen.txBalance(contract, inpt.payer, inpt.to, inpt.amt, inpt.memo ??= "");
-      let res = await this.SubmitTx([tx],
+      let res = await this.submitter.SubmitTx([tx],
         [],
         [inpt.payer_prv_key]
       ) as TransactResult;
@@ -1394,7 +791,7 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
   }
 
   private async submitAuctionTx(actions: EosioActionObject[], payer_prv_key: string): Promise<NCReturnTxs> {
-    const response = await this.SubmitTx(
+    const response = await this.submitter.SubmitTx(
       actions, 
       [], 
       [payer_prv_key]
@@ -1461,103 +858,31 @@ async getDaoStakeProposals(inpt: NCGetDaoProposals) {
   }
 
 
+// to be deprecated
+ async stakeMainDAO(inpt: NCStakeMainDao) { return this.pools.stakeMainDAO(inpt); }
+ async instUnstakeMainDAO(inpt: NCStakeMainDao) { return this.pools.stakeMainDAO(inpt); }
+ async dldUnstakeMainDAO(inpt: NCStakeMainDao) { return this.pools.dldUnstakeMainDAO(inpt); }
+ 
+ async createPool(inpt: NCCreatePool) { return this.pools.createPool(inpt); }
+ async stakePool(inpt: NCStakePool) { return this.pools.stakePool(inpt); } 
+ async unstakePool(inpt: NCUnstakePool) { return this.pools.unstakePool(inpt); }
+ 
+ async createDao(inpt: NCCreateDao) { return this.daos.createDao(inpt);}
 
-  async SubmitTx (
-    actions: any[],
-    public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
-    private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
-    )  
-    {
-      if(this.debug) console.log("Submitted transaction: " + JSON.stringify({ actions, public_keys, private_keys }));
-      return this[this.isProxy ? "SubmitTxProxy" : "SubmitTxNative"](actions, public_keys, private_keys);
-  }
+ async createDaoProposal(inpt: NCCreateDaoProposal) { return this.daos.createDaoProposal(inpt); }
+ async createDaoUserWhitelistProposal(inpt: NCCreateDaoUserWhitelistProposal) { return this.daos.createDaoUserWhitelistProposal(inpt); }
+ async createDaoStakeProposal(inpt: NCCreateDaoStakeProposal) { return this.daos.createDaoStakeProposal(inpt); }
 
+ async approveDaoProposal(inpt: NCApproveDaoProposal) { return this.daos.approveDaoProposal(inpt); }
+ async approveDaoWhitelistProposal(inpt: NCApproveDaoProposal) { return this.daos.approveDaoWhitelistProposal(inpt); }
+ async approveDaoStakeProposal(inpt: NCApproveDaoProposal) { return this.daos.approveDaoStakeProposal(inpt); }
+ 
+ async executeDaoProposal(inpt: NCExecuteDaoProposal) { return this.daos.executeDaoProposal(inpt); }
+ async executeDaoWhitelistProposal(inpt: NCExecuteDaoProposal) { return this.daos.executeDaoWhitelistProposal(inpt); }
+ async executeDaoStakeProposal(inpt: NCExecuteDaoProposal) { return this.daos.executeDaoStakeProposal(inpt);}
 
-  async SubmitTxProxy(
-    actions: any[],
-    public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
-    private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
-    ) {
-      const args = JSON.stringify({
-        actions,
-        public_keys,
-        private_keys
-      });
-    
-      try {
-  
-        const r = await fetch(
-          this.urls.nodeos_proxy_url || this.urls.nodeos_url,
-          { method: "POST", body: args, headers: { "Authorization": `newsafe ${private_keys[0]}`, "Content-Type": "application/json" } });
+ async voteOnProposal(inpt: NCDaoProposalVote) { return this.daos.voteOnProposal(inpt) };
+ async withdrawVoteDeposit(inpt: NCDaoWithdrawVoteDeposit) { return this.daos.withdrawVoteDeposit(inpt); }
 
-        const txt = await r.text();
-
-        return JSON.parse(txt);
-      } catch(e) {
-        console.log((e as any).message)
-        throw e;
-      }
-  }
-
-
-  async SubmitTxNative(
-    actions: any[],
-    public_keys: string[],   // testnet ["EOS5PU92CupzxWEuvTMcCNr3G69r4Vch3bmYDrczNSHx5LbNRY7NT"]
-    private_keys: string[],  // testnet ["5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"]
-    ) {
-  
-    // if(!private_keys?.length)
-    // {
-    private_keys = private_keys instanceof Array ? private_keys : [private_keys];
-    debugger;
-    public_keys = private_keys.map(k => ecc.privateToPublic(k));
-    debugger;
-    // }
-
-    const signatureProvider = new JsSignatureProvider(private_keys);
-    signatureProvider.availableKeys = public_keys;
-
-    //@ts-ignore
-    const rpc = this.nodeos_rpc;
-    const api = new Api({ rpc, signatureProvider }); //required to submit transactions
-
-    const info = await rpc.get_info();
-    const lastBlockInfo = await rpc.get_block(info.last_irreversible_block_num)
-    const tzOff = new Date(info.head_block_time).getTimezoneOffset();
-    var t = new Date((new Date(info.head_block_time)).getTime() + 10 * 60 * 1000 - tzOff * 1000 * 60).toISOString().slice(0, -1);//+10m
-
-    const transactionObj: Transaction =
-    {
-      actions: actions,
-      expiration: t,
-      ref_block_prefix: lastBlockInfo.ref_block_prefix,  //info.last_irreversible_block_num 
-      ref_block_num: lastBlockInfo.block_num & 0xffff, // 22774
-    };
-
-    //if (this.debug) console.log("actions before serialization: " + JSON.stringify(transactionObj.actions));
-    
-    const a = await api.serializeActions(transactionObj.actions);
-    const transaction = { ...transactionObj, actions: a };
-    const serializedTransaction = api.serializeTransaction(transaction);
-
-    const availableKeys = await api.signatureProvider.getAvailableKeys();
-    const requiredKeys = await api.authorityProvider.getRequiredKeys({ transaction, availableKeys });
-    const abis = await api.getTransactionAbis(transaction);
-    // const pushTransactionArgs: PushTransactionArgs = { serializedTransaction, signatures };
-    
-    let tx = {
-      chainId: info.chain_id, // from getinfo
-      requiredKeys: requiredKeys,
-      serializedTransaction: serializedTransaction,
-      serializedContextFreeData: undefined,
-      abis: abis
-    };
-
-    const pushTransactionArgs: PushTransactionArgs = await api.signatureProvider.sign(tx);
-    //console.log(pushTransactionArgs);
-    return api.pushSignedTransaction(pushTransactionArgs);
-  };
-
-
-  
+ async submitTx(actions: any[], public_keys: string[], private_keys: string[] ) {   this.submitter.SubmitTx(actions,public_keys, private_keys); }
 }
