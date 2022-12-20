@@ -29,7 +29,7 @@ import {
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, NCBuyRam,
   NCCreateDao, NCGetDaoWhiteList, 
-  NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
+  NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoUserWhitelistRemoveProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, 
   NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
   NCMintAsset, NCBindCollection, NCMintFile, NCCreatePermission,
@@ -48,7 +48,7 @@ export {
   NCCreateUser, NCCreateCollection,
   NCCreatePool, NCStakePool, NCUnstakePool,
   NCStakeMainDao, 
-  NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
+  NCCreateDao, NCGetDaoWhiteList, NCCreateDaoProposal, NCCreateDaoUserWhitelistRemoveProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
   NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
   NCMintAsset,  NCBindCollection, NCMintFile, NCCreatePermission,
   NCGetAccInfo, NCGetPoolInfo, NCLinkPerm,
@@ -871,7 +871,7 @@ export class NCO_BlockchainAPI {
  async createDaoProposal(inpt: NCCreateDaoProposal) { return this.daos.createDaoProposal(inpt); }
  async createDaoUserWhitelistProposal(inpt: NCCreateDaoUserWhitelistProposal) { return this.daos.createDaoUserWhitelistProposal(inpt); }
  async createDaoStakeProposal(inpt: NCCreateDaoStakeProposal) { return this.daos.createDaoStakeProposal(inpt); }
-
+ async createDaoRemoveMemberProposal(inpt: NCCreateDaoUserWhitelistRemoveProposal) { return this.daos.createDaoRemoveMemberProposal(inpt); }
  async approveDaoProposal(inpt: NCApproveDaoProposal) { return this.daos.approveDaoProposal(inpt); }
  async approveDaoWhitelistProposal(inpt: NCApproveDaoProposal) { return this.daos.approveDaoWhitelistProposal(inpt); }
  async approveDaoStakeProposal(inpt: NCApproveDaoProposal) { return this.daos.approveDaoStakeProposal(inpt); }

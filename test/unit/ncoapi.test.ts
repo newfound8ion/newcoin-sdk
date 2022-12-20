@@ -2,7 +2,7 @@
 //import { TransactResult } from 'eosjs/dist/eosjs-api-interfaces';
 //import { isObjectBindingPattern } from 'typescript';
 import { debug } from 'console';
-import { devnet_urls, devnet_services, NCO_BlockchainAPI } from '../../src/';
+import {devnet_urls, devnet_services, NCO_BlockchainAPI, NCCreateDaoUserWhitelistRemoveProposal} from '../../src/';
 import { 
     //NCKeyPair,
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
@@ -572,6 +572,40 @@ const api = new NCO_BlockchainAPI(
             // @ts-ignore
             expect(~~dao_id).toBeGreaterThan(0);
             
+        }, 60000)
+
+
+        it("create remove member proposal", async () => {
+
+            let start = new Date();
+            let end = start;
+
+            start = new Date(start.setSeconds(start.getSeconds() + 10));
+            end   = new Date(end.setSeconds(start.getSeconds() + 20));
+            console.log("start vote: " + start);
+            console.log("end vote: " + end);
+
+            //end.setMinutes(start.getMinutes() + 1);
+
+            let n: NCCreateDaoUserWhitelistRemoveProposal = {
+                user: "zuzanella.io",
+                proposer: name,
+                proposer_prv_key: prv_key_active,
+                dao_owner:name,
+                pass_rate: 0,
+                vote_start: start.toISOString().slice(0,-5), //now.toISOString(),
+                vote_end:  end.toISOString().slice(0,-5)  //new Date(now.getTime()+ 8*24*60*60*1000).toISOString()
+            } ;
+
+            console.log("Arguments for DAO proposal creation : " + JSON.stringify(n));
+            let resp :NCReturnTxs = await api.daos.createDaoRemoveMemberProposal(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_createDaoProposal).toBe('string');
+            // @ts-ignore
+            dao_id = resp.dao_id.toString() ;
+            // @ts-ignore
+            expect(~~dao_id).toBeGreaterThan(0);
+
         }, 60000)
     
         it("approve dao proposal", async () => {
