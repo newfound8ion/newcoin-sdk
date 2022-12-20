@@ -30,7 +30,7 @@ import {
 import { normalizeUsername } from '../../src/utils';
 import { readAsset } from '../../src/io/nft';
 
-const TEST_PROXY = false;
+const TEST_PROXY = true;
 const DEBUG = false;
 
 //import * as nco from 'newcoin';
@@ -580,7 +580,7 @@ const api = new NCO_BlockchainAPI(
                 approver: name, 
                 approver_prv_key: prv_key_active,
                 dao_owner: name,
-                proposal_id: 0
+                proposal_id: 22
 
             };              
             

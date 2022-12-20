@@ -8,7 +8,7 @@ import { NCCreateDao, NCGetDaoWhiteList,
 import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from  '@newfound8ion/newcoin.daos-js'
 import { DAOPayload, GetTableRowsPayload, ProposalPayload } from  "@newfound8ion/newcoin.daos-js/dist/interfaces";
-const ecc = require("eosjs-ecc-priveos");
+// const ecc = require("eosjs-ecc-priveos");
 import fetch from 'cross-fetch';
 
 import { NCO_submit_API } from "./submit"
@@ -132,7 +132,7 @@ class NCO_daos_API {
 
   /**
  * 
- * @param inpt : NCCreateDaoUserWhitelistProposal
+ * @param inpt : NCCreateDaoStakeProposal
  * @returns NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
  */
    async createDaoStakeProposal(inpt: NCCreateDaoStakeProposal) {
@@ -183,7 +183,7 @@ class NCO_daos_API {
       console.log("Got action:", JSON.stringify(t));
   
       const res = await this.SubmitTx(t,
-        [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+        [], [inpt.approver_prv_key]) as TransactResult;
   
       let r: NCReturnTxs = {};
       r.TxID_approveDaoProposal = res.transaction_id;
@@ -214,7 +214,7 @@ class NCO_daos_API {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+      [], [inpt.approver_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_approveDaoProposal = res.transaction_id;
@@ -238,7 +238,7 @@ class NCO_daos_API {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+      [], [inpt.approver_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_approveDaoProposal = res.transaction_id;
@@ -261,7 +261,7 @@ class NCO_daos_API {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.exec_prv_key)], [inpt.exec_prv_key]) as TransactResult;
+      [], [inpt.exec_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_executeDaoProposal = res.transaction_id;
