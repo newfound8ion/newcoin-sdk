@@ -1,14 +1,16 @@
 import { NCInit, NCInitServices, NCInitUrls } from "./io/system";
 
-import { NCCreateDao, NCGetDaoWhiteList, 
+import {
+    NCCreateDao, NCGetDaoWhiteList,
     NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
-    NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes, 
-    NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit, NCReturnTxs } from "./types";
+    NCApproveDaoProposal, NCExecuteDaoProposal, NCGetVotes,
+    NCGetDaoProposals, NCDaoProposalVote, NCDaoWithdrawVoteDeposit, NCReturnTxs, NCCreateDaoUserWhitelistRemoveProposal
+} from "./types";
 
 import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
 import { ActionGenerator as DaosAG, ChainApi as DaosChainApi } from  '@newfound8ion/newcoin.daos-js'
 import { DAOPayload, GetTableRowsPayload, ProposalPayload } from  "@newfound8ion/newcoin.daos-js/dist/interfaces";
-const ecc = require("eosjs-ecc-priveos");
+// const ecc = require("eosjs-ecc-priveos");
 import fetch from 'cross-fetch';
 
 import { NCO_submit_API } from "./submit"
@@ -130,9 +132,32 @@ class NCO_daos_API {
     return r;
   }
 
+// *
+// * @param inpt : NCCreate
+// * @returns NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
+// */
+    async createDaoRemoveMemberProposal(inpt: NCCreateDaoUserWhitelistRemoveProposal) {
+        const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner));
+
+        const t = await this.aGen.createRemoveWhiteListProposal(
+            [{ actor: inpt.proposer, permission: "active" }],
+            inpt.proposer, Number(dao_id), inpt.user,
+            inpt.pass_rate,
+            inpt.vote_start, inpt.vote_end
+        );
+
+        const res = await this.SubmitTx(t,
+            [],
+            [inpt.proposer_prv_key]) as TransactResult;
+
+        let r: NCReturnTxs = {};
+        r.TxID_createDaoProposal = res.transaction_id;
+        return r;
+    }
+
   /**
  * 
- * @param inpt : NCCreateDaoUserWhitelistProposal
+ * @param inpt : NCCreateDaoStakeProposal
  * @returns NCReturnTxs.TxID_createDaoProposal, NCReturnTxs.proposal_id
  */
    async createDaoStakeProposal(inpt: NCCreateDaoStakeProposal) {
@@ -183,7 +208,7 @@ class NCO_daos_API {
       console.log("Got action:", JSON.stringify(t));
   
       const res = await this.SubmitTx(t,
-        [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+        [], [inpt.approver_prv_key]) as TransactResult;
   
       let r: NCReturnTxs = {};
       r.TxID_approveDaoProposal = res.transaction_id;
@@ -214,7 +239,7 @@ class NCO_daos_API {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+      [], [inpt.approver_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_approveDaoProposal = res.transaction_id;
@@ -238,7 +263,7 @@ class NCO_daos_API {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.approver_prv_key)], [inpt.approver_prv_key]) as TransactResult;
+      [], [inpt.approver_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_approveDaoProposal = res.transaction_id;
@@ -261,7 +286,7 @@ class NCO_daos_API {
     );
 
     const res = await this.SubmitTx(t,
-      [ecc.privateToPublic(inpt.exec_prv_key)], [inpt.exec_prv_key]) as TransactResult;
+      [], [inpt.exec_prv_key]) as TransactResult;
 
     let r: NCReturnTxs = {};
     r.TxID_executeDaoProposal = res.transaction_id;
@@ -448,7 +473,7 @@ class NCO_daos_API {
   
     if(inpt.proposal_author && (inpt.proposal_id == undefined))
     {
-        let w = await this.cApi.getProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
+        let w = await this.cApi.getStakeProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
         inpt.proposal_id = await w.json();
     }
   
@@ -456,14 +481,14 @@ class NCO_daos_API {
   
     const opt = {
           json: true,
-          code: "daos.nco",
+          code: "daos2.nco",
           scope: dao_id,
           table: "stakeprpls",
           lower_bound: inpt.lower_bound,
           upper_bound: inpt.upper_bound,
           limit: ~~(inpt.limit??"10"),
           reverse: inpt.reverse,
-          index_position: "1",
+          index_position: "0",
     } as GetTableRowsPayload;
     
     let w = await (await this.cApi.getTableRows( opt )).json();
@@ -516,4 +541,4 @@ class NCO_daos_API {
       return w;
     }
   
-};
+}

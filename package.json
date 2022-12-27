@@ -1,18 +1,17 @@
 {
-  "name": "@newfound8ion/newcoin-sdk",
-  "version": "1.2.95",
+  "name": "yanna-sdk",
+  "version": "2.1.3",
   "description": "SDK for Newcoin blockchain",
   "main": "./dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "./dist/index.d.ts",
-  
   "scripts": {
     "test": "npm run build && jest --bail",
     "docs": "typedoc --out docs src/index.ts --excludeExternals --excludePrivate --excludeProtected --emit docs",
     "build": "npm run dist",
     "dist": "rollup -c --bundleConfigAsCjs"
   },
-  "author": "vitalyrue",
+  "author": "yannafaith97",
   "license": "MIT",
   "dependencies": {
     "@eoscafe/hyperion": "^3.2.9",
@@ -45,18 +44,8 @@
     "typedoc-plugin-missing-exports": "^0.23.0",
     "typescript": "^4.9.3"
   },
-  "keywords": [
-    "newcoin"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/newfound8ion/newcoin-sdk.git"
-  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
-  },
-  "bugs": {
-    "url": "https://github.com/newfound8ion/newcoin-sdk/issues"
   },
   "homepage": "https://github.com/newfound8ion/newcoin-sdk#readme",
   "directories": {
