@@ -46,7 +46,7 @@ export type NCInitUrls = {
     token_contract: "eosio.token",
     maindao_contract: "pool.nco",
     staking_contract: "pools2.nco",
-    daos_contract: "daos.nco",
+    daos_contract: "daos2.nco",
     neftymarket_contract: "market.nefty",
     atomicassets_contract: "atomicassets"
   };

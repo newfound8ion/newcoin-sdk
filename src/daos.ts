@@ -481,14 +481,14 @@ class NCO_daos_API {
   
     const opt = {
           json: true,
-          code: "daos.nco",
+          code: "daos2.nco",
           scope: dao_id,
           table: "stakeprpls",
           lower_bound: inpt.lower_bound,
           upper_bound: inpt.upper_bound,
           limit: ~~(inpt.limit??"10"),
           reverse: inpt.reverse,
-          index_position: "1",
+          index_position: "0",
     } as GetTableRowsPayload;
     
     let w = await (await this.cApi.getTableRows( opt )).json();

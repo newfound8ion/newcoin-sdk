@@ -102,24 +102,28 @@ it("create dao proposal", async () => {
 }, 60000);
 
 it("create stake proposal", async () => {
-
     let start = new Date();
     let end = start;
     start = new Date(start.setSeconds(start.getSeconds() + 10));
     end = new Date(end.setSeconds(start.getSeconds() + 20));
 
     // let quantity = {
-    //     quantity: "1.0000 DXDXIO",
+    //     quantity: "1.000 DXDXIO",
     //     contract: "pools2.nco"
     // };
 
-    const quantity = "2.100 " + "DXDXIO"
+    // let quantity = {
+    //     quantity: "1.000 DXDXIO",
+    //     contract: "eosio.token"
+    // };
 
+    let quantity = "quantity: 1.0000 DXDXIO"
 
-
+    // const quantity = "2.100 " + "DXDXIO"
     let n: NCCreateDaoStakeProposal = {
-        quantity,
+        quantity: quantity,
         to: "dx.io",
+        dao_id:"0",
         proposer: user,
         proposer_prv_key: prv_key_active,
         dao_owner: user,
