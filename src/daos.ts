@@ -126,6 +126,7 @@ class NCO_daos_API {
     r.TxID_createDaoProposal = res.transaction_id;
     r.dao_id = dao_id;
     let ps = await this.getDaoWhitelistProposals({...inpt, dao_id });  //  { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
+    if(this.debug) console.log("getDaoWhitelistProposal return: ", JSON.stringify(ps));
     r.proposal_id = ps.rows[ps.rows.length - 1].id;
     return r;
   }
@@ -326,7 +327,7 @@ class NCO_daos_API {
     const res = await this.SubmitTx(t,
       [], [inpt.voter_prv_key]) as TransactResult;
 
-    //if(this.debug) console.log("received from VoteForDaoProposal" + JSON.stringify(res));
+    if(this.debug) console.log("received from VoteForDaoProposal" + JSON.stringify(res));
     return { TxID_voteDaoProposal: res.transaction_id } as NCReturnTxs;
   }
 
@@ -394,7 +395,7 @@ class NCO_daos_API {
   
     const opt = {
           json: true,
-          code: "daos.nco",
+          code: this.services.daos_contract,
           scope: dao_id,
           table: "proposals",
           lower_bound: inpt.lower_bound,
@@ -425,7 +426,7 @@ class NCO_daos_API {
   
     const opt = {
           json: true,
-          code: "daos.nco",
+          code: this.services.daos_contract,
           scope: dao_id,
           table: "whlistprpls",
           lower_bound: inpt.lower_bound,
@@ -456,7 +457,7 @@ class NCO_daos_API {
   
     const opt = {
           json: true,
-          code: "daos.nco",
+          code: this.services.daos_contract,
           scope: dao_id,
           table: "stakeprpls",
           lower_bound: inpt.lower_bound,
@@ -479,7 +480,7 @@ class NCO_daos_API {
       //let w = await q.json();
       const opt = {
           json: true,
-          code: "daos.nco",
+          code: this.services.daos_contract,
           scope: dao_id,
           table: "whitelist",
           key_type: "name",
@@ -500,7 +501,7 @@ class NCO_daos_API {
   
       const opt = {
         json: true,
-        code: "daos.nco",
+        code: this.services.daos_contract,
         scope: inpt.voter,
         table: "votes",
         key_type: "i64",

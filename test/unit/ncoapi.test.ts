@@ -31,7 +31,7 @@ import { normalizeUsername } from '../../src/utils';
 import { readAsset } from '../../src/io/nft';
 
 const TEST_PROXY = false;
-const DEBUG = false;
+const DEBUG = true;
 
 //import * as nco from 'newcoin';
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
@@ -422,11 +422,11 @@ const api = new NCO_BlockchainAPI(
             end   = new Date(end.setSeconds(end.getSeconds() + 27));
 
             let n: NCCreateDaoUserWhitelistProposal = { 
-                proposer: name, 
-                proposer_prv_key: prv_key_active,
+                proposer: "io",// name, 
+                proposer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",//prv_key_active,
                 dao_owner:name,
-                type: "",
-                pass_rate: 0,
+                type: "custodian",
+                pass_rate: 51,
                 vote_start: start.toISOString().slice(0,-5), //now.toISOString(),
                 vote_end:  end.toISOString().slice(0,-5),  //new Date(now.getTime()+ 8*24*60*60*1000).toISOString()
                 user: "io"
@@ -535,7 +535,8 @@ const api = new NCO_BlockchainAPI(
             console.log("Arguments for whitelist search: " + JSON.stringify(n));
             let resp = await api.daos.getDaoWhitelist(n);
             console.log(JSON.stringify(resp));
-            //expect(resp.rows[0].id).toBe(0);
+            expect(resp.rows[0].id).toBe(name);
+            
 
         }, 60000)
   
@@ -558,7 +559,7 @@ const api = new NCO_BlockchainAPI(
                 title: "Latest news",
                 summary: "Don't panic",
                 url: "meduza.io",
-                pass_rate: 0,
+                pass_rate: 51,
                 vote_start: start.toISOString().slice(0,-5), //now.toISOString(),
                 vote_end:  end.toISOString().slice(0,-5)  //new Date(now.getTime()+ 8*24*60*60*1000).toISOString()
             } ;              
@@ -695,7 +696,7 @@ const api = new NCO_BlockchainAPI(
     });
 
     // ================= minting ================================================== 
-    describe("NFT stuff", () => {
+    describe.skip("NFT stuff", () => {
         it("Mint asset basic", async () => {
 
             let test = "1".repeat(64);
@@ -884,7 +885,7 @@ const api = new NCO_BlockchainAPI(
     });
 
 
-    describe("Votes tests", () => {
+    describe.skip("Votes tests", () => {
         it("get dao whitelist", async () => {
 
             let n: NCGetDaoWhiteList = { 
@@ -931,7 +932,7 @@ const api = new NCO_BlockchainAPI(
     });
 
 
-    describe("get account pools balances", () => {
+    describe.skip("get account pools balances", () => {
         it("get pool balances", async () => {
             
             let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;
