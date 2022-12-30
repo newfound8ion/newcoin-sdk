@@ -27,7 +27,7 @@ import {
     file_schema
 } from "../../src/schemas"
 
-import { normalizeUsername } from '../../src/utils';
+
 import { readAsset } from '../../src/io/nft';
 
 const TEST_PROXY = false;
@@ -45,11 +45,9 @@ const newsafeJwt = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVkZW50aWFsIjp7Im9
 //defaults pre-generation
 let pub_key_active = "EOS8KnfBrVCvdWr1JXybAcMvz8NjqB3XLArEAzRm7wLJchWKw6NFM";
 let prv_key_active = TEST_PROXY ? newsafeJwt : "5JLUzZYfMJUim4KPdGw1ipA8i4Std8QM4hunnvwaesqgRfWiD3j";
-
 let pub_key_owner = "EOS6j3ATfMaBRM7DnGHqZ8Miqw4ah1awgtpbriq4zubfdhey9pcDx";
 // @ts-ignore
 let prv_key_owner = "5JvR9dzATtTkPPDcUdNZzQ8Grp6w4eKJz4xqomCx9T7M9VCaQgN";
-
 let pub_key_comm = "EOS5wzNPC5WM73cC3ScApobLgGABMuMSrdJB9b4RqZraGg3BEWnP9";
 // @ts-ignore
 let prv_key_comm = "5J4twVpFc1dKsqUmcyvUZg5kQ1ofNTJAWZn5xPwsDGo6MkCRpZ2";
@@ -79,7 +77,7 @@ const api = new NCO_BlockchainAPI(
     is_proxy: TEST_PROXY}
 );
 
-    describe("Basic blockchain operations", () => {
+    describe("Non blockchain tests", () => {
 
         it("test template", async () => {
             let resp = "test template shows tests are running" ;
@@ -110,33 +108,10 @@ const api = new NCO_BlockchainAPI(
             //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
             //const resp = await api.getDaoWhitelistProposals(n);
             //console.log(JSON.stringify(resp));
-            console.log("transeferring 1000 NCO in a loop");
-            
-            let resp :NCReturnTxs = {};
-            for(let i = 0; i < 10; i++)
-            {
-                let n: NCTxNcoBal = { 
-                        to:   "vitalyrue.io",
-                        amt: '1.0000 NCO', 
-                        payer:'io',
-                        memo: 'NCO transfer', 
-                        payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
-                    };
-                    
-                try{
-                    resp  = await api.txNCOBalance(n) ;
-                } catch {
-                    console.log("got to i =  " + i);
-                }
-                               
-                //expect(typeof resp.TxID).toBe('string');
-            }
-            console.log(resp);
 
         }, 50000);
        
     });
-    
     
     describe("Basic blockchain operations", () => {
         it("create acc", async () => {
@@ -152,7 +127,7 @@ const api = new NCO_BlockchainAPI(
                 net_amount : "100.0000 NCO", 
                 xfer : true, // stake or transfer CPU/NET to the account
             };
-            let resp : NCReturnTxs = await api.createUser(nco_struct) ;
+            let resp : NCReturnTxs = await api.accounts.createUser(nco_struct) ;
             console.log(resp);
             expect(typeof resp.TxID_createAcc).toBe('string');
 
@@ -166,21 +141,21 @@ const api = new NCO_BlockchainAPI(
                 payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
                 ram_amt: 1024*16
             };
-            let  resp : NCReturnTxs = await api.buyRam(br);
+            let  resp : NCReturnTxs = await api.accounts.buyRam(br);
             console.log(resp);
             expect(typeof resp.TxID).toBe('string');
 
         }, 15000);
 
 
-        it("create collection with schemas", async () => { 
+        it.skip("create collection with schemas", async () => { 
 
             let nco_struct : NCCreateCollection = {
                 user: name, 
-                collection_name: normalizeUsername(name, "a"),
-                schema_name: normalizeUsername(name, "b"),
+                collection_name: api.utils.getRootCollectionName(name),
+                schema_name: api.utils.getRootCollectionNftSchemaName(name),
                 schema_fields: default_schema,
-                template_name: normalizeUsername(name, "c"),
+                template_name: "-1",
                 template_fields: [], 
                 user_prv_active_key: prv_key_active,
                 allow_notify: true,
@@ -190,7 +165,7 @@ const api = new NCO_BlockchainAPI(
                 max_supply : 0xffff 
             };
 
-            let resp : NCReturnTxs = await api.createCollection(nco_struct);
+            let resp : NCReturnTxs = await api.assets.createCollection(nco_struct);
             console.log(resp);
             expect(typeof resp.TxID_createCol).toBe('string'); 
             expect(typeof resp.TxID_createSch).toBe('string'); 
@@ -201,7 +176,7 @@ const api = new NCO_BlockchainAPI(
 
         it("create ROOT user collection with schemas", async () => { 
 
-
+            console.log("creating root collection... ");
             let resp : NCReturnTxs = await api.createRootCollection(name, prv_key_active);
             console.log(resp);
             expect(typeof resp.TxID_createCol).toBe('string'); 
@@ -535,8 +510,7 @@ const api = new NCO_BlockchainAPI(
             console.log("Arguments for whitelist search: " + JSON.stringify(n));
             let resp = await api.daos.getDaoWhitelist(n);
             console.log(JSON.stringify(resp));
-            expect(resp.rows[0].user).toBe(name);
-            expect(resp.rows[1].user).toBe("io");
+            expect(resp.rows[1].user || resp.rows[0].user).toBe(name);
 ;            
 
         }, 60000)
@@ -697,14 +671,16 @@ const api = new NCO_BlockchainAPI(
     });
 
     // ================= minting ================================================== 
-    describe.skip("NFT stuff", () => {
+    describe("NFT stuff", () => {
         it("Mint asset basic", async () => {
 
-            let test = "1".repeat(64);
+            //let test = "1".repeat(64);
 
             let n: NCMintAsset = { 
-            creator: name, 
-            payer: name,  
+            creator: name,
+            col_name: api.utils.getRootCollectionName(name),
+            sch_name: api.utils.getRootCollectionNftSchemaName(name),
+            payer: name, 
             payer_prv_key: prv_key_active, 
             immutable_data: [
                 {'key': 'name', 'value': ['string', name+'_'+(new Date()).getTime()]},
@@ -712,7 +688,7 @@ const api = new NCO_BlockchainAPI(
                 {'key': 'image','value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png']},
                 {'key': "external_url",'value':['string', '']},
                 {'key': 'content_type','value':['string', 'text']},
-                {'key': 'content','value':['string', test]},
+                {'key': 'content','value':['string', 'test_string']},
                 {'key': "license",'value':['string', 'CC-EX-123456']},
                 //{'key': "template_name"}, {'value': ['string', '']},
                 //{'key': "attributes"}, { 'value': ['string[]', []] }
@@ -722,7 +698,7 @@ const api = new NCO_BlockchainAPI(
             ]
             };
             
-        let resp :NCReturnTxs = await api.mintAsset(n) ;
+        let resp :NCReturnTxs = await api.assets.mintAsset(n) ;
         console.log(resp);
         expect(typeof resp.TxID_mintAsset).toBe('string');
         }, 60000);
@@ -775,7 +751,7 @@ const api = new NCO_BlockchainAPI(
 
         it("bind collection",async () => {
             //let test = "test string 0xcafefeed ".repeat(10);
-            let randomcolname = normalizeUsername(  randomname(), "x" );
+            let randomcolname = api.utils.normalizeUsername(  randomname(), "x" );
 
             let n: NCBindCollection = { 
                 creator: name,
@@ -786,7 +762,7 @@ const api = new NCO_BlockchainAPI(
                 image: 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/12.png'
             };
             
-            let resp : NCReturnTxs = await api.bindCollection(n) as NCReturnTxs;
+            let resp : NCReturnTxs = await api.bindCollectionToRoot(n) as NCReturnTxs;
             asset_id = resp.asset_id as string;
             console.log(resp);
             expect(typeof resp.TxID_bindCollection).toBe('string');
@@ -798,8 +774,8 @@ const api = new NCO_BlockchainAPI(
             let test = "2".repeat(64);
             let n: NCMintAsset = { 
                 creator: name,
-                col_name: normalizeUsername(name, "y"),
-                sch_name: normalizeUsername(name, "v"),
+                col_name: api.utils.normalizeUsername(name, "y"),
+                sch_name: api.utils.normalizeUsername(name, "v"),
                 payer: name,  
                 payer_prv_key: prv_key_active, 
                 immutable_data: [
@@ -814,7 +790,7 @@ const api = new NCO_BlockchainAPI(
             
             let resp : NCReturnTxs = {};
             try {
-                let resp :NCReturnTxs = await api.mintAsset(n) ;
+                let resp :NCReturnTxs = await api.assets.mintAsset(n) ;
                 console.log(resp);
             } catch(e) {
                 debug;;
@@ -825,10 +801,10 @@ const api = new NCO_BlockchainAPI(
 
                 let nco_struct : NCCreateCollection = {
                     user: name, 
-                    collection_name: normalizeUsername(name, "y"),
-                    schema_name: normalizeUsername(name, "v"),
+                    collection_name: api.utils.normalizeUsername(name, "y"),
+                    schema_name: api.utils.normalizeUsername(name, "v"),
                     schema_fields: file_schema,
-                    template_name: normalizeUsername(name, "t"),
+                    template_name:api.utils.normalizeUsername(name, "t"),
                     template_fields: [], 
                     user_prv_active_key: prv_key_active,
                     allow_notify: true,
@@ -838,10 +814,10 @@ const api = new NCO_BlockchainAPI(
                     max_supply : 0xffffff 
                 };
 
-                resp = await api.createCollection(nco_struct);
+                resp = await api.assets.createCollection(nco_struct);
                 console.log("created collection " + resp);
 
-                resp  = await api.mintAsset(n) ;
+                resp  = await api.assets.mintAsset(n) ;
                 console.log("minted file: " + resp);
 
         }
@@ -859,7 +835,7 @@ const api = new NCO_BlockchainAPI(
             let n: NCMintAsset = { 
             creator: name,
             //col_name: "sbtcollctn11",
-            sch_name: normalizeUsername(name, "s"),
+            sch_name: api.utils.normalizeUsername(name, "s"),
             payer: name,  
             payer_prv_key: prv_key_active, 
             immutable_data: [
@@ -879,18 +855,17 @@ const api = new NCO_BlockchainAPI(
             ]
         };  
             
-        let resp :NCReturnTxs = await api.mintAsset(n) ;
+        let resp :NCReturnTxs = await api.assets.mintAsset(n) ;
         console.log(resp);
         expect(typeof resp.TxID_mintAsset).toBe('string');
         }, 60000);
     });
 
-
-    describe.skip("Votes tests", () => {
+    describe("Votes tests", () => {
         it("get dao whitelist", async () => {
 
             let n: NCGetDaoWhiteList = { 
-                dao_id: "97"
+                dao_id: dao_id
             };              
             
             let resp = await api.daos.getDaoWhitelist(n);
@@ -902,7 +877,7 @@ const api = new NCO_BlockchainAPI(
         it("list votes for a proposer", async () => {
 
             let n: NCGetVotes = { 
-                voter: "testaaagt.io",
+                voter: name,
                 lower_bound: "2", 
                 limit: "12"
             };              
@@ -911,7 +886,7 @@ const api = new NCO_BlockchainAPI(
             let resp = await api.daos.getVotes(n);
             console.log("Answer" + JSON.stringify(resp));
             //console.log("Quantity field: " + JSON.stringify(resp.rows[0].quantity));
-            expect(resp.rows[0].id).toBe(0);
+            expect(resp.rows[0].user).toBe(0);
 
         }, 60000)
 
@@ -932,8 +907,7 @@ const api = new NCO_BlockchainAPI(
         }, 60000)
     });
 
-
-    describe.skip("get account pools balances", () => {
+    describe("get account pools balances", () => {
         it("get pool balances", async () => {
             
             let n:   NCGetAccInfo = { owner: 'io', contract: 'pools2.nco' } ;

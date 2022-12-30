@@ -1,6 +1,7 @@
-//import { type } from "os";
+
 
 import { TransactResult } from "eosjs/dist/eosjs-api-interfaces";
+//import { type } from "os";
 
 export type NCKeyPair = {
   pub_key: string;
@@ -268,6 +269,13 @@ export type NCModifyAsset = {
   payer_prv_key: string
 }
 
+export type NCMintNftToRoot = {
+  creator: string,
+  immutable_data: NCKeyValPair[],
+  mutable_data: NCKeyValPair[],
+  payer: string,
+  payer_prv_key: string
+}
 
 export type NCBindCollection = {
   creator:  string,
@@ -279,7 +287,58 @@ export type NCBindCollection = {
 };
 
 
-export type NCMintFile = {
+export type NCMintProfile = {
+
+  status: string;
+  offer: string;
+
+  displayName: string,
+  source: string, // one of the socials
+  authority: string,
+  signature: string,
+
+  content: string,
+  bio: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  phone: string;
+
+  contentType: string;
+  contentUrl: string;
+  coverContentUrl: string;
+  blurHash: string;
+  aspectRatio: string;
+  creator: string,
+
+  instagram: string,
+  tiktok :   string,
+  youtube:   string,
+  twitter:   string,
+  spotify:   string,
+  pinterest: string,
+  snapchat:  string,
+  reddit:    string,
+  discord:   string,
+  tumblr:    string,
+  soundcloud:string,
+  apple:     string,
+  telegram:  string,
+  signal:    string,
+  medium:    string,
+  facebook:  string,
+  facebookId:string,
+  youtubeId: string  
+  payer:     string,
+
+  payer_prv_key: string,
+  user_prv_active_key: string
+};
+
+
+export type  NCMintFile = {
   creator: string,
   name: string, 
   path: string,
@@ -341,6 +400,9 @@ export type NCReturnTxs = {
 
   TxID_mintAsset?: string; asset_id?: string;
   TxID_modifyAsset?: string;
+  
+  TxID_mintNft?: string;
+  TxID_mintProfile?: string; 
   TxID_mintFile?: string; 
   TxID_changeFile?: string;
   TxID_bindCollection?: string;
