@@ -535,8 +535,9 @@ const api = new NCO_BlockchainAPI(
             console.log("Arguments for whitelist search: " + JSON.stringify(n));
             let resp = await api.daos.getDaoWhitelist(n);
             console.log(JSON.stringify(resp));
-            expect(resp.rows[0].id).toBe(name);
-            
+            expect(resp.rows[0].user).toBe(name);
+            expect(resp.rows[1].user).toBe("io");
+;            
 
         }, 60000)
   
