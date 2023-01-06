@@ -173,7 +173,10 @@ export type NCCreateDaoStakeProposal = {
   dao_id?: string,
   dao_owner: string,
   to: string,
-  quantity: string,
+  quantity: {
+    quantity: string,
+    contract: string
+  },
   pass_rate: number,
   vote_start: string,
   vote_end: string
@@ -201,8 +204,10 @@ export type NCExecuteDaoProposal = {
 export type NCGetDaoProposals = {
   dao_id?: string,
   dao_owner?: string,
+
   proposal_id?: string,
   proposal_author?: string;
+  
   lower_bound?: string;
   upper_bound?: string;
   limit?: number;

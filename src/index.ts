@@ -111,7 +111,6 @@ export class NCO_BlockchainAPI {
     this.services   = n.services;
     this.daos       = new NCO_daos_API(n);
     this.pools      = new NCO_pools_API(n);
-    n.debug = false; 
     this.submitter  = new NCO_submit_API(n);
     this.utils      = new NCO_utils_API(n);
     this.assets     = new NCO_assets_API(n);

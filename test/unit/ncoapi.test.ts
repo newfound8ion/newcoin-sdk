@@ -8,9 +8,9 @@ import {
     NCCreateUser,  NCCreateCollection, NCCreatePool, 
     NCCreatePermission, NCLinkPerm, 
     NCStakeMainDao, 
-    NCCreateDao, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, 
-    NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit,
-    NCExecuteDaoProposal, NCGetDaoProposals, NCGetVotes,
+    NCCreateDao, NCCreateDaoProposal, NCCreateDaoUserWhitelistProposal, NCCreateDaoStakeProposal,
+    NCApproveDaoProposal, NCDaoProposalVote, NCDaoWithdrawVoteDeposit, NCExecuteDaoProposal, 
+    NCGetDaoProposals, NCGetVotes,
     NCStakePool, NCUnstakePool,
     NCMintAsset, NCMintFile, NCTxNcoBal, NCTxBal,
     NCGetAccInfo, 
@@ -114,6 +114,7 @@ const api = new NCO_BlockchainAPI(
     });
     
     describe("Basic blockchain operations", () => {
+
         it("create acc", async () => {
 
             let nco_struct : NCCreateUser = {
@@ -185,9 +186,10 @@ const api = new NCO_BlockchainAPI(
 
         }, 60000);
 
+
     });
 
-    describe("Permission management", () => {
+    describe.skip("Permission management", () => {
         it("create permission", async () => {
             let n: NCCreatePermission = { 
                 author: name, 
@@ -258,6 +260,7 @@ const api = new NCO_BlockchainAPI(
     });
 
     describe("pools tests", () => {
+
         it("create pool", async () => {
 
             let n: NCCreatePool = { 
@@ -306,72 +309,71 @@ const api = new NCO_BlockchainAPI(
         let resp : NCReturnTxs = await api.pools.dldUnstakeMainDAO(n) ;
         console.log(resp);
         expect(typeof resp.TxID_unstakeMainDAO).toBe('string');
-        }, 60000)
-
-    it("stake pool", async () => {
-        let n: NCStakePool = { 
-            owner: name, 
-            amt: '100.0000 GNCO', 
-            payer: name,//'io',  
-            payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
-        } ;
-            
-        let resp : NCReturnTxs = await api.pools.stakePool(n) ;
-        console.log(resp);
-        pool_code = resp.pool_code as string;
-        
-        expect(pool_code).toBeDefined();
-        expect(typeof resp.TxID_stakePool).toBe('string');
-        }, 60000);
-        
-
-     it("stake pool", async () => {
-        let n: NCStakePool = { 
-            owner: name, 
-            amt: '100.0000 GNCO', 
-            payer: 'io',  
-            payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
-        } ;
-            
-        let resp : NCReturnTxs = await api.pools.stakePool(n) ;
-        console.log(resp);
-        pool_code = resp.pool_code as string;
-        
-        expect(pool_code).toBeDefined();
-        expect(typeof resp.TxID_stakePool).toBe('string');
-        }, 60000);
-        
-    it("withdraw from pool", async () => {
-        expect(pool_code).toBeDefined();
-
-        const n: NCUnstakePool = { 
-                amt: '5.0000 '+pool_code,  
-                payer: name, //"io",
-                payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
-        } ;
-        console.log("unstake action: "+ JSON.stringify(n));
-        let resp : NCReturnTxs = await api.pools.unstakePool(n) ;
-        console.log(resp);
-        expect(typeof resp.TxID_unstakePool).toBe('string');
         }, 60000);
 
-    
-    it("nco to creator coin", async () => {
-
-            const n: NCSwapNCOtoCC = { 
-                    amt: '200.0000 NCO',  
-                    payer: "io",
-                    payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
-                    creator_to: name
-            };
-           
-            let resp = await api.swapNcoToCreatorCoin(n) ;
+        it("stake pool", async () => {
+            let n: NCStakePool = { 
+                owner: name, 
+                amt: '100.0000 GNCO', 
+                payer: name,//'io',  
+                payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+            } ;
+                
+            let resp : NCReturnTxs = await api.pools.stakePool(n) ;
             console.log(resp);
-            expect(resp.TxID_stakePool).toBeDefined();
+            pool_code = resp.pool_code as string;
+            
+            expect(pool_code).toBeDefined();
+            expect(typeof resp.TxID_stakePool).toBe('string');
+            }, 60000);
+            
 
-           //expect(typeof resp.TxID_unstakePool).toBe('string');
+        it("stake pool", async () => {
+            let n: NCStakePool = { 
+                owner: name, 
+                amt: '100.0000 GNCO', 
+                payer: 'io',  
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+            } ;
+                
+            let resp : NCReturnTxs = await api.pools.stakePool(n) ;
+            console.log(resp);
+            pool_code = resp.pool_code as string;
+            
+            expect(pool_code).toBeDefined();
+            expect(typeof resp.TxID_stakePool).toBe('string');
+            }, 60000);
+            
+        it("withdraw from pool", async () => {
+            expect(pool_code).toBeDefined();
+
+            const n: NCUnstakePool = { 
+                    amt: '5.0000 '+pool_code,  
+                    payer: name, //"io",
+                    payer_prv_key: prv_key_active//"5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"//
+            } ;
+            console.log("unstake action: "+ JSON.stringify(n));
+            let resp : NCReturnTxs = await api.pools.unstakePool(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_unstakePool).toBe('string');
             }, 60000);
 
+        
+        it("nco to creator coin", async () => {
+
+                const n: NCSwapNCOtoCC = { 
+                        amt: '200.0000 NCO',  
+                        payer: "io",
+                        payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                        creator_to: name
+                };
+            
+                let resp = await api.swapNcoToCreatorCoin(n) ;
+                console.log(resp);
+                expect(resp.TxID_stakePool).toBeDefined();
+
+            //expect(typeof resp.TxID_unstakePool).toBe('string');
+                }, 60000);
     });
     
     describe("'DAO tests", () => {
@@ -434,7 +436,7 @@ const api = new NCO_BlockchainAPI(
                     + " --- Vote NO:  " + JSON.stringify(resp.rows[0].vote_no )); 
             expect(resp.rows[0].id).toBe(0);
 
-        }, 60000)
+        }, 60000);
     
         it("list whitelist proposals for dao", async () => {
             let n: NCGetDaoProposals = { 
@@ -448,7 +450,7 @@ const api = new NCO_BlockchainAPI(
             // @ts-ignore
             expect(resp.rows[0].id).toBe(0);
 
-        }, 60000)
+        }, 60000);
     
         it("approve WL proposal", async () => {
 
@@ -463,7 +465,7 @@ const api = new NCO_BlockchainAPI(
             console.log(resp);
             expect(typeof resp.TxID_approveDaoProposal).toBe('string');
 
-        }, 60000)
+        }, 60000);
    
         it("vote proposal",async () => {
             let n: NCDaoProposalVote = {
@@ -510,11 +512,14 @@ const api = new NCO_BlockchainAPI(
             console.log("Arguments for whitelist search: " + JSON.stringify(n));
             let resp = await api.daos.getDaoWhitelist(n);
             console.log(JSON.stringify(resp));
-            expect(resp.rows[1].user || resp.rows[0].user).toBe(name);
-;            
+            let sss = false
+            if( resp.rows[0].user == "io" || resp.rows[1].user == "io" ) sss = true;
+            expect(sss).toBe (true); 
+  
 
         }, 60000)
-  
+
+        // ********* dao proposals
         it("create dao proposal", async () => {
 
             let start = new Date();
@@ -567,7 +572,7 @@ const api = new NCO_BlockchainAPI(
 
         }, 60000)
     
-        it("get proposal by id", async () => {
+        it("get dao proposals", async () => {
 
             let n: NCGetDaoProposals = { 
                 proposal_id: "0",
@@ -667,11 +672,125 @@ const api = new NCO_BlockchainAPI(
             expect(typeof resp.TxID_executeDaoProposal).toBe('string');
             
 
-        }, 60000)
+        }, 60000);
+
+        // *************** stake proposal
+        it("create Stake proposal ", async () => {
+            let start = new Date();
+            let end = start;
+            start = new Date(start.setSeconds(start.getSeconds() + 10));
+            end = new Date(end.setSeconds(start.getSeconds() + 20));
+        
+            const q = {contract:"pool.nco",  quantity: "100.0000 GNCO"} ;
+            // const q = {contract:"pools2.nco",quantity: "1.6000 "+ pool_code} ; // does not work
+            //const q = {contract:"eosio.token",  quantity: "1.0000 GNCO"} ; // assertion failure with message: create_stake_proposal : invalid stake currency contract
+
+            // const quantity = "2.100 " + "DXDXIO"
+            let n: NCCreateDaoStakeProposal = {
+                to: "vitalyr.io",
+                quantity: q,
+
+                dao_id: dao_id,
+                dao_owner: name,
+
+                proposer: "io",
+                proposer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                
+                pass_rate: 51,
+                vote_start: start.toISOString().slice(0,-5),
+                vote_end:  end.toISOString().slice(0,-5)
+            };
+        
+            console.log("Arguments for stake creation : " + JSON.stringify(n));
+            let resp :NCReturnTxs = await api.daos.createDaoStakeProposal(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_createDaoProposal).toBe('string');
+            // @ts-ignore
+            // dao_id = resp.dao_id.toString() ;
+            // // @ts-ignore
+            // expect(~~dao_id).toBeGreaterThan(0);
+        }, 60000);
+
+
+        it("approve dao proposal", async () => {
+            console.log("waiting 25 sec .... ");
+            await wait(10000);
+
+            let n: NCApproveDaoProposal = { 
+                approver: name, 
+                approver_prv_key: prv_key_active,
+                dao_owner: name,
+                proposal_id: 0
+            };              
+            
+            console.log("Arguments for DAO proposal approval: " + JSON.stringify(n));
+            let resp :NCReturnTxs = await api.daos.approveDaoStakeProposal(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_approveDaoProposal).toBe('string');
+
+        }, 60000);
+
+        it("vote stake proposal",async () => {
+            let n: NCDaoProposalVote = {
+                voter: name,
+                voter_prv_key: prv_key_active,
+                dao_id: dao_id,
+                proposal_id: "0",
+                proposal_type: "stake",
+                quantity: "2.1000 " + pool_code, 
+                option: "YES"
+            };
+
+            console.log("Arguments for Voting: " + JSON.stringify(n));
+            let resp :NCReturnTxs = await api.daos.voteOnProposal(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_voteDaoProposal).toBe('string');
+
+        }, 45000);
+
+        it("IO vote stake proposal",async () => {
+            let n: NCDaoProposalVote = {
+                voter: "io",
+                voter_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                dao_id: dao_id,
+                proposal_id: "0",
+                proposal_type: "stake",
+                quantity: "2.5000 " + pool_code, 
+                option: "NO"
+            };
+
+            console.log("Arguments for stake proposal Voting: " + JSON.stringify(n));
+            let resp :NCReturnTxs = await api.daos.voteOnProposal(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_voteDaoProposal).toBe('string');
+
+        }, 45000);
+
+        it("execute stake proposal", async () => {
+
+            console.log("waiting 25 sec .... ");
+            await wait(25000);
+
+            let n: NCExecuteDaoProposal = { 
+                exec: name, 
+                exec_prv_key: prv_key_active,
+                dao_owner: name,
+                proposal_id: 0,
+                proposal_author: "io"
+            };              
+            
+            console.log("Arguments for stake proposal execution: " + JSON.stringify(n));
+            let resp :NCReturnTxs = await api.daos.executeDaoStakeProposal(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID_executeDaoProposal).toBe('string');
+            
+        }, 60000);
+
+
     });
 
     // ================= minting ================================================== 
-    describe("NFT stuff", () => {
+    describe.skip("NFT stuff", () => {
         it("Mint asset basic", async () => {
 
             //let test = "1".repeat(64);

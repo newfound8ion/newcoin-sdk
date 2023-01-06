@@ -153,8 +153,8 @@ class NCO_daos_API {
     let r: NCReturnTxs = {};
     r.TxID_createDaoProposal = res.transaction_id;
     r.dao_id = dao_id;
-    let ps = await this.getDaoStakeProposals(
-      { dao_id: dao_id, proposal_author: inpt.proposer } as NCGetDaoProposals );
+    let ps = await this.getDaoStakeProposals({ ...inpt, dao_id } as NCGetDaoProposals );
+    if(this.debug) console.log("Got response: " + JSON.stringify(ps)); 
     r.proposal_id = ps.rows[ps.rows.length - 1].id;
     return r;
   }
@@ -381,7 +381,7 @@ class NCO_daos_API {
   
   async getDaoProposals(inpt: NCGetDaoProposals) {
     
-    if(this.debug) console.log("Get proposal list: ", JSON.stringify(inpt));
+    if(this.debug) console.log("Get regular DAO proposals list: ", JSON.stringify(inpt));
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
     if(!dao_id) return { dao_id: null };
   
@@ -404,8 +404,10 @@ class NCO_daos_API {
           reverse: inpt.reverse,
           index_position: "1",
       } as GetTableRowsPayload;
+    
+    if(this.debug) console.log("*** get tablerow args" +  JSON.stringify(opt));
     let w = await (await this.cApi.getTableRows( opt )).json();
-  
+    
     if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
     return { ...w, dao_id };
   }
@@ -435,9 +437,11 @@ class NCO_daos_API {
           reverse: inpt.reverse,
           index_position: "1",
     } as GetTableRowsPayload;
+
+    if(this.debug) console.log("*** get tablerow args" +  JSON.stringify(opt));
     let w = await (await this.cApi.getTableRows( opt )).json();
     
-    if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
+    if(this.debug) console.log("received whitelist proposal list" + JSON.stringify(w));    
     return { ...w, dao_id };
   }
   
@@ -445,16 +449,18 @@ class NCO_daos_API {
     
     if(this.debug) console.log("Get stake proposal list: ", JSON.stringify(inpt));
     const dao_id = inpt.dao_id || (await this.getDaoIdByOwner(inpt.dao_owner, true));
-    if(!dao_id) return { dao_id: null };
+    if(!dao_id) return { dao_id: null, comm: "could not get dao_id for this owner" };
   
+
+    // --  *** 
     if(inpt.proposal_author && (inpt.proposal_id == undefined))
     {
         let w = await this.cApi.getProposalByProposer( { daoID: dao_id,  proposal_author: inpt.proposal_author } as ProposalPayload );
         inpt.proposal_id = await w.json();
     }
   
+    // --- *** 
     if(inpt.proposal_id) inpt.lower_bound = inpt.upper_bound = inpt.proposal_id;
-  
     const opt = {
           json: true,
           code: this.services.daos_contract,
@@ -466,10 +472,11 @@ class NCO_daos_API {
           reverse: inpt.reverse,
           index_position: "1",
     } as GetTableRowsPayload;
-    
+
+    if(this.debug) console.log("*** get tablerow args" +  JSON.stringify(opt));
     let w = await (await this.cApi.getTableRows( opt )).json();
     
-    if(this.debug) console.log("received proposal list" + JSON.stringify(w));    
+    if(this.debug) console.log("received stake proposal list" + JSON.stringify(w));    
     return { ...w, dao_id };
   }
   
@@ -495,7 +502,6 @@ class NCO_daos_API {
       return { ...w, dao_id };
     }
       
-  
     async getVotes(inpt: NCGetVotes) {
       let w;
   
