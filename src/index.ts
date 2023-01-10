@@ -320,8 +320,8 @@ export class NCO_BlockchainAPI {
 
       try { 
         let mint_res  = await this.assets.mintAsset(s) ;
-        mint_res.TxID_mintFile = mint_res.TxID_mintAsset;
-        console.log("minted file ");
+        mint_res.TxID_mintNft = mint_res.TxID_mintAsset;
+        console.log("minted NFT to root ");
         return mint_res;
       } catch(e) {
         let err = (e as Error).message;
@@ -482,6 +482,8 @@ export class NCO_BlockchainAPI {
         };
 
         let res = await this.assets.createCollection(nco_struct);
+        //let res = await this.createFileCollection(inpt.name, inpt.user_prv_active_key);
+        
         if(this.debug) console.log("createcollection of files result: ")
         if(this.debug) console.log(res);
         

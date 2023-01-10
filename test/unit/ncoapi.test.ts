@@ -18,7 +18,8 @@ import {
     NCChangeFile,
     NCBuyRam,
     NCBindCollection,
-    NCSwapNCOtoCC
+    NCSwapNCOtoCC,
+    NCMintNftToRoot
     //NCBuyRam
 } from "../../src/types";
 
@@ -36,8 +37,9 @@ const DEBUG = true;
 //import * as nco from 'newcoin';
 let randomname= () => " ".repeat(9).split("").map(_ => String.fromCharCode(Math.floor(Math.random() * (122 - 97) + 97))).join("") + ".io"
 let name = TEST_PROXY ? "dx.io" : randomname();
-console.log(name);
-
+let name2 = randomname();
+console.log("name: " + name);
+console.log("name2: " + name2)
 
 const newsafeJwt = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVkZW50aWFsIjp7Im9yaWdpbiI6ImZpcmViYXNlIn0sImlkZW50aXR5Ijp7InVzZXJuYW1lIjoiZHguaW8ifSwicmVxdWVzdG9yIjoibmV3Z3JhcGguaW8iLCJzY29wZXMiOltdLCJjb25maWciOnsiY3JlYXRlZCI6IjIwMjItMDktMDlUMTI6NDc6MDUuMjYyWiIsImV4cGlyZXMiOiIyMDIyLTA5LTA5VDEzOjE3OjA1LjI2MloiLCJyZW5ld2FibGUiOnRydWV9LCJyZXF1ZXN0Ijp7InJlZmVyZXIiOiJkZXYubmV3Z3JhLnBoIiwiYXBwT3duZXIiOiJuZXdncmFwaC5pbyIsInJlZGlyZWN0VXJsIjoiaHR0cHM6Ly9kZXYubmV3Z3JhLnBoIiwic2NvcGVzIjpbXX0sImF1dGhvcml0eSI6ImF1dGgudW5zaWQub3JnIiwidmVyc2lvbiI6IjEiLCJpYXQiOjE2NjI3Mjc2MjV9.YQuqUxIAPUUMhdPTtFd08KdykA4lXfdUCFtY0cAGhlJ1jm_pypSsDLASw6tfEn4ubAzPz3cYfvsViiIfrD6CpIJ2GliK7v1y7R_ti4vwHkcGfVWlqV8PuNAAPirWfptrYKPWacwZH0lRBTKf8hyzYbTmHOegZBi4dGSarZsDpNnfLpDsYVfVvzu-395Geu3OTyz37wAg7Dmzje5bKDWYiizTQ-oL9Gq45CYJDyJ1Y7wYFiAPE4iMnPFhg3ooHde9URsNXLHJ_Dw8qEelquoB48NCQlH0pff-ESDcVmNrgfDXPTtLUA2mgGR_rhkjWkFQV5GZykijxBMurhuERJYbs7qcP_hclrlSOp-mS3TIELbmVwybS5GCivL0XRyw67cew0FNzJD5roLBPcIFPK9gVE-fwNv4D9W9nq7S00W0o2jYiqSbHtkwAKJo9HbpMe3DOyfVzQt6ZmrXan0fQij9HEt8RJu1ETsOvnJ9zGr0njReoCs_OO1O8DETEEPUApsi";
 //jest. retryTimes(3);
@@ -104,10 +106,11 @@ const api = new NCO_BlockchainAPI(
         }, 10000);
 
 
-        it.skip("custom code", async () => {
+        it("custom code", async () => {
             //let n: NCGetDaoProposals = { dao_owner: "testaaagt.io",] reverse: false  }
             //const resp = await api.getDaoWhitelistProposals(n);
             //console.log(JSON.stringify(resp));
+            expect(true).not.toBe(false);
 
         }, 50000);
        
@@ -129,11 +132,13 @@ const api = new NCO_BlockchainAPI(
                 xfer : true, // stake or transfer CPU/NET to the account
             };
             let resp : NCReturnTxs = await api.accounts.createUser(nco_struct) ;
-            console.log(resp);
+            console.log(resp)
+
             expect(typeof resp.TxID_createAcc).toBe('string');
 
         }, 60000);
- 
+
+
         it("buy ram", async () => {
 
             let br : NCBuyRam = {
@@ -189,7 +194,7 @@ const api = new NCO_BlockchainAPI(
 
     });
 
-    describe.skip("Permission management", () => {
+    describe("Permission management", () => {
         it("create permission", async () => {
             let n: NCCreatePermission = { 
                 author: name, 
@@ -790,7 +795,7 @@ const api = new NCO_BlockchainAPI(
     });
 
     // ================= minting ================================================== 
-    describe.skip("NFT stuff", () => {
+    describe("NFT stuff", () => {
         it("Mint asset basic", async () => {
 
             //let test = "1".repeat(64);
@@ -1043,5 +1048,111 @@ const api = new NCO_BlockchainAPI(
             else 
                 expect(false).toBe(true);
         }, 60000)
+    });
+
+    describe("bare account (BA) operations", () => {
+
+        it("BA create acc", async () => {
+
+            let nco_struct : NCCreateUser = {
+                newUser: name2, 
+                newacc_pub_active_key: pub_key_active,
+                newacc_pub_owner_key:  pub_key_owner,
+                payer: "io", 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                ram_amt : 8196, 
+                cpu_amount : "100.0000 NCO", 
+                net_amount : "100.0000 NCO", 
+                xfer : true, // stake or transfer CPU/NET to the account
+            };
+            let resp : NCReturnTxs = await api.accounts.createUser(nco_struct) ;
+            console.log(resp)
+
+            expect(typeof resp.TxID_createAcc).toBe('string');
+
+        }, 60000);
+
+
+        it("BA buy ram", async () => {
+
+            let br : NCBuyRam = {
+                user: name2, 
+                payer: "io", 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV",
+                ram_amt: 1024*16
+            };
+            let  resp : NCReturnTxs = await api.accounts.buyRam(br);
+            console.log(resp);
+            expect(typeof resp.TxID).toBe('string');
+
+        }, 15000);
+
+        it("BA tx nco balance", async () => {
+            console.log("transefrring some NCO to resp");
+            let n: NCTxNcoBal = { 
+                to:   name2, 
+                amt: '100.0000 NCO', 
+                payer:'io',
+                memo: 'NCO balance transfer', 
+                payer_prv_key: "5KdRwMUrkFssK2nUXASnhzjsN1rNNiy8bXAJoHYbBgJMLzjiXHV"
+            };
+            
+            let resp :NCReturnTxs = await api.txNCOBalance(n) ;
+            console.log(resp);
+            expect(typeof resp.TxID).toBe('string');
+
+        }, 60000);
+               
+        // does not have root and file collection
+        it("BA Mint NFT to Root basic", async () => {
+
+            await wait(10000);
+
+            //let test = "1".repeat(64);
+            let n: NCMintNftToRoot = { 
+            creator: name2,
+            payer: name2, 
+            payer_prv_key: prv_key_active, 
+            immutable_data: [
+                {'key': 'name', 'value': ['string', name+'_'+(new Date()).getTime()]},
+                {'key': 'description','value': ['string', 'demo nft']}, 
+                {'key': 'image','value': ['string', 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/50.png']},
+                {'key': "external_url",'value':['string', '']},
+                {'key': 'content_type','value':['string', 'text']},
+                {'key': 'content','value':['string', 'test_string']},
+                {'key': "license",'value':['string', 'CC-EX-123456']},
+                //{'key': "template_name"}, {'value': ['string', '']},
+                //{'key': "attributes"}, { 'value': ['string[]', []] }
+              ],
+            mutable_data: [
+                //{'key': 'storage', 'value': ['string', test]}
+            ]
+        };
+            
+        let resp :NCReturnTxs = await api.mintNftToRoot(n) ;
+        console.log(resp);
+        expect(typeof resp.TxID_mintNft).toBe('string');
+        }, 60000);
+
+        it("BA create file",async () => {
+            let test = "test string 0xcafefeed ".repeat(10);
+
+            let n: NCMintFile = { 
+                creator: name2,
+                payer: name2,  
+                user_prv_active_key: prv_key_active, 
+                payer_prv_key: prv_key_active, 
+                name: name+'_'+(new Date()).getTime(),
+                path: 'demo/file', 
+                content: test,
+                image: 'https://storage.googleapis.com/opensea-prod.appspot.com/creature/12.png'
+            };
+            
+            let resp : NCReturnTxs = await api.createFile(n) as NCReturnTxs;
+            asset_id = resp.asset_id as string;
+            console.log(resp);
+            expect(typeof resp.TxID_mintFile).toBe('string');
+        }, 60000);
+
     });
 
